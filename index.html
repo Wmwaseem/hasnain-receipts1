@@ -10,7 +10,9 @@
     <meta name="apple-mobile-web-app-title" content="Showroom Manager">
     <link rel="manifest" href="manifest.json">
     <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect fill='%230A1628' width='100' height='100'/><text y='75' font-size='70' fill='white' text-anchor='middle' x='50'>🚗</text></svg>">
-    <title>Car Showroom Manager - Premium Edition</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.sheetjs.com/xlsx-0.20.0/package/dist/xlsx.full.min.js"></script>
+    <title>Car Showroom Manager - Ultimate Edition</title>
     <style>
         * {
             margin: 0;
@@ -196,6 +198,15 @@
             background: rgba(248, 215, 218, 0.95);
             border-left-color: #dc3545;
             box-shadow: 0 4px 15px rgba(220, 53, 69, 0.2);
+        }
+        
+        .alert-box strong {
+            font-size: 18px;
+        }
+        
+        .alert-box div {
+            font-size: 16px;
+            line-height: 1.6;
         }
 
         .card {
@@ -540,6 +551,8 @@
 
         .modal-image {
             width: 100%;
+            max-height: 85vh;
+            object-fit: contain;
             border-radius: 16px;
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
             border: 2px solid rgba(255, 255, 255, 0.1);
@@ -621,6 +634,14 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
+            word-break: break-all;
+            line-height: 1.2;
+        }
+        
+        @media (max-width: 480px) {
+            .stat-number {
+                font-size: 20px;
+            }
         }
 
         .stat-label {
@@ -766,6 +787,25 @@
                 <div class="form-group">
                     <label>Selling Price (PKR) *</label>
                     <input type="number" id="selling-price" placeholder="e.g., 2500000" min="0" step="1000">
+                </div>
+
+                <div class="form-group">
+                    <label>Purchase Cost (PKR) *</label>
+                    <input type="number" id="purchase-cost" placeholder="e.g., 2000000" min="0" step="1000">
+                    <small style="color: #666; font-size: 12px; display: block; margin-top: 5px;">
+                        💡 How much did you pay to buy this car?
+                    </small>
+                </div>
+
+                <div class="form-group">
+                    <label>Additional Expenses (Optional)</label>
+                    <small style="color: #666; font-size: 12px; display: block; margin-bottom: 10px;">
+                        Repairs, maintenance, modifications, etc.
+                    </small>
+                    <div id="expenses-container"></div>
+                    <button type="button" class="btn btn-primary" onclick="addExpenseField()" style="width: auto; padding: 10px 15px; margin-top: 5px;">
+                        ➕ Add Expense
+                    </button>
                 </div>
 
                 <div class="form-group">
@@ -934,6 +974,55 @@
                 <button class="btn btn-primary" onclick="calculateAnalytics()" style="margin-bottom: 15px;">🔄 Refresh Analytics</button>
             </div>
 
+            <!-- Profit/Loss Tab -->
+            <div id="profit-tab" class="tab-content">
+                <h3 style="color: #00D4FF; margin-bottom: 20px; text-align: center; font-weight: 800;">💵 Profit & Loss</h3>
+
+                <div style="background: linear-gradient(135deg, #00D4FF 0%, #6B46C1 100%); padding: 20px; border-radius: 15px; color: white; margin-bottom: 20px; box-shadow: 0 8px 25px rgba(0, 212, 255, 0.3);">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
+                        <div>
+                            <div style="font-size: 12px; opacity: 0.9;">Total Revenue</div>
+                            <div style="font-size: 22px; font-weight: 700; word-break: break-all;" id="profit-revenue">₨0</div>
+                        </div>
+                        <div>
+                            <div style="font-size: 12px; opacity: 0.9;">Purchase Cost</div>
+                            <div style="font-size: 22px; font-weight: 700; word-break: break-all;" id="profit-purchase">₨0</div>
+                        </div>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
+                        <div>
+                            <div style="font-size: 12px; opacity: 0.9;">Total Expenses</div>
+                            <div style="font-size: 22px; font-weight: 700; word-break: break-all;" id="profit-expenses">₨0</div>
+                        </div>
+                        <div>
+                            <div style="font-size: 12px; opacity: 0.9;">Profit Margin</div>
+                            <div style="font-size: 22px; font-weight: 700;" id="profit-margin">0%</div>
+                        </div>
+                    </div>
+                    <div style="border-top: 2px solid rgba(255,255,255,0.3); padding-top: 15px; margin-top: 15px;">
+                        <div style="font-size: 14px; opacity: 0.9;">Net Profit</div>
+                        <div style="font-size: 32px; font-weight: 700; word-break: break-all;" id="profit-net">₨0</div>
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px;">
+                    <button class="btn btn-primary" onclick="exportSalesReport()" style="font-size: 14px;">📊 Sales</button>
+                    <button class="btn btn-primary" onclick="exportProfitReport()" style="font-size: 14px;">💵 Profit</button>
+                    <button class="btn btn-primary" onclick="exportPaymentReport()" style="font-size: 14px;">💰 Payments</button>
+                    <button class="btn btn-primary" onclick="exportExpenseReport()" style="font-size: 14px;">💸 Expenses</button>
+                </div>
+
+                <button class="btn btn-primary" onclick="calculateProfit()" style="margin-bottom: 15px;">🔄 Refresh</button>
+
+                <h4 style="color: #00D4FF; margin: 20px 0 15px 0; font-weight: 700;">Profit by Car</h4>
+                <div id="profit-breakdown"></div>
+            </div>
+
+            <!-- Created By Footer -->
+            <div style="text-align: center; padding: 20px 0 100px 0; color: rgba(255,255,255,0.7); font-size: 12px; font-weight: 500;">
+                Created by WM with ❤️
+            </div>
+
             <!-- Bottom Navigation -->
             <div class="tab-buttons">
                 <button class="tab-btn active" onclick="switchTab('upload')">
@@ -952,6 +1041,10 @@
                 <button class="tab-btn" onclick="switchTab('all')">
                     <span class="tab-icon">📋</span>
                     <span>All</span>
+                </button>
+                <button class="tab-btn" onclick="switchTab('profit')">
+                    <span class="tab-icon">💵</span>
+                    <span>Profit</span>
                 </button>
                 <button class="tab-btn" onclick="switchTab('analytics')">
                     <span class="tab-icon">📊</span>
@@ -988,6 +1081,9 @@
         let currentViewingReceipt = null;
         let allReceiptsCache = [];
         let allInstallmentsCache = [];
+        let allExpensesCache = [];
+        let expenseFieldCount = 0;
+        let revenueChart, employeeChart, carsChart;
         let deferredPrompt;
 
         // Employee Management Functions
@@ -1051,6 +1147,38 @@
                     }
                 }
             }
+        }
+
+        // Expense Management Functions
+        function addExpenseField() {
+            expenseFieldCount++;
+            const container = document.getElementById('expenses-container');
+            const div = document.createElement('div');
+            div.className = 'installment-item';
+            div.id = 'expense-' + expenseFieldCount;
+            div.style.display = 'block';
+            div.style.marginBottom = '10px';
+            
+            div.innerHTML = `
+                <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                    <select id="expense-type-${expenseFieldCount}" style="flex: 1; min-width: 100px;">
+                        <option value="Repair">Repair</option>
+                        <option value="Maintenance">Maintenance</option>
+                        <option value="Modification">Modification</option>
+                        <option value="Other">Other</option>
+                    </select>
+                    <input type="text" id="expense-desc-${expenseFieldCount}" placeholder="Description" style="flex: 2; min-width: 120px;">
+                    <input type="number" id="expense-amount-${expenseFieldCount}" placeholder="Amount" min="0" step="1000" style="flex: 1; min-width: 80px;">
+                    <button type="button" onclick="removeExpenseField(${expenseFieldCount})" class="delete-btn" style="padding: 10px;">✕</button>
+                </div>
+            `;
+            
+            container.appendChild(div);
+        }
+
+        function removeExpenseField(id) {
+            const element = document.getElementById('expense-' + id);
+            if (element) element.remove();
         }
 
         // PWA Install
@@ -1150,8 +1278,11 @@
                 loadAllReceipts();
             } else if (tab === 'analytics') {
                 calculateAnalytics();
+                setTimeout(createCharts, 100);
             } else if (tab === 'payments') {
                 loadPayments();
+            } else if (tab === 'profit') {
+                calculateProfit();
             }
         }
 
@@ -1213,6 +1344,27 @@
             const customerPhone = document.getElementById('customer-phone').value.trim();
             const sellingDate = document.getElementById('selling-date').value;
             const sellingPrice = document.getElementById('selling-price').value.trim();
+            const purchaseCost = document.getElementById('purchase-cost').value.trim();
+            
+            // Collect expenses
+            const expenses = [];
+            for (let i = 1; i <= expenseFieldCount; i++) {
+                const typeEl = document.getElementById(`expense-type-${i}`);
+                const descEl = document.getElementById(`expense-desc-${i}`);
+                const amountEl = document.getElementById(`expense-amount-${i}`);
+                
+                if (typeEl && descEl && amountEl) {
+                    const amount = parseFloat(amountEl.value) || 0;
+                    if (amount > 0) {
+                        expenses.push({
+                            type: typeEl.value,
+                            description: descEl.value.trim() || 'No description',
+                            amount: amount
+                        });
+                    }
+                }
+            }
+            
             const paymentType = document.querySelector('input[name="payment-type"]:checked').value;
             const soldBy = document.getElementById('sold-by').value;
             const photoInput = document.getElementById('receipt-photo');
@@ -1257,6 +1409,12 @@
 
             if (!sellingPrice || parseFloat(sellingPrice) <= 0) {
                 errorMsg.textContent = 'Please enter a valid selling price';
+                errorMsg.style.display = 'block';
+                return;
+            }
+
+            if (!purchaseCost || parseFloat(purchaseCost) <= 0) {
+                errorMsg.textContent = 'Please enter purchase cost';
                 errorMsg.style.display = 'block';
                 return;
             }
@@ -1348,6 +1506,8 @@
                     customerPhone: customerPhone,
                     sellingDate: sellingDate,
                     sellingPrice: parseFloat(sellingPrice),
+                    purchaseCost: parseFloat(purchaseCost),
+                    expenses: expenses,
                     paymentType: paymentType,
                     downPayment: downPayment,
                     soldBy: soldBy,
@@ -1375,6 +1535,9 @@
                     document.getElementById('customer-name').value = '';
                     document.getElementById('customer-phone').value = '';
                     document.getElementById('selling-price').value = '';
+                    document.getElementById('purchase-cost').value = '';
+                    document.getElementById('expenses-container').innerHTML = '';
+                    expenseFieldCount = 0;
                     document.getElementById('sold-by').value = '';
                     photoInput.value = '';
                     document.getElementById('preview').style.display = 'none';
@@ -1756,6 +1919,182 @@
             }
         }
 
+        async function calculateProfit() {
+            if (allReceiptsCache.length === 0) {
+                await loadAllReceipts();
+            }
+
+            const receipts = allReceiptsCache;
+            
+            let totalRevenue = 0;
+            let totalPurchase = 0;
+            let totalExpenses = 0;
+            
+            receipts.forEach(r => {
+                totalRevenue += parseFloat(r.sellingPrice) || 0;
+                totalPurchase += parseFloat(r.purchaseCost) || 0;
+                const expenses = (r.expenses || []).reduce((sum, e) => sum + (parseFloat(e.amount) || 0), 0);
+                totalExpenses += expenses;
+            });
+            
+            const netProfit = totalRevenue - totalPurchase - totalExpenses;
+            const profitMargin = totalRevenue > 0 ? ((netProfit / totalRevenue) * 100) : 0;
+            
+            document.getElementById('profit-revenue').textContent = '₨' + totalRevenue.toLocaleString();
+            document.getElementById('profit-purchase').textContent = '₨' + totalPurchase.toLocaleString();
+            document.getElementById('profit-expenses').textContent = '₨' + totalExpenses.toLocaleString();
+            document.getElementById('profit-net').textContent = '₨' + netProfit.toLocaleString();
+            document.getElementById('profit-margin').textContent = profitMargin.toFixed(1) + '%';
+            
+            showProfitBreakdown();
+        }
+
+        function showProfitBreakdown() {
+            const container = document.getElementById('profit-breakdown');
+            
+            if (allReceiptsCache.length === 0) {
+                container.innerHTML = '<div class="no-results">No data available</div>';
+                return;
+            }
+            
+            let html = '';
+            
+            allReceiptsCache.forEach(receipt => {
+                const selling = parseFloat(receipt.sellingPrice) || 0;
+                const purchase = parseFloat(receipt.purchaseCost) || 0;
+                const expenses = (receipt.expenses || []).reduce((sum, e) => sum + (parseFloat(e.amount) || 0), 0);
+                const profit = selling - purchase - expenses;
+                const margin = selling > 0 ? ((profit / selling) * 100) : 0;
+                
+                const profitColor = profit >= 0 ? '#28a745' : '#dc3545';
+                
+                html += `
+                    <div class="receipt-item" style="border-left: 4px solid ${profitColor};">
+                        <div class="receipt-reg">${receipt.carName || 'N/A'} (${receipt.regNumber})</div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; font-size: 12px;">
+                            <div>Selling: ₨${selling.toLocaleString()}</div>
+                            <div>Purchase: ₨${purchase.toLocaleString()}</div>
+                            <div>Expenses: ₨${expenses.toLocaleString()}</div>
+                            <div style="font-weight: 700; color: ${profitColor};">
+                                Profit: ₨${profit.toLocaleString()} (${margin.toFixed(1)}%)
+                            </div>
+                        </div>
+                        <div class="receipt-date" style="margin-top: 8px;">Sold by: ${receipt.soldBy || 'N/A'}</div>
+                    </div>
+                `;
+            });
+            
+            container.innerHTML = html;
+        }
+
+        // Excel Export Functions
+        function exportSalesReport() {
+            const data = allReceiptsCache.map(r => {
+                const expenses = (r.expenses || []).reduce((sum, e) => sum + (parseFloat(e.amount) || 0), 0);
+                const profit = (parseFloat(r.sellingPrice) || 0) - (parseFloat(r.purchaseCost) || 0) - expenses;
+                return {
+                    'Receipt ID': r.receiptId,
+                    'Car Name': r.carName,
+                    'Registration': r.regNumber,
+                    'Customer': r.customerName,
+                    'Phone': r.customerPhone,
+                    'Date': r.sellingDate,
+                    'Selling Price': r.sellingPrice,
+                    'Purchase Cost': r.purchaseCost || 0,
+                    'Expenses': expenses,
+                    'Profit': profit,
+                    'Payment Type': r.paymentType,
+                    'Sold By': r.soldBy
+                };
+            });
+            
+            exportToExcel(data, 'Sales_Report_' + new Date().toISOString().split('T')[0]);
+        }
+
+        function exportProfitReport() {
+            const data = allReceiptsCache.map(r => {
+                const selling = parseFloat(r.sellingPrice) || 0;
+                const purchase = parseFloat(r.purchaseCost) || 0;
+                const expenses = (r.expenses || []).reduce((sum, e) => sum + (parseFloat(e.amount) || 0), 0);
+                const profit = selling - purchase - expenses;
+                const margin = selling > 0 ? ((profit / selling) * 100).toFixed(2) : 0;
+                
+                return {
+                    'Car': r.carName,
+                    'Registration': r.regNumber,
+                    'Date': r.sellingDate,
+                    'Selling Price': selling,
+                    'Purchase Cost': purchase,
+                    'Expenses': expenses,
+                    'Gross Profit': selling - purchase,
+                    'Net Profit': profit,
+                    'Profit Margin %': margin,
+                    'Sold By': r.soldBy
+                };
+            });
+            
+            exportToExcel(data, 'Profit_Loss_Report_' + new Date().toISOString().split('T')[0]);
+        }
+
+        function exportPaymentReport() {
+            const data = [];
+            
+            allReceiptsCache.forEach(r => {
+                if (r.paymentType === 'INSTALLMENT') {
+                    const insts = allInstallmentsCache.filter(i => i.receiptId === r.receiptId);
+                    
+                    insts.forEach(inst => {
+                        data.push({
+                            'Car': r.carName,
+                            'Registration': r.regNumber,
+                            'Customer': r.customerName,
+                            'Phone': r.customerPhone,
+                            'Installment #': inst.installmentNumber,
+                            'Due Date': inst.dueDate,
+                            'Amount': inst.amount,
+                            'Status': inst.status,
+                            'Paid Date': inst.paidDate || 'N/A'
+                        });
+                    });
+                }
+            });
+            
+            exportToExcel(data, 'Payment_Report_' + new Date().toISOString().split('T')[0]);
+        }
+
+        function exportExpenseReport() {
+            const data = [];
+            
+            allReceiptsCache.forEach(r => {
+                if (r.expenses && r.expenses.length > 0) {
+                    r.expenses.forEach(e => {
+                        data.push({
+                            'Car': r.carName,
+                            'Registration': r.regNumber,
+                            'Expense Type': e.type,
+                            'Description': e.description,
+                            'Amount': e.amount,
+                            'Date': r.sellingDate
+                        });
+                    });
+                }
+            });
+            
+            exportToExcel(data, 'Expense_Report_' + new Date().toISOString().split('T')[0]);
+        }
+
+        function exportToExcel(data, filename) {
+            if (!data || data.length === 0) {
+                alert('❌ No data to export');
+                return;
+            }
+            
+            const ws = XLSX.utils.json_to_sheet(data);
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, "Report");
+            XLSX.writeFile(wb, filename + '.xlsx');
+        }
+
         async function calculateAnalytics() {
             if (allReceiptsCache.length === 0) {
                 await loadAllReceipts();
@@ -1877,6 +2216,133 @@
             });
             
             container.innerHTML = html;
+        }
+
+        function createCharts() {
+            // Destroy existing charts
+            if (revenueChart) revenueChart.destroy();
+            if (employeeChart) employeeChart.destroy();
+            if (carsChart) carsChart.destroy();
+            
+            // Revenue Chart - Monthly trend
+            const monthlyData = {};
+            allReceiptsCache.forEach(r => {
+                const date = new Date(r.sellingDate);
+                const monthKey = date.getFullYear() + '-' + String(date.getMonth() + 1).padStart(2, '0');
+                monthlyData[monthKey] = (monthlyData[monthKey] || 0) + (parseFloat(r.sellingPrice) || 0);
+            });
+            
+            const sortedMonths = Object.keys(monthlyData).sort();
+            const last6Months = sortedMonths.slice(-6);
+            
+            const revenueCtx = document.getElementById('revenueChart');
+            if (revenueCtx) {
+                revenueChart = new Chart(revenueCtx, {
+                    type: 'line',
+                    data: {
+                        labels: last6Months.map(m => {
+                            const [y, month] = m.split('-');
+                            return new Date(y, month - 1).toLocaleDateString('en', { month: 'short', year: '2-digit' });
+                        }),
+                        datasets: [{
+                            label: 'Revenue (₨)',
+                            data: last6Months.map(m => monthlyData[m]),
+                            borderColor: '#00D4FF',
+                            backgroundColor: 'rgba(0, 212, 255, 0.1)',
+                            tension: 0.4,
+                            fill: true
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { display: false } },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                ticks: {
+                                    callback: function(value) {
+                                        if (value >= 1000000) return '₨' + (value / 1000000).toFixed(1) + 'M';
+                                        if (value >= 1000) return '₨' + (value / 1000).toFixed(0) + 'K';
+                                        return '₨' + value;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+            
+            // Employee Chart - Pie
+            const employeeStats = {};
+            allReceiptsCache.forEach(r => {
+                const emp = r.soldBy || 'Unknown';
+                employeeStats[emp] = (employeeStats[emp] || 0) + 1;
+            });
+            
+            const empCtx = document.getElementById('employeeChart');
+            if (empCtx) {
+                employeeChart = new Chart(empCtx, {
+                    type: 'pie',
+                    data: {
+                        labels: Object.keys(employeeStats),
+                        datasets: [{
+                            data: Object.values(employeeStats),
+                            backgroundColor: [
+                                '#00D4FF',
+                                '#6B46C1',
+                                '#11998e',
+                                '#D4AF37',
+                                '#dc3545',
+                                '#ffc107'
+                            ]
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false
+                    }
+                });
+            }
+            
+            // Cars Chart - Bar
+            const carStats = {};
+            allReceiptsCache.forEach(r => {
+                const car = r.carName || 'Unknown';
+                carStats[car] = (carStats[car] || 0) + 1;
+            });
+            
+            const sortedCars = Object.entries(carStats)
+                .sort((a, b) => b[1] - a[1])
+                .slice(0, 5);
+            
+            const carsCtx = document.getElementById('carsChart');
+            if (carsCtx) {
+                carsChart = new Chart(carsCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: sortedCars.map(c => c[0]),
+                        datasets: [{
+                            label: 'Cars Sold',
+                            data: sortedCars.map(c => c[1]),
+                            backgroundColor: 'rgba(0, 212, 255, 0.8)',
+                            borderColor: '#00D4FF',
+                            borderWidth: 2
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { display: false } },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                ticks: { stepSize: 1 }
+                            }
+                        }
+                    }
+                });
+            }
         }
 
         document.getElementById('modal').addEventListener('click', function(e) {
