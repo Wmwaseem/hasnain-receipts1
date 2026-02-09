@@ -1,0 +1,25 @@
+{
+  "name": "Car Showroom Manager",
+  "short_name": "Showroom",
+  "description": "Complete car showroom management with profit tracking, payments, and analytics",
+  "start_url": "/hasnain-receipts/",
+  "display": "standalone",
+  "background_color": "#0A1628",
+  "theme_color": "#0A1628",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><rect fill='%230A1628' width='192' height='192'/><text y='140' font-size='120' fill='white' text-anchor='middle' x='96'>🚗</text></svg>",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect fill='%230A1628' width='512' height='512'/><text y='380' font-size='320' fill='white' text-anchor='middle' x='256'>🚗</text></svg>",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["business", "productivity", "finance"]
+}
