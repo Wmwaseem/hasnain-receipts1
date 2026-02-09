@@ -21,7 +21,7 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Jameel Noori Nastaleeq', 'Noto Nastalikh Urdu', sans-serif;
             background: linear-gradient(135deg, #0A1628 0%, #1E3A5F 50%, #2C5F8D 100%);
             min-height: 100vh;
             padding: 20px;
@@ -712,6 +712,39 @@
             background: linear-gradient(135deg, #00D4FF 0%, #6B46C1 100%);
             border-radius: 10px;
         }
+
+        /* Urdu Language Support */
+        body.urdu {
+            direction: rtl;
+            text-align: right;
+        }
+        
+        body.urdu input[type="text"],
+        body.urdu input[type="number"],
+        body.urdu select {
+            text-align: right;
+            direction: rtl;
+        }
+        
+        body.urdu .tab-buttons {
+            flex-direction: row-reverse;
+        }
+        
+        [data-lang-en] {
+            display: inline;
+        }
+        
+        [data-lang-ur] {
+            display: none;
+        }
+        
+        body.urdu [data-lang-en] {
+            display: none;
+        }
+        
+        body.urdu [data-lang-ur] {
+            display: inline;
+        }
     </style>
 </head>
 <body>
@@ -742,10 +775,13 @@
             <p>Premium Sales Management System</p>
             <p style="font-size: 11px; color: #999; margin-top: 8px;">Powered by Advanced Technology</p>
             <div class="notification-badge hidden" id="overdue-badge" onclick="switchTabDirect('payments')">
-                <span id="overdue-count">0</span> Overdue
+                <span id="overdue-count">0</span> <span data-lang-en="Overdue" data-lang-ur="ادائیگی باقی">Overdue</span>
             </div>
-            <button class="logout-btn manage-btn" onclick="manageEmployees()">👥 Employees</button>
-            <button class="logout-btn" onclick="logout()">🚪 Logout</button>
+            <button class="logout-btn" onclick="toggleLanguage()" style="background: linear-gradient(135deg, #D4AF37 0%, #FFD700 100%); box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);">
+                <span id="lang-icon">🌐</span> <span id="lang-text">اردو</span>
+            </button>
+            <button class="logout-btn manage-btn" onclick="manageEmployees()">👥 <span data-lang-en="Employees" data-lang-ur="ملازمین">Employees</span></button>
+            <button class="logout-btn" onclick="logout()">🚪 <span data-lang-en="Logout" data-lang-ur="لاگ آؤٹ">Logout</span></button>
         </div>
 
         <div class="install-prompt" id="install-prompt">
@@ -857,7 +893,7 @@
                 
                 <img id="preview" class="preview-image" style="display: none;">
                 
-                <button class="btn btn-primary" onclick="uploadReceipt()">💾 Save Receipt</button>
+                <button class="btn btn-primary" onclick="uploadReceipt()"><span data-lang-en="💾 Save Receipt" data-lang-ur="💾 رسید محفوظ کریں">💾 Save Receipt</span></button>
             </div>
 
             <!-- Payments Tab -->
@@ -885,7 +921,7 @@
                     </div>
                 </div>
 
-                <button class="btn btn-primary" onclick="loadPayments()" style="margin-bottom: 15px;">🔄 Refresh</button>
+                <button class="btn btn-primary" onclick="loadPayments()" style="margin-bottom: 15px;"><span data-lang-en="🔄 Refresh" data-lang-ur="🔄 تازہ کریں">🔄 Refresh</span></button>
 
                 <div id="payments-list"></div>
             </div>
@@ -902,7 +938,7 @@
                         <option value="">All Employees</option>
                     </select>
                 </div>
-                <button class="btn btn-primary" onclick="performSearch()">🔍 Search</button>
+                <button class="btn btn-primary" onclick="performSearch()"><span data-lang-en="🔍 Search" data-lang-ur="🔍 تلاش">🔍 Search</span></button>
                 <div id="search-results"></div>
             </div>
 
@@ -914,7 +950,7 @@
                         <div class="stat-label">Total Receipts</div>
                     </div>
                 </div>
-                <button class="btn btn-primary" onclick="loadAllReceipts()" style="margin-bottom: 15px;">🔄 Refresh</button>
+                <button class="btn btn-primary" onclick="loadAllReceipts()" style="margin-bottom: 15px;"><span data-lang-en="🔄 Refresh" data-lang-ur="🔄 تازہ کریں">🔄 Refresh</span></button>
                 <div id="all-receipts"></div>
             </div>
 
@@ -971,7 +1007,7 @@
                     </div>
                 </div>
 
-                <button class="btn btn-primary" onclick="calculateAnalytics()" style="margin-bottom: 15px;">🔄 Refresh Analytics</button>
+                <button class="btn btn-primary" onclick="calculateAnalytics()" style="margin-bottom: 15px;"><span data-lang-en="🔄 Refresh" data-lang-ur="🔄 تازہ کریں">🔄 Refresh</span> Analytics</button>
             </div>
 
             <!-- Profit/Loss Tab -->
@@ -982,26 +1018,26 @@
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
                         <div>
                             <div style="font-size: 12px; opacity: 0.9;">Total Revenue</div>
-                            <div style="font-size: 22px; font-weight: 700; word-break: break-all;" id="profit-revenue">₨0</div>
+                            <div style="font-size: 18px; font-weight: 700; word-break: break-all; line-height: 1.2;" id="profit-revenue">₨0</div>
                         </div>
                         <div>
                             <div style="font-size: 12px; opacity: 0.9;">Purchase Cost</div>
-                            <div style="font-size: 22px; font-weight: 700; word-break: break-all;" id="profit-purchase">₨0</div>
+                            <div style="font-size: 18px; font-weight: 700; word-break: break-all; line-height: 1.2;" id="profit-purchase">₨0</div>
                         </div>
                     </div>
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
                         <div>
                             <div style="font-size: 12px; opacity: 0.9;">Total Expenses</div>
-                            <div style="font-size: 22px; font-weight: 700; word-break: break-all;" id="profit-expenses">₨0</div>
+                            <div style="font-size: 18px; font-weight: 700; word-break: break-all; line-height: 1.2;" id="profit-expenses">₨0</div>
                         </div>
                         <div>
                             <div style="font-size: 12px; opacity: 0.9;">Profit Margin</div>
-                            <div style="font-size: 22px; font-weight: 700;" id="profit-margin">0%</div>
+                            <div style="font-size: 18px; font-weight: 700; line-height: 1.2;" id="profit-margin">0%</div>
                         </div>
                     </div>
                     <div style="border-top: 2px solid rgba(255,255,255,0.3); padding-top: 15px; margin-top: 15px;">
                         <div style="font-size: 14px; opacity: 0.9;">Net Profit</div>
-                        <div style="font-size: 32px; font-weight: 700; word-break: break-all;" id="profit-net">₨0</div>
+                        <div style="font-size: 26px; font-weight: 700; word-break: break-all; line-height: 1.2;" id="profit-net">₨0</div>
                     </div>
                 </div>
 
@@ -1012,14 +1048,14 @@
                     <button class="btn btn-primary" onclick="exportExpenseReport()" style="font-size: 14px;">💸 Expenses</button>
                 </div>
 
-                <button class="btn btn-primary" onclick="calculateProfit()" style="margin-bottom: 15px;">🔄 Refresh</button>
+                <button class="btn btn-primary" onclick="calculateProfit()" style="margin-bottom: 15px;"><span data-lang-en="🔄 Refresh" data-lang-ur="🔄 تازہ کریں">🔄 Refresh</span></button>
 
                 <h4 style="color: #00D4FF; margin: 20px 0 15px 0; font-weight: 700;">Profit by Car</h4>
                 <div id="profit-breakdown"></div>
             </div>
 
             <!-- Created By Footer -->
-            <div style="text-align: center; padding: 20px 0 100px 0; color: rgba(255,255,255,0.7); font-size: 12px; font-weight: 500;">
+            <div style="text-align: center; padding: 20px 0 100px 0; color: #00D4FF; font-size: 13px; font-weight: 700;">
                 Created by WM with ❤️
             </div>
 
@@ -1027,28 +1063,28 @@
             <div class="tab-buttons">
                 <button class="tab-btn active" onclick="switchTab('upload')">
                     <span class="tab-icon">📤</span>
-                    <span>Upload</span>
+                    <span data-lang-en="Upload" data-lang-ur="اپ لوڈ">Upload</span>
                 </button>
                 <button class="tab-btn" onclick="switchTab('payments')">
                     <span class="tab-icon">💰</span>
-                    <span>Payments</span>
+                    <span data-lang-en="Payments" data-lang-ur="ادائیگیاں">Payments</span>
                     <span class="badge hidden" id="payment-badge">0</span>
                 </button>
                 <button class="tab-btn" onclick="switchTab('search')">
                     <span class="tab-icon">🔍</span>
-                    <span>Search</span>
+                    <span data-lang-en="Search" data-lang-ur="تلاش">Search</span>
                 </button>
                 <button class="tab-btn" onclick="switchTab('all')">
                     <span class="tab-icon">📋</span>
-                    <span>All</span>
+                    <span data-lang-en="All" data-lang-ur="تمام">All</span>
                 </button>
                 <button class="tab-btn" onclick="switchTab('profit')">
                     <span class="tab-icon">💵</span>
-                    <span>Profit</span>
+                    <span data-lang-en="Profit" data-lang-ur="منافع">Profit</span>
                 </button>
                 <button class="tab-btn" onclick="switchTab('analytics')">
                     <span class="tab-icon">📊</span>
-                    <span>Stats</span>
+                    <span data-lang-en="Stats" data-lang-ur="اعدادوشمار">Stats</span>
                 </button>
             </div>
         </div>
@@ -1064,8 +1100,10 @@
                 <div style="color: white; font-size: 14px; margin-top: 5px;" id="modal-details"></div>
                 <div id="modal-installments" style="margin-top: 15px;"></div>
                 <div style="margin-top: 15px; display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
-                    <button class="btn btn-primary" onclick="openDriveLink()" style="width: auto; padding: 10px 20px;">📁 View in Drive</button>
-                    <button class="delete-btn" onclick="deleteReceipt()">🗑️ Delete</button>
+                    <button class="btn btn-primary" onclick="downloadReceipt()" style="width: auto; padding: 10px 20px; background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);"><span data-lang-en="💾 Download" data-lang-ur="💾 ڈاؤن لوڈ">💾 Download</span></button>
+                    <button class="btn btn-primary" onclick="editReceipt()" style="width: auto; padding: 10px 20px; background: linear-gradient(135deg, #D4AF37 0%, #FFD700 100%);"><span data-lang-en="✏️ Edit" data-lang-ur="✏️ ترمیم">✏️ Edit</span></button>
+                    <button class="btn btn-primary" onclick="openDriveLink()" style="width: auto; padding: 10px 20px;"><span data-lang-en="📁 Drive" data-lang-ur="📁 ڈرائیو">📁 Drive</span></button>
+                    <button class="delete-btn" onclick="deleteReceipt()"><span data-lang-en="🗑️ Delete" data-lang-ur="🗑️ حذف کریں">🗑️ Delete</span></button>
                 </div>
             </div>
         </div>
@@ -1074,9 +1112,172 @@
     <script>
         const CONFIG = {
             PASSWORD: 'hasnain123',
-            GOOGLE_SCRIPT_URL: 'https://script.google.com/macros/s/AKfycby6JIDWAWyZpZft33s0gZNobVDRRJmlmDnXgl8oukLfw_TCSBDJuamtm4PBJRwcO71i1w/exec'
+            GOOGLE_SCRIPT_URL: 'https://script.google.com/macros/s/AKfycbzAaxqPHhGV9sLotNqpSLQXNliyZJyqywB31WGOUOmxRYHgF2zA8_ZDQYKqSSDk_PjDEA/exec'
         };
 
+        // Translation Object
+        const translations = {
+            en: {
+                // Login
+                loginTitle: "CAR SHOWROOM MANAGER",
+                loginSubtitle: "Premium Sales Management System",
+                loginPassword: "Password",
+                loginButton: "Login",
+                loginError: "Incorrect password",
+                
+                // Header
+                appTitle: "CAR SHOWROOM MANAGER",
+                appSubtitle: "Premium Sales Management System",
+                createdBy: "Created by WM with ❤️",
+                
+                // Tabs
+                tabUpload: "Upload",
+                tabPayments: "Payments",
+                tabSearch: "Search",
+                tabAll: "All",
+                tabProfit: "Profit",
+                tabStats: "Stats",
+                
+                // Upload Form
+                carName: "Car Name/Model",
+                regNumber: "Car Registration Number",
+                customerName: "Customer Name",
+                customerPhone: "Customer Phone",
+                sellingDate: "Selling Date",
+                sellingPrice: "Selling Price (PKR)",
+                purchaseCost: "Purchase Cost (PKR)",
+                purchaseHint: "How much did you pay to buy this car?",
+                expenses: "Additional Expenses (Optional)",
+                expensesHint: "Repairs, maintenance, modifications, etc.",
+                addExpense: "Add Expense",
+                paymentType: "Payment Type",
+                cashFull: "Cash (Full Payment)",
+                installment: "Installment",
+                downPayment: "Down Payment (PKR)",
+                installmentCount: "Number of Installments",
+                soldBy: "Sold By (Employee)",
+                receiptPhoto: "Receipt Photo",
+                saveReceipt: "Save Receipt",
+                
+                // Messages
+                uploading: "Uploading...",
+                success: "Receipt saved successfully",
+                
+                // Profit Tab
+                profitTitle: "Profit & Loss",
+                totalRevenue: "Total Revenue",
+                totalPurchase: "Purchase Cost",
+                totalExpenses: "Total Expenses",
+                profitMargin: "Profit Margin",
+                netProfit: "Net Profit",
+                exportSales: "Sales",
+                exportProfit: "Profit",
+                exportPayments: "Payments",
+                exportExpenses: "Expenses",
+                refresh: "Refresh",
+                profitByCar: "Profit by Car",
+                
+                // Buttons
+                download: "Download",
+                edit: "Edit",
+                delete: "Delete",
+                save: "Save",
+                cancel: "Cancel",
+                close: "Close",
+                
+                // Stats
+                totalCars: "Total Cars Sold",
+                monthlyRevenue: "Monthly Revenue Trend",
+                salesByEmployee: "Sales by Employee",
+                bestSellingCars: "Best Selling Cars",
+                topSalespeople: "Top Salespeople",
+                thisWeek: "This Week",
+                thisMonth: "This Month",
+                carsSold: "Cars Sold",
+                revenue: "Revenue"
+            },
+            ur: {
+                // Login
+                loginTitle: "کار شو روم مینیجر",
+                loginSubtitle: "پریمیم سیلز مینجمنٹ سسٹم",
+                loginPassword: "پاس ورڈ",
+                loginButton: "لاگ ان",
+                loginError: "غلط پاس ورڈ",
+                
+                // Header
+                appTitle: "کار شو روم مینیجر",
+                appSubtitle: "پریمیم سیلز مینجمنٹ سسٹم",
+                createdBy: "WM نے محبت سے بنایا ❤️",
+                
+                // Tabs
+                tabUpload: "اپ لوڈ",
+                tabPayments: "ادائیگیاں",
+                tabSearch: "تلاش",
+                tabAll: "تمام",
+                tabProfit: "منافع",
+                tabStats: "اعدادوشمار",
+                
+                // Upload Form
+                carName: "گاڑی کا نام/ماڈل",
+                regNumber: "رجسٹریشن نمبر",
+                customerName: "گاہک کا نام",
+                customerPhone: "گاہک کا فون",
+                sellingDate: "فروخت کی تاریخ",
+                sellingPrice: "فروخت کی قیمت (PKR)",
+                purchaseCost: "خریداری کی قیمت (PKR)",
+                purchaseHint: "آپ نے یہ گاڑی کتنے میں خریدی؟",
+                expenses: "اضافی اخراجات (اختیاری)",
+                expensesHint: "مرمت، دیکھ بھال، تبدیلیاں وغیرہ",
+                addExpense: "اخراجات شامل کریں",
+                paymentType: "ادائیگی کی قسم",
+                cashFull: "نقد (مکمل ادائیگی)",
+                installment: "قسطیں",
+                downPayment: "پیشگی ادائیگی (PKR)",
+                installmentCount: "قسطوں کی تعداد",
+                soldBy: "فروخت کنندہ (ملازم)",
+                receiptPhoto: "رسید کی تصویر",
+                saveReceipt: "رسید محفوظ کریں",
+                
+                // Messages
+                uploading: "اپ لوڈ ہو رہا ہے...",
+                success: "رسید کامیابی سے محفوظ ہوگئی",
+                
+                // Profit Tab
+                profitTitle: "منافع اور نقصان",
+                totalRevenue: "کل آمدنی",
+                totalPurchase: "خریداری کی لاگت",
+                totalExpenses: "کل اخراجات",
+                profitMargin: "منافع کا مارجن",
+                netProfit: "خالص منافع",
+                exportSales: "فروخت",
+                exportProfit: "منافع",
+                exportPayments: "ادائیگیاں",
+                exportExpenses: "اخراجات",
+                refresh: "تازہ کریں",
+                profitByCar: "گاڑی کے لحاظ سے منافع",
+                
+                // Buttons
+                download: "ڈاؤن لوڈ",
+                edit: "ترمیم",
+                delete: "حذف کریں",
+                save: "محفوظ کریں",
+                cancel: "منسوخ کریں",
+                close: "بند کریں",
+                
+                // Stats
+                totalCars: "کل فروخت شدہ گاڑیاں",
+                monthlyRevenue: "ماہانہ آمدنی کا رجحان",
+                salesByEmployee: "ملازم کے لحاظ سے فروخت",
+                bestSellingCars: "سب سے زیادہ فروخت ہونے والی گاڑیاں",
+                topSalespeople: "اعلیٰ فروخت کنندگان",
+                thisWeek: "اس ہفتے",
+                thisMonth: "اس مہینے",
+                carsSold: "فروخت شدہ گاڑیاں",
+                revenue: "آمدنی"
+            }
+        };
+
+        let currentLang = localStorage.getItem('language') || 'en';
         let employeesList = JSON.parse(localStorage.getItem('employees')) || [];
         let currentViewingReceipt = null;
         let allReceiptsCache = [];
@@ -1085,6 +1286,59 @@
         let expenseFieldCount = 0;
         let revenueChart, employeeChart, carsChart;
         let deferredPrompt;
+
+        // Language Toggle Functions
+        function toggleLanguage() {
+            currentLang = currentLang === 'en' ? 'ur' : 'en';
+            localStorage.setItem('language', currentLang);
+            applyLanguage();
+        }
+
+        function applyLanguage() {
+            const body = document.body;
+            const lang = currentLang;
+            
+            // Toggle Urdu class for RTL
+            if (lang === 'ur') {
+                body.classList.add('urdu');
+                document.getElementById('lang-text').textContent = 'English';
+            } else {
+                body.classList.remove('urdu');
+                document.getElementById('lang-text').textContent = 'اردو';
+            }
+            
+            // Update all translatable elements
+            updateTranslations();
+        }
+
+        function updateTranslations() {
+            const t = translations[currentLang];
+            
+            // Login screen
+            const loginTitle = document.querySelector('.login-container h1');
+            if (loginTitle) loginTitle.textContent = '🚗 ' + t.loginTitle;
+            
+            // Header
+            const headerTitle = document.querySelector('.header h1');
+            if (headerTitle) headerTitle.textContent = '🚗 ' + t.appTitle;
+            
+            // Tab labels (using data attributes)
+            document.querySelectorAll('[data-lang-en]').forEach(el => {
+                if (currentLang === 'ur') {
+                    el.style.display = 'none';
+                } else {
+                    el.style.display = 'inline';
+                }
+            });
+            
+            document.querySelectorAll('[data-lang-ur]').forEach(el => {
+                if (currentLang === 'ur') {
+                    el.style.display = 'inline';
+                } else {
+                    el.style.display = 'none';
+                }
+            });
+        }
 
         // Employee Management Functions
         function loadEmployeesIntoDropdowns() {
@@ -1206,6 +1460,7 @@
 
         document.addEventListener('DOMContentLoaded', function() {
             checkLogin();
+            applyLanguage();
             loadEmployeesIntoDropdowns();
             
             document.getElementById('receipt-photo').addEventListener('change', function(e) {
@@ -2350,6 +2605,205 @@
                 closeModal();
             }
         });
+
+        // DOWNLOAD RECEIPT FUNCTION
+        async function downloadReceipt() {
+            if (!currentViewingReceipt) return;
+            
+            try {
+                const imageUrl = `https://drive.google.com/uc?export=download&id=${currentViewingReceipt.driveFileId}`;
+                const link = document.createElement('a');
+                link.href = imageUrl;
+                link.download = `${currentViewingReceipt.regNumber}_${currentViewingReceipt.carName}.jpg`;
+                link.target = '_blank';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                
+                alert('✅ Download started! Check your downloads folder.');
+            } catch (error) {
+                console.error('Download error:', error);
+                alert('❌ Error downloading. Please use "View in Drive" to download manually.');
+            }
+        }
+
+        // EDIT RECEIPT FUNCTIONS
+        function editReceipt() {
+            if (!currentViewingReceipt) return;
+            
+            // Close main modal
+            closeModal();
+            
+            // Populate edit form
+            document.getElementById('edit-car-name').value = currentViewingReceipt.carName || '';
+            document.getElementById('edit-reg-number').value = currentViewingReceipt.regNumber || '';
+            document.getElementById('edit-customer-name').value = currentViewingReceipt.customerName || '';
+            document.getElementById('edit-customer-phone').value = currentViewingReceipt.customerPhone || '';
+            document.getElementById('edit-selling-date').value = currentViewingReceipt.sellingDate || '';
+            document.getElementById('edit-selling-price').value = currentViewingReceipt.sellingPrice || '';
+            document.getElementById('edit-purchase-cost').value = currentViewingReceipt.purchaseCost || '';
+            
+            // Populate employee dropdown
+            const editSoldBy = document.getElementById('edit-sold-by');
+            editSoldBy.innerHTML = '<option value="">Select Employee</option>';
+            employeesList.forEach(emp => {
+                const option = document.createElement('option');
+                option.value = emp;
+                option.textContent = emp;
+                if (emp === currentViewingReceipt.soldBy) {
+                    option.selected = true;
+                }
+                editSoldBy.appendChild(option);
+            });
+            
+            // Show edit modal
+            document.getElementById('edit-modal').classList.add('active');
+            document.getElementById('edit-success').style.display = 'none';
+            document.getElementById('edit-error').style.display = 'none';
+        }
+
+        function closeEditModal() {
+            document.getElementById('edit-modal').classList.remove('active');
+        }
+
+        async function saveEditedReceipt() {
+            const successMsg = document.getElementById('edit-success');
+            const errorMsg = document.getElementById('edit-error');
+            
+            successMsg.style.display = 'none';
+            errorMsg.style.display = 'none';
+            
+            // Get edited values
+            const carName = document.getElementById('edit-car-name').value.trim();
+            const regNumber = document.getElementById('edit-reg-number').value.trim().toUpperCase();
+            const customerName = document.getElementById('edit-customer-name').value.trim();
+            const customerPhone = document.getElementById('edit-customer-phone').value.trim();
+            const sellingDate = document.getElementById('edit-selling-date').value;
+            const sellingPrice = document.getElementById('edit-selling-price').value.trim();
+            const purchaseCost = document.getElementById('edit-purchase-cost').value.trim();
+            const soldBy = document.getElementById('edit-sold-by').value;
+            
+            // Validation
+            if (!carName || !regNumber || !customerName || !customerPhone || !sellingDate || !sellingPrice || !purchaseCost || !soldBy) {
+                errorMsg.textContent = '❌ Please fill all fields';
+                errorMsg.style.display = 'block';
+                return;
+            }
+            
+            const saveBtn = event.target;
+            const originalText = saveBtn.textContent;
+            saveBtn.textContent = '⏳ Saving...';
+            saveBtn.disabled = true;
+            
+            try {
+                const response = await fetch(CONFIG.GOOGLE_SCRIPT_URL, {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        action: 'updateReceipt',
+                        receiptId: currentViewingReceipt.receiptId,
+                        carName: carName,
+                        regNumber: regNumber,
+                        customerName: customerName,
+                        customerPhone: customerPhone,
+                        sellingDate: sellingDate,
+                        sellingPrice: parseFloat(sellingPrice),
+                        purchaseCost: parseFloat(purchaseCost),
+                        soldBy: soldBy
+                    })
+                });
+
+                const result = await response.json();
+                
+                if (result.success) {
+                    successMsg.textContent = '✅ Receipt updated successfully!';
+                    successMsg.style.display = 'block';
+                    
+                    // Reload data
+                    await loadAllReceipts();
+                    await loadPayments();
+                    
+                    setTimeout(() => {
+                        closeEditModal();
+                    }, 1500);
+                } else {
+                    throw new Error(result.error || 'Update failed');
+                }
+                
+            } catch (error) {
+                console.error('Error:', error);
+                errorMsg.textContent = '❌ Error: ' + error.message;
+                errorMsg.style.display = 'block';
+            } finally {
+                saveBtn.textContent = originalText;
+                saveBtn.disabled = false;
+            }
+        }
+
+        // Close edit modal on background click
+        document.getElementById('edit-modal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeEditModal();
+            }
+        });
     </script>
+
+    <!-- Edit Receipt Modal -->
+    <div id="edit-modal" class="modal">
+        <div class="modal-content" style="max-width: 600px;">
+            <button class="close-modal" onclick="closeEditModal()">✕ Close</button>
+            <div style="background: white; padding: 30px; border-radius: 16px; margin-top: 50px;">
+                <h3 style="color: #00D4FF; margin-bottom: 20px; font-weight: 800; text-align: center;"><span data-lang-en="✏️ Edit" data-lang-ur="✏️ ترمیم">✏️ Edit</span> Receipt</h3>
+                
+                <div class="success-msg" id="edit-success"></div>
+                <div class="error-msg" id="edit-error"></div>
+                
+                <div class="form-group">
+                    <label>Car Name/Model</label>
+                    <input type="text" id="edit-car-name">
+                </div>
+                
+                <div class="form-group">
+                    <label>Registration Number</label>
+                    <input type="text" id="edit-reg-number" style="text-transform: uppercase;">
+                </div>
+                
+                <div class="form-group">
+                    <label>Customer Name</label>
+                    <input type="text" id="edit-customer-name">
+                </div>
+                
+                <div class="form-group">
+                    <label>Customer Phone</label>
+                    <input type="text" id="edit-customer-phone">
+                </div>
+                
+                <div class="form-group">
+                    <label>Selling Date</label>
+                    <input type="date" id="edit-selling-date">
+                </div>
+                
+                <div class="form-group">
+                    <label>Selling Price (PKR)</label>
+                    <input type="number" id="edit-selling-price" min="0" step="1000">
+                </div>
+                
+                <div class="form-group">
+                    <label>Purchase Cost (PKR)</label>
+                    <input type="number" id="edit-purchase-cost" min="0" step="1000">
+                </div>
+                
+                <div class="form-group">
+                    <label>Sold By</label>
+                    <select id="edit-sold-by">
+                        <option value="">Select Employee</option>
+                    </select>
+                </div>
+                
+                <button class="btn btn-primary" onclick="saveEditedReceipt()">💾 Save Changes</button>
+                <button class="btn" onclick="closeEditModal()" style="background: #6c757d; color: white; margin-top: 10px;">Cancel</button>
+            </div>
+        </div>
+    </div>
+
 </body>
 </html>
