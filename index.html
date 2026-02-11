@@ -1,2809 +1,938 @@
 <!DOCTYPE html>
-<!-- LUXURY VERSION: Premium design with employee management -->
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="theme-color" content="#0A1628">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="Showroom Manager">
-    <link rel="manifest" href="manifest.json">
-    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect fill='%230A1628' width='100' height='100'/><text y='75' font-size='70' fill='white' text-anchor='middle' x='50'>🚗</text></svg>">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-    <script src="https://cdn.sheetjs.com/xlsx-0.20.0/package/dist/xlsx.full.min.js"></script>
-    <title>Car Showroom Manager - Ultimate Edition</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Jameel Noori Nastaleeq', 'Noto Nastalikh Urdu', sans-serif;
-            background: linear-gradient(135deg, #0A1628 0%, #1E3A5F 50%, #2C5F8D 100%);
-            min-height: 100vh;
-            padding: 20px;
-            position: relative;
-            overflow-x: hidden;
-        }
-
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: 
-                radial-gradient(circle at 20% 50%, rgba(0, 212, 255, 0.1) 0%, transparent 50%),
-                radial-gradient(circle at 80% 80%, rgba(107, 70, 193, 0.1) 0%, transparent 50%);
-            pointer-events: none;
-            z-index: 0;
-        }
-
-        .container {
-            max-width: 600px;
-            margin: 0 auto;
-            position: relative;
-            z-index: 1;
-        }
-
-        .login-container {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(20px);
-            padding: 40px;
-            border-radius: 24px;
-            box-shadow: 
-                0 20px 60px rgba(0, 0, 0, 0.3),
-                0 0 0 1px rgba(255, 255, 255, 0.1) inset;
-            text-align: center;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-
-        .login-container h1 {
-            background: linear-gradient(135deg, #0A1628 0%, #00D4FF 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            font-size: 28px;
-            font-weight: 800;
-            margin-bottom: 10px;
-            letter-spacing: -0.5px;
-        }
-
-        .login-container p {
-            color: #555;
-            margin-bottom: 25px;
-            font-weight: 500;
-        }
-
-        .header {
-            background: rgba(255, 255, 255, 0.98);
-            backdrop-filter: blur(20px);
-            padding: 24px;
-            border-radius: 20px;
-            box-shadow: 
-                0 10px 40px rgba(0, 0, 0, 0.15),
-                0 0 0 1px rgba(255, 255, 255, 0.1) inset;
-            margin-bottom: 20px;
-            text-align: center;
-            position: relative;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-
-        .header h1 {
-            background: linear-gradient(135deg, #0A1628 0%, #00D4FF 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            font-size: 26px;
-            font-weight: 800;
-            margin-bottom: 8px;
-            letter-spacing: -0.5px;
-        }
-
-        .header p {
-            color: #666;
-            font-size: 14px;
-            font-weight: 500;
-        }
-
-        .logout-btn {
-            background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 12px;
-            font-size: 13px;
-            font-weight: 600;
-            cursor: pointer;
-            margin-top: 12px;
-            margin-left: 8px;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(220, 53, 69, 0.3);
-        }
-
-        .logout-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(220, 53, 69, 0.4);
-        }
-
-        .manage-btn {
-            background: linear-gradient(135deg, #00D4FF 0%, #6B46C1 100%);
-            box-shadow: 0 4px 15px rgba(0, 212, 255, 0.3);
-        }
-
-        .manage-btn:hover {
-            box-shadow: 0 6px 20px rgba(0, 212, 255, 0.4);
-        }
-
-        .notification-badge {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
-            color: white;
-            padding: 6px 14px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 700;
-            cursor: pointer;
-            animation: pulse 2s infinite;
-            box-shadow: 0 4px 15px rgba(220, 53, 69, 0.4);
-        }
-
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-        }
-
-        .install-prompt {
-            background: linear-gradient(135deg, #00D4FF 0%, #6B46C1 100%);
-            color: white;
-            padding: 16px;
-            border-radius: 16px;
-            margin-bottom: 20px;
-            display: none;
-            align-items: center;
-            gap: 12px;
-            box-shadow: 0 8px 25px rgba(0, 212, 255, 0.3);
-        }
-
-        .install-prompt button {
-            background: white;
-            color: #6B46C1;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 10px;
-            font-weight: 700;
-            cursor: pointer;
-            margin-left: auto;
-            transition: all 0.3s ease;
-        }
-
-        .alert-box {
-            background: rgba(255, 243, 205, 0.95);
-            backdrop-filter: blur(10px);
-            border-left: 4px solid #D4AF37;
-            padding: 16px;
-            border-radius: 12px;
-            margin-bottom: 16px;
-            display: none;
-            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.2);
-        }
-
-        .alert-box.danger {
-            background: rgba(248, 215, 218, 0.95);
-            border-left-color: #dc3545;
-            box-shadow: 0 4px 15px rgba(220, 53, 69, 0.2);
-        }
-        
-        .alert-box strong {
-            font-size: 18px;
-        }
-        
-        .alert-box div {
-            font-size: 16px;
-            line-height: 1.6;
-        }
-
-        .card {
-            background: rgba(255, 255, 255, 0.98);
-            backdrop-filter: blur(20px);
-            padding: 24px;
-            padding-bottom: 90px;
-            border-radius: 20px;
-            box-shadow: 
-                0 20px 60px rgba(0, 0, 0, 0.15),
-                0 0 0 1px rgba(255, 255, 255, 0.1) inset;
-            margin-bottom: 20px;
-            min-height: calc(100vh - 200px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-
-        .tab-buttons {
-            display: flex;
-            gap: 6px;
-            background: rgba(255, 255, 255, 0.98);
-            backdrop-filter: blur(20px);
-            position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            padding: 12px;
-            box-shadow: 
-                0 10px 40px rgba(0, 0, 0, 0.2),
-                0 0 0 1px rgba(255, 255, 255, 0.1) inset;
-            z-index: 100;
-            max-width: 560px;
-            width: calc(100% - 40px);
-            border-radius: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-
-        .tab-btn {
-            flex: 1;
-            padding: 12px 8px;
-            border: none;
-            background: transparent;
-            color: #666;
-            border-radius: 14px;
-            font-size: 11px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 6px;
-            position: relative;
-            letter-spacing: 0.3px;
-        }
-
-        .tab-btn .tab-icon {
-            font-size: 22px;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .tab-btn.active {
-            background: linear-gradient(135deg, #00D4FF 0%, #6B46C1 100%);
-            color: white;
-            transform: translateY(-2px);
-            box-shadow: 
-                0 8px 20px rgba(0, 212, 255, 0.4),
-                0 0 0 1px rgba(255, 255, 255, 0.2) inset;
-        }
-
-        .tab-btn.active .tab-icon {
-            transform: scale(1.1);
-        }
-
-        .tab-btn .badge {
-            position: absolute;
-            top: 8px;
-            right: 12px;
-            background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
-            color: white;
-            font-size: 10px;
-            padding: 2px 6px;
-            border-radius: 10px;
-            font-weight: 700;
-            box-shadow: 0 2px 8px rgba(220, 53, 69, 0.4);
-        }
-
-        .tab-content {
-            display: none;
-        }
-
-        .tab-content.active {
-            display: block;
-        }
-
-        .form-group {
-            margin-bottom: 18px;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 8px;
-            color: #2C3E50;
-            font-weight: 700;
-            font-size: 14px;
-            letter-spacing: 0.3px;
-        }
-
-        input[type="text"],
-        input[type="password"],
-        input[type="date"],
-        input[type="number"],
-        select {
-            width: 100%;
-            padding: 14px 16px;
-            border: 2px solid #E8ECF0;
-            border-radius: 12px;
-            font-size: 16px;
-            transition: all 0.3s ease;
-            background: #F8F9FA;
-            color: #2C3E50;
-            font-weight: 500;
-        }
-
-        input:focus,
-        select:focus {
-            outline: none;
-            border-color: #00D4FF;
-            background: white;
-            box-shadow: 0 0 0 4px rgba(0, 212, 255, 0.1);
-        }
-
-        input[type="file"] {
-            width: 100%;
-            padding: 14px;
-            border: 2px dashed #00D4FF;
-            border-radius: 12px;
-            cursor: pointer;
-            font-size: 14px;
-            background: rgba(0, 212, 255, 0.05);
-            transition: all 0.3s ease;
-        }
-
-        input[type="file"]:hover {
-            background: rgba(0, 212, 255, 0.1);
-            border-color: #6B46C1;
-        }
-
-        input[type="radio"] {
-            margin-right: 8px;
-        }
-
-        .radio-group {
-            display: flex;
-            gap: 20px;
-            margin: 10px 0;
-        }
-
-        .radio-group label {
-            display: flex;
-            align-items: center;
-            font-weight: normal;
-            cursor: pointer;
-        }
-
-        .installment-section {
-            background: rgba(0, 212, 255, 0.05);
-            padding: 16px;
-            border-radius: 12px;
-            margin-top: 16px;
-            display: none;
-            border: 2px solid rgba(0, 212, 255, 0.2);
-        }
-
-        .installment-item {
-            background: white;
-            padding: 14px;
-            border-radius: 10px;
-            margin-bottom: 12px;
-            border-left: 4px solid #00D4FF;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-        }
-
-        .btn {
-            width: 100%;
-            padding: 16px;
-            border: none;
-            border-radius: 14px;
-            font-size: 16px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            margin-top: 12px;
-            letter-spacing: 0.5px;
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, #00D4FF 0%, #6B46C1 100%);
-            color: white;
-            box-shadow: 0 8px 25px rgba(0, 212, 255, 0.3);
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 12px 35px rgba(0, 212, 255, 0.4);
-        }
-
-        .btn-primary:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        .btn-success {
-            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
-            color: white;
-            box-shadow: 0 8px 25px rgba(40, 167, 69, 0.3);
-        }
-
-        .btn-small {
-            padding: 10px 16px;
-            font-size: 13px;
-            width: auto;
-        }
-
-        .preview-image {
-            width: 100%;
-            max-height: 300px;
-            object-fit: contain;
-            border-radius: 12px;
-            margin-top: 12px;
-            border: 2px solid #E8ECF0;
-        }
-
-        .receipt-item {
-            padding: 18px;
-            border: 2px solid #E8ECF0;
-            border-radius: 16px;
-            margin-bottom: 12px;
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
-            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
-        }
-
-        .receipt-item:hover {
-            border-color: #00D4FF;
-            background: white;
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(0, 212, 255, 0.15);
-        }
-
-        .receipt-item.pending-payment {
-            border-left: 5px solid #D4AF37;
-            background: linear-gradient(135deg, #FFFBF0 0%, #FFF8E1 100%);
-        }
-
-        .receipt-item.overdue-payment {
-            border-left: 5px solid #dc3545;
-            background: linear-gradient(135deg, #FFF5F7 0%, #FFE8EB 100%);
-        }
-
-        .receipt-reg {
-            font-size: 19px;
-            font-weight: 800;
-            background: linear-gradient(135deg, #0A1628 0%, #00D4FF 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 8px;
-            letter-spacing: -0.3px;
-        }
-
-        .receipt-date {
-            font-size: 13px;
-            color: #7C8B9A;
-            font-weight: 500;
-            margin-bottom: 4px;
-        }
-
-        .payment-badge {
-            display: inline-block;
-            padding: 6px 12px;
-            border-radius: 8px;
-            font-size: 12px;
-            font-weight: 700;
-            margin-top: 8px;
-            letter-spacing: 0.3px;
-        }
-
-        .payment-badge.cash {
-            background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
-            color: #155724;
-        }
-
-        .payment-badge.installment {
-            background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
-            color: #856404;
-        }
-
-        .payment-badge.pending {
-            background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
-            color: #721c24;
-        }
-
-        .drive-link {
-            display: inline-block;
-            margin-top: 10px;
-            font-size: 12px;
-            color: #00D4FF;
-            text-decoration: none;
-            padding: 6px 12px;
-            background: rgba(0, 212, 255, 0.1);
-            border-radius: 8px;
-            font-weight: 600;
-        }
-
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(10, 22, 40, 0.98);
-            backdrop-filter: blur(20px);
-            z-index: 1000;
-            padding: 20px;
-            overflow-y: auto;
-        }
-
-        .modal.active {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .modal-content {
-            position: relative;
-            max-width: 900px;
-            width: 100%;
-        }
-
-        .modal-image {
-            width: 100%;
-            max-height: 85vh;
-            object-fit: contain;
-            border-radius: 16px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-            border: 2px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .close-modal {
-            position: absolute;
-            top: -50px;
-            right: 0;
-            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
-            border: none;
-            padding: 12px 24px;
-            border-radius: 12px;
-            font-size: 16px;
-            font-weight: 700;
-            cursor: pointer;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
-            transition: all 0.3s ease;
-        }
-
-        .close-modal:hover {
-            transform: translateY(-2px);
-        }
-
-        .success-msg, .error-msg {
-            padding: 14px 18px;
-            border-radius: 12px;
-            margin-bottom: 16px;
-            display: none;
-            font-weight: 600;
-            letter-spacing: 0.3px;
-        }
-
-        .success-msg {
-            background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
-            color: #155724;
-            border-left: 4px solid #28a745;
-        }
-
-        .error-msg {
-            background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
-            color: #721c24;
-            border-left: 4px solid #dc3545;
-        }
-
-        .loading {
-            text-align: center;
-            padding: 30px;
-            color: #00D4FF;
-            font-weight: 700;
-            font-size: 16px;
-        }
-
-        .no-results {
-            text-align: center;
-            padding: 50px;
-            color: #B0BEC5;
-            font-weight: 600;
-        }
-
-        .stats {
-            display: flex;
-            justify-content: space-around;
-            padding: 20px;
-            background: linear-gradient(135deg, rgba(0, 212, 255, 0.1) 0%, rgba(107, 70, 193, 0.1) 100%);
-            border-radius: 16px;
-            margin-bottom: 20px;
-            border: 1px solid rgba(0, 212, 255, 0.2);
-        }
-
-        .stat-item {
-            text-align: center;
-        }
-
-        .stat-number {
-            font-size: 28px;
-            font-weight: 800;
-            background: linear-gradient(135deg, #00D4FF 0%, #6B46C1 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            word-break: break-all;
-            line-height: 1.2;
-        }
-        
-        @media (max-width: 480px) {
-            .stat-number {
-                font-size: 20px;
-            }
-        }
-
-        .stat-label {
-            font-size: 12px;
-            color: #7C8B9A;
-            margin-top: 6px;
-            font-weight: 600;
-        }
-
-        .delete-btn {
-            background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
-            color: white;
-            border: none;
-            padding: 10px 18px;
-            border-radius: 10px;
-            font-size: 13px;
-            font-weight: 700;
-            cursor: pointer;
-            box-shadow: 0 4px 15px rgba(220, 53, 69, 0.3);
-            transition: all 0.3s ease;
-        }
-
-        .delete-btn:hover {
-            transform: translateY(-2px);
-        }
-
-        .hidden {
-            display: none !important;
-        }
-
-        @media (max-width: 480px) {
-            body {
-                padding: 12px;
-            }
-            
-            .header h1 {
-                font-size: 22px;
-            }
-            
-            .card {
-                padding: 18px;
-                padding-bottom: 90px;
-            }
-            
-            .tab-btn {
-                font-size: 10px;
-                padding: 10px 6px;
-            }
-            
-            .tab-btn .tab-icon {
-                font-size: 20px;
-            }
-        }
-
-        html {
-            scroll-behavior: smooth;
-        }
-
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: rgba(255, 255, 255, 0.1);
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: linear-gradient(135deg, #00D4FF 0%, #6B46C1 100%);
-            border-radius: 10px;
-        }
-
-        /* Urdu Language Support */
-        body.urdu {
-            direction: rtl;
-            text-align: right;
-        }
-        
-        body.urdu input[type="text"],
-        body.urdu input[type="number"],
-        body.urdu select {
-            text-align: right;
-            direction: rtl;
-        }
-        
-        body.urdu .tab-buttons {
-            flex-direction: row-reverse;
-        }
-        
-        [data-lang-en] {
-            display: inline;
-        }
-        
-        [data-lang-ur] {
-            display: none;
-        }
-        
-        body.urdu [data-lang-en] {
-            display: none;
-        }
-        
-        body.urdu [data-lang-ur] {
-            display: inline;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#0A1628">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Showroom Manager">
+<link rel="manifest" href="manifest.json">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script src="https://cdn.sheetjs.com/xlsx-0.20.0/package/dist/xlsx.full.min.js"></script>
+<title>Car Showroom Manager</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400;700&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Roboto',sans-serif;background:linear-gradient(135deg,#0A1628 0%,#1E3A5F 50%,#2C5F8D 100%);min-height:100vh;padding:20px;position:relative;overflow-x:hidden}
+body.urdu{font-family:'Noto Nastaliq Urdu',serif;direction:rtl;text-align:right}
+body.urdu .tab-buttons{flex-direction:row-reverse}
+body.urdu input,body.urdu select{text-align:right;direction:rtl}
+body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;background-image:radial-gradient(circle at 20% 50%,rgba(0,212,255,.1) 0%,transparent 50%),radial-gradient(circle at 80% 80%,rgba(107,70,193,.1) 0%,transparent 50%);pointer-events:none;z-index:0}
+.container{max-width:600px;margin:0 auto;position:relative;z-index:1}
+.login-container{background:rgba(255,255,255,.95);backdrop-filter:blur(20px);padding:40px;border-radius:24px;box-shadow:0 20px 60px rgba(0,0,0,.3);text-align:center;border:1px solid rgba(255,255,255,.2)}
+.login-container h1{background:linear-gradient(135deg,#0A1628 0%,#00D4FF 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;font-size:28px;font-weight:800;margin-bottom:10px}
+.login-container p{color:#555;margin-bottom:10px;font-weight:500}
+.header{background:rgba(255,255,255,.98);backdrop-filter:blur(20px);padding:24px;border-radius:20px;box-shadow:0 10px 40px rgba(0,0,0,.15);margin-bottom:20px;text-align:center;position:relative;border:1px solid rgba(255,255,255,.2)}
+.header h1{background:linear-gradient(135deg,#0A1628 0%,#00D4FF 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;font-size:26px;font-weight:800;margin-bottom:8px}
+.header p{color:#666;font-size:14px;font-weight:500}
+.logout-btn{background:linear-gradient(135deg,#dc3545 0%,#c82333 100%);color:white;border:none;padding:10px 20px;border-radius:12px;font-size:13px;font-weight:600;cursor:pointer;margin-top:12px;margin-left:8px;transition:all .3s ease;box-shadow:0 4px 15px rgba(220,53,69,.3)}
+.logout-btn:hover{transform:translateY(-2px)}
+.manage-btn{background:linear-gradient(135deg,#00D4FF 0%,#6B46C1 100%);box-shadow:0 4px 15px rgba(0,212,255,.3)}
+.lang-btn{background:linear-gradient(135deg,#D4AF37 0%,#FFD700 100%);color:#333 !important;font-weight:700 !important;box-shadow:0 4px 15px rgba(212,175,55,.3)}
+.notification-badge{position:absolute;top:15px;right:15px;background:linear-gradient(135deg,#dc3545 0%,#c82333 100%);color:white;padding:6px 14px;border-radius:20px;font-size:12px;font-weight:700;cursor:pointer;animation:pulse 2s infinite;box-shadow:0 4px 15px rgba(220,53,69,.4)}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
+.install-prompt{background:linear-gradient(135deg,#00D4FF 0%,#6B46C1 100%);color:white;padding:16px;border-radius:16px;margin-bottom:20px;display:none;align-items:center;gap:12px}
+.install-prompt button{background:white;color:#6B46C1;border:none;padding:10px 20px;border-radius:10px;font-weight:700;cursor:pointer;margin-left:auto}
+.alert-box{background:rgba(255,243,205,.95);border-left:4px solid #D4AF37;padding:16px;border-radius:12px;margin-bottom:16px;display:none}
+.alert-box.danger{background:rgba(248,215,218,.95);border-left-color:#dc3545}
+.alert-box strong{font-size:18px}
+.alert-box div{font-size:16px;line-height:1.6}
+.card{background:rgba(255,255,255,.98);backdrop-filter:blur(20px);padding:24px;padding-bottom:90px;border-radius:20px;box-shadow:0 20px 60px rgba(0,0,0,.15);margin-bottom:20px;min-height:calc(100vh - 200px);border:1px solid rgba(255,255,255,.2)}
+.tab-buttons{display:flex;gap:6px;background:rgba(255,255,255,.98);backdrop-filter:blur(20px);position:fixed;bottom:20px;left:50%;transform:translateX(-50%);padding:12px;box-shadow:0 10px 40px rgba(0,0,0,.2);z-index:100;max-width:560px;width:calc(100% - 40px);border-radius:20px;border:1px solid rgba(255,255,255,.2)}
+.tab-btn{flex:1;padding:10px 4px;border:none;background:transparent;color:#666;border-radius:14px;font-size:10px;font-weight:700;cursor:pointer;transition:all .4s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;align-items:center;gap:4px;position:relative}
+.tab-btn .tab-icon{font-size:20px}
+.tab-btn.active{background:linear-gradient(135deg,#00D4FF 0%,#6B46C1 100%);color:white;transform:translateY(-2px);box-shadow:0 8px 20px rgba(0,212,255,.4)}
+.tab-btn .badge{position:absolute;top:6px;right:8px;background:#dc3545;color:white;font-size:9px;padding:2px 5px;border-radius:10px;font-weight:700}
+.tab-content{display:none}
+.tab-content.active{display:block}
+.form-group{margin-bottom:18px}
+label{display:block;margin-bottom:8px;color:#2C3E50;font-weight:700;font-size:14px}
+input[type=text],input[type=password],input[type=date],input[type=number],select{width:100%;padding:14px 16px;border:2px solid #E8ECF0;border-radius:12px;font-size:16px;transition:all .3s ease;background:#F8F9FA;color:#2C3E50;font-weight:500}
+input:focus,select:focus{outline:none;border-color:#00D4FF;background:white;box-shadow:0 0 0 4px rgba(0,212,255,.1)}
+input[type=file]{width:100%;padding:14px;border:2px dashed #00D4FF;border-radius:12px;cursor:pointer;font-size:14px;background:rgba(0,212,255,.05)}
+.radio-group{display:flex;gap:20px;margin:10px 0;flex-wrap:wrap}
+.radio-group label{display:flex;align-items:center;font-weight:normal;cursor:pointer}
+input[type=radio]{margin-right:8px}
+.installment-section{background:rgba(0,212,255,.05);padding:16px;border-radius:12px;margin-top:16px;display:none;border:2px solid rgba(0,212,255,.2)}
+.installment-item{background:white;padding:14px;border-radius:10px;margin-bottom:12px;border-left:4px solid #00D4FF;box-shadow:0 2px 8px rgba(0,0,0,.05)}
+.btn{width:100%;padding:16px;border:none;border-radius:14px;font-size:16px;font-weight:700;cursor:pointer;transition:all .4s cubic-bezier(.4,0,.2,1);margin-top:12px}
+.btn-primary{background:linear-gradient(135deg,#00D4FF 0%,#6B46C1 100%);color:white;box-shadow:0 8px 25px rgba(0,212,255,.3)}
+.btn-primary:hover{transform:translateY(-3px)}
+.btn-primary:disabled{opacity:.6;cursor:not-allowed;transform:none}
+.btn-success{background:linear-gradient(135deg,#28a745 0%,#20c997 100%);color:white}
+.btn-small{padding:10px 16px;font-size:13px;width:auto}
+.preview-image{width:100%;max-height:300px;object-fit:contain;border-radius:12px;margin-top:12px;border:2px solid #E8ECF0}
+.receipt-item{padding:18px;border:2px solid #E8ECF0;border-radius:16px;margin-bottom:12px;cursor:pointer;transition:all .3s cubic-bezier(.4,0,.2,1);background:linear-gradient(135deg,#fff 0%,#f8f9fa 100%)}
+.receipt-item:hover{border-color:#00D4FF;transform:translateY(-2px);box-shadow:0 8px 25px rgba(0,212,255,.15)}
+.receipt-item.pending-payment{border-left:5px solid #D4AF37;background:linear-gradient(135deg,#FFFBF0 0%,#FFF8E1 100%)}
+.receipt-item.overdue-payment{border-left:5px solid #dc3545;background:linear-gradient(135deg,#FFF5F7 0%,#FFE8EB 100%)}
+.receipt-reg{font-size:19px;font-weight:800;background:linear-gradient(135deg,#0A1628 0%,#00D4FF 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:8px}
+.receipt-date{font-size:13px;color:#7C8B9A;font-weight:500;margin-bottom:4px}
+.payment-badge{display:inline-block;padding:6px 12px;border-radius:8px;font-size:12px;font-weight:700;margin-top:8px}
+.payment-badge.cash{background:linear-gradient(135deg,#d4edda 0%,#c3e6cb 100%);color:#155724}
+.payment-badge.installment{background:linear-gradient(135deg,#fff3cd 0%,#ffeaa7 100%);color:#856404}
+.payment-badge.pending{background:linear-gradient(135deg,#f8d7da 0%,#f5c6cb 100%);color:#721c24}
+.modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(10,22,40,.98);backdrop-filter:blur(20px);z-index:1000;padding:20px;overflow-y:auto}
+.modal.active{display:flex;align-items:center;justify-content:center}
+.modal-content{position:relative;max-width:900px;width:100%}
+.modal-image{width:100%;max-height:85vh;object-fit:contain;border-radius:16px;box-shadow:0 20px 60px rgba(0,0,0,.5)}
+.close-modal{position:absolute;top:-50px;right:0;background:linear-gradient(135deg,#fff 0%,#f8f9fa 100%);border:none;padding:12px 24px;border-radius:12px;font-size:15px;font-weight:700;cursor:pointer;box-shadow:0 8px 25px rgba(0,0,0,.3);color:#333}
+body.urdu .close-modal{right:auto;left:0}
+.success-msg,.error-msg{padding:14px 18px;border-radius:12px;margin-bottom:16px;display:none;font-weight:600}
+.success-msg{background:linear-gradient(135deg,#d4edda 0%,#c3e6cb 100%);color:#155724;border-left:4px solid #28a745}
+.error-msg{background:linear-gradient(135deg,#f8d7da 0%,#f5c6cb 100%);color:#721c24;border-left:4px solid #dc3545}
+.loading{text-align:center;padding:30px;color:#00D4FF;font-weight:700;font-size:16px}
+.no-results{text-align:center;padding:50px;color:#B0BEC5;font-weight:600}
+.stats{display:flex;justify-content:space-around;padding:20px;background:linear-gradient(135deg,rgba(0,212,255,.1) 0%,rgba(107,70,193,.1) 100%);border-radius:16px;margin-bottom:20px;border:1px solid rgba(0,212,255,.2)}
+.stat-item{text-align:center}
+.stat-number{font-size:26px;font-weight:800;background:linear-gradient(135deg,#00D4FF 0%,#6B46C1 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;word-break:break-all;line-height:1.2}
+@media(max-width:480px){.stat-number{font-size:18px}}
+.stat-label{font-size:12px;color:#7C8B9A;margin-top:6px;font-weight:600}
+.delete-btn{background:linear-gradient(135deg,#dc3545 0%,#c82333 100%);color:white;border:none;padding:10px 18px;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;box-shadow:0 4px 15px rgba(220,53,69,.3)}
+.hidden{display:none !important}
+@media(max-width:480px){body{padding:12px}.header h1{font-size:20px}.card{padding:16px;padding-bottom:90px}.tab-btn{font-size:9px;padding:8px 3px}.tab-btn .tab-icon{font-size:18px}}
+::-webkit-scrollbar{width:8px}
+::-webkit-scrollbar-track{background:rgba(255,255,255,.1)}
+::-webkit-scrollbar-thumb{background:linear-gradient(135deg,#00D4FF 0%,#6B46C1 100%);border-radius:10px}
+</style>
 </head>
 <body>
-    <!-- Login Screen -->
-    <div id="login-screen" class="container">
-        <div class="login-container">
-            <h1>🚗 CAR SHOWROOM MANAGER</h1>
-            <p>Premium Sales Management System</p>
-            <p style="font-size: 11px; color: #999; margin-top: 8px;">Powered by Advanced Technology</p>
-            
-            <div style="margin-top: 30px;">
-                <div class="error-msg" id="login-error"></div>
-                
-                <div class="form-group" style="text-align: left;">
-                    <label>Password</label>
-                    <input type="password" id="login-password" placeholder="Enter password">
-                </div>
-                
-                <button class="btn btn-primary" onclick="login()">🔓 Login</button>
-            </div>
+
+<!-- LOGIN -->
+<div id="login-screen" class="container">
+  <div class="login-container">
+    <h1 id="login-title">🚗 CAR SHOWROOM MANAGER</h1>
+    <p id="login-sub">Premium Sales Management System</p>
+    <p style="font-size:11px;color:#999;margin-top:8px;">Powered by Advanced Technology</p>
+    <div style="margin-top:30px;">
+      <div class="error-msg" id="login-error"></div>
+      <div class="form-group" style="text-align:left;">
+        <label id="lbl-password">Password</label>
+        <input type="password" id="login-password" placeholder="Enter password">
+      </div>
+      <button class="btn btn-primary" onclick="login()" id="btn-login">🔓 Login</button>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN APP -->
+<div id="main-app" class="container hidden">
+  <div class="header">
+    <h1 id="header-title">🚗 CAR SHOWROOM MANAGER</h1>
+    <p>Premium Sales Management System</p>
+    <p style="font-size:11px;color:#999;margin-top:8px;">Powered by Advanced Technology</p>
+    <div class="notification-badge hidden" id="overdue-badge" onclick="switchTabDirect('payments')">
+      <span id="overdue-count">0</span> <span id="lbl-overdue">Overdue</span>
+    </div>
+    <button class="logout-btn lang-btn" onclick="toggleLanguage()">🌐 <span id="lang-text">اردو</span></button>
+    <button class="logout-btn manage-btn" onclick="manageEmployees()">👥 <span id="lbl-employees">Employees</span></button>
+    <button class="logout-btn" onclick="logout()">🚪 <span id="lbl-logout">Logout</span></button>
+  </div>
+
+  <div class="install-prompt" id="install-prompt">
+    <span id="lbl-install">📱 Install this app for easier access!</span>
+    <button onclick="installApp()" id="btn-install">Install</button>
+  </div>
+
+  <div class="card">
+
+    <!-- UPLOAD TAB -->
+    <div id="upload-tab" class="tab-content active">
+      <div class="success-msg" id="upload-success"></div>
+      <div class="error-msg" id="upload-error"></div>
+      <div class="form-group"><label id="lbl-car-name">Car Name/Model *</label><input type="text" id="car-name" placeholder="e.g., Toyota Corolla 2020"></div>
+      <div class="form-group"><label id="lbl-reg-number">Car Registration Number *</label><input type="text" id="reg-number" placeholder="e.g., ABC-123" style="text-transform:uppercase"></div>
+      <div class="form-group"><label id="lbl-cust-name">Customer Name *</label><input type="text" id="customer-name" placeholder="e.g., Ahmed Khan"></div>
+      <div class="form-group"><label id="lbl-cust-phone">Customer Phone *</label><input type="text" id="customer-phone" placeholder="e.g., 03001234567"></div>
+      <div class="form-group"><label id="lbl-sell-date">Selling Date *</label><input type="date" id="selling-date"></div>
+      <div class="form-group"><label id="lbl-sell-price">Selling Price (PKR) *</label><input type="number" id="selling-price" placeholder="e.g., 2500000" min="0" step="1000"></div>
+      <div class="form-group">
+        <label id="lbl-purch-cost">Purchase Cost (PKR) *</label>
+        <input type="number" id="purchase-cost" placeholder="e.g., 2000000" min="0" step="1000">
+        <small id="lbl-purch-hint" style="color:#666;font-size:12px;display:block;margin-top:5px;">💡 How much did you pay to buy this car?</small>
+      </div>
+      <div class="form-group">
+        <label id="lbl-expenses">Additional Expenses (Optional)</label>
+        <small id="lbl-exp-hint" style="color:#666;font-size:12px;display:block;margin-bottom:10px;">Repairs, maintenance, modifications, etc.</small>
+        <div id="expenses-container"></div>
+        <button type="button" class="btn btn-primary" onclick="addExpenseField()" style="width:auto;padding:10px 15px;margin-top:5px;" id="btn-add-expense">➕ Add Expense</button>
+      </div>
+      <div class="form-group">
+        <label id="lbl-pay-type">Payment Type *</label>
+        <div class="radio-group">
+          <label><input type="radio" name="payment-type" value="CASH" checked onchange="toggleInstallmentSection()"> 💵 <span id="lbl-cash">Cash (Full Payment)</span></label>
+          <label><input type="radio" name="payment-type" value="INSTALLMENT" onchange="toggleInstallmentSection()"> 📅 <span id="lbl-inst">Installment</span></label>
         </div>
+      </div>
+      <div class="installment-section" id="installment-section">
+        <div class="form-group"><label id="lbl-down">Down Payment (PKR) *</label><input type="number" id="down-payment" placeholder="e.g., 500000" min="0" step="1000"></div>
+        <div class="form-group">
+          <label id="lbl-inst-count">Number of Installments *</label>
+          <select id="installment-count" onchange="generateInstallmentFields()">
+            <option value="1">1</option><option value="2">2</option><option value="3">3</option>
+            <option value="4">4</option><option value="5">5</option><option value="6">6</option>
+          </select>
+        </div>
+        <div id="installment-fields"></div>
+      </div>
+      <div class="form-group"><label id="lbl-sold-by">Sold By (Employee) *</label><select id="sold-by"><option value="">Select Employee</option></select></div>
+      <div class="form-group"><label id="lbl-receipt-photo">Receipt Photo *</label><input type="file" id="receipt-photo" accept="image/*"></div>
+      <img id="preview" class="preview-image" style="display:none">
+      <button class="btn btn-primary" onclick="uploadReceipt()" id="btn-save-receipt">💾 Save Receipt</button>
     </div>
 
-    <!-- Main App -->
-    <div id="main-app" class="container hidden">
-        <div class="header">
-            <h1>🚗 CAR SHOWROOM MANAGER</h1>
-            <p>Premium Sales Management System</p>
-            <p style="font-size: 11px; color: #999; margin-top: 8px;">Powered by Advanced Technology</p>
-            <div class="notification-badge hidden" id="overdue-badge" onclick="switchTabDirect('payments')">
-                <span id="overdue-count">0</span> <span data-lang-en="Overdue" data-lang-ur="ادائیگی باقی">Overdue</span>
-            </div>
-            <button class="logout-btn" onclick="toggleLanguage()" style="background: linear-gradient(135deg, #D4AF37 0%, #FFD700 100%); box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);">
-                <span id="lang-icon">🌐</span> <span id="lang-text">اردو</span>
-            </button>
-            <button class="logout-btn manage-btn" onclick="manageEmployees()">👥 <span data-lang-en="Employees" data-lang-ur="ملازمین">Employees</span></button>
-            <button class="logout-btn" onclick="logout()">🚪 <span data-lang-en="Logout" data-lang-ur="لاگ آؤٹ">Logout</span></button>
-        </div>
-
-        <div class="install-prompt" id="install-prompt">
-            <span>📱 Install this app for easier access!</span>
-            <button onclick="installApp()">Install</button>
-        </div>
-
-        <div class="card">
-            <!-- Upload Tab -->
-            <div id="upload-tab" class="tab-content active">
-                <div class="success-msg" id="upload-success"></div>
-                <div class="error-msg" id="upload-error"></div>
-                
-                <div class="form-group">
-                    <label>Car Name/Model *</label>
-                    <input type="text" id="car-name" placeholder="e.g., Toyota Corolla 2020">
-                </div>
-                
-                <div class="form-group">
-                    <label>Car Registration Number *</label>
-                    <input type="text" id="reg-number" placeholder="e.g., ABC-123" style="text-transform: uppercase;">
-                </div>
-
-                <div class="form-group">
-                    <label>Customer Name *</label>
-                    <input type="text" id="customer-name" placeholder="e.g., Ahmed Khan">
-                </div>
-
-                <div class="form-group">
-                    <label>Customer Phone *</label>
-                    <input type="text" id="customer-phone" placeholder="e.g., 03001234567">
-                </div>
-                
-                <div class="form-group">
-                    <label>Selling Date *</label>
-                    <input type="date" id="selling-date">
-                </div>
-                
-                <div class="form-group">
-                    <label>Selling Price (PKR) *</label>
-                    <input type="number" id="selling-price" placeholder="e.g., 2500000" min="0" step="1000">
-                </div>
-
-                <div class="form-group">
-                    <label>Purchase Cost (PKR) *</label>
-                    <input type="number" id="purchase-cost" placeholder="e.g., 2000000" min="0" step="1000">
-                    <small style="color: #666; font-size: 12px; display: block; margin-top: 5px;">
-                        💡 How much did you pay to buy this car?
-                    </small>
-                </div>
-
-                <div class="form-group">
-                    <label>Additional Expenses (Optional)</label>
-                    <small style="color: #666; font-size: 12px; display: block; margin-bottom: 10px;">
-                        Repairs, maintenance, modifications, etc.
-                    </small>
-                    <div id="expenses-container"></div>
-                    <button type="button" class="btn btn-primary" onclick="addExpenseField()" style="width: auto; padding: 10px 15px; margin-top: 5px;">
-                        ➕ Add Expense
-                    </button>
-                </div>
-
-                <div class="form-group">
-                    <label>Payment Type *</label>
-                    <div class="radio-group">
-                        <label>
-                            <input type="radio" name="payment-type" value="CASH" checked onchange="toggleInstallmentSection()">
-                            💵 Cash (Full Payment)
-                        </label>
-                        <label>
-                            <input type="radio" name="payment-type" value="INSTALLMENT" onchange="toggleInstallmentSection()">
-                            📅 Installment
-                        </label>
-                    </div>
-                </div>
-
-                <div class="installment-section" id="installment-section">
-                    <div class="form-group">
-                        <label>Down Payment (PKR) *</label>
-                        <input type="number" id="down-payment" placeholder="e.g., 500000" min="0" step="1000">
-                    </div>
-
-                    <div class="form-group">
-                        <label>Number of Installments *</label>
-                        <select id="installment-count" onchange="generateInstallmentFields()">
-                            <option value="1">1 Installment</option>
-                            <option value="2">2 Installments</option>
-                            <option value="3">3 Installments</option>
-                            <option value="4">4 Installments</option>
-                            <option value="5">5 Installments</option>
-                            <option value="6">6 Installments</option>
-                        </select>
-                    </div>
-
-                    <div id="installment-fields"></div>
-                </div>
-
-                <div class="form-group">
-                    <label>Sold By (Employee) *</label>
-                    <select id="sold-by">
-                        <option value="">Select Employee</option>
-                    </select>
-                </div>
-                
-                <div class="form-group">
-                    <label>Receipt Photo *</label>
-                    <input type="file" id="receipt-photo" accept="image/*">
-                </div>
-                
-                <img id="preview" class="preview-image" style="display: none;">
-                
-                <button class="btn btn-primary" onclick="uploadReceipt()"><span data-lang-en="💾 Save Receipt" data-lang-ur="💾 رسید محفوظ کریں">💾 Save Receipt</span></button>
-            </div>
-
-            <!-- Payments Tab -->
-            <div id="payments-tab" class="tab-content">
-                <h3 style="color: #00D4FF; margin-bottom: 20px; font-weight: 800;">💰 Payment Tracking</h3>
-
-                <div class="alert-box danger" id="overdue-alert">
-                    <strong>⚠️ Overdue Payments!</strong>
-                    <div id="overdue-list" style="margin-top: 10px;"></div>
-                </div>
-
-                <div class="alert-box" id="upcoming-alert">
-                    <strong>📅 Upcoming Payments</strong>
-                    <div id="upcoming-list" style="margin-top: 10px;"></div>
-                </div>
-
-                <div class="stats" style="grid-template-columns: repeat(2, 1fr); display: grid; gap: 15px;">
-                    <div class="stat-item">
-                        <div class="stat-number" id="total-pending">₨0</div>
-                        <div class="stat-label">Total Pending</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-number" id="total-received">₨0</div>
-                        <div class="stat-label">Total Received</div>
-                    </div>
-                </div>
-
-                <button class="btn btn-primary" onclick="loadPayments()" style="margin-bottom: 15px;"><span data-lang-en="🔄 Refresh" data-lang-ur="🔄 تازہ کریں">🔄 Refresh</span></button>
-
-                <div id="payments-list"></div>
-            </div>
-
-            <!-- Search Tab -->
-            <div id="search-tab" class="tab-content">
-                <div class="form-group">
-                    <label>Search by Registration Number</label>
-                    <input type="text" id="search-input" placeholder="e.g., ABC-123" style="text-transform: uppercase;">
-                </div>
-                <div class="form-group">
-                    <label>Filter by Employee</label>
-                    <select id="search-employee">
-                        <option value="">All Employees</option>
-                    </select>
-                </div>
-                <button class="btn btn-primary" onclick="performSearch()"><span data-lang-en="🔍 Search" data-lang-ur="🔍 تلاش">🔍 Search</span></button>
-                <div id="search-results"></div>
-            </div>
-
-            <!-- All Receipts Tab -->
-            <div id="all-tab" class="tab-content">
-                <div class="stats">
-                    <div class="stat-item">
-                        <div class="stat-number" id="total-receipts">0</div>
-                        <div class="stat-label">Total Receipts</div>
-                    </div>
-                </div>
-                <button class="btn btn-primary" onclick="loadAllReceipts()" style="margin-bottom: 15px;"><span data-lang-en="🔄 Refresh" data-lang-ur="🔄 تازہ کریں">🔄 Refresh</span></button>
-                <div id="all-receipts"></div>
-            </div>
-
-            <!-- Analytics Tab -->
-            <div id="analytics-tab" class="tab-content">
-                <h3 style="color: #00D4FF; margin-bottom: 20px; text-align: center; font-weight: 800;">📊 Sales Analytics</h3>
-
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; margin-bottom: 25px;">
-                    <div style="background: linear-gradient(135deg, #00D4FF 0%, #6B46C1 100%); padding: 20px; border-radius: 10px; color: white; text-align: center; box-shadow: 0 8px 25px rgba(0, 212, 255, 0.3);">
-                        <div style="font-size: 28px; font-weight: 700;" id="total-cars">0</div>
-                        <div style="font-size: 12px; margin-top: 5px;">Total Cars Sold</div>
-                    </div>
-                    <div style="background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); padding: 20px; border-radius: 10px; color: white; text-align: center; box-shadow: 0 8px 25px rgba(17, 153, 142, 0.3);">
-                        <div style="font-size: 28px; font-weight: 700;" id="total-revenue">₨0</div>
-                        <div style="font-size: 12px; margin-top: 5px;">Total Revenue</div>
-                    </div>
-                </div>
-
-                <div style="background: rgba(0, 212, 255, 0.1); padding: 15px; border-radius: 10px; margin-bottom: 20px; border: 1px solid rgba(0, 212, 255, 0.2);">
-                    <h4 style="color: #00D4FF; margin-bottom: 15px; font-weight: 700;">🏆 Top Salespeople</h4>
-                    <div id="top-salespeople-list"></div>
-                </div>
-
-                <div style="background: rgba(0, 212, 255, 0.1); padding: 15px; border-radius: 10px; margin-bottom: 20px; border: 1px solid rgba(0, 212, 255, 0.2);">
-                    <h4 style="color: #00D4FF; margin-bottom: 15px; font-weight: 700;">🚗 Best Selling Cars</h4>
-                    <div id="best-selling-list"></div>
-                </div>
-
-                <div style="background: rgba(0, 212, 255, 0.1); padding: 20px; border-radius: 10px; margin-bottom: 20px; border: 1px solid rgba(0, 212, 255, 0.2);">
-                    <h4 style="color: #00D4FF; margin-bottom: 15px; font-weight: 700;">📅 This Week</h4>
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
-                        <div>
-                            <div style="font-size: 12px; color: #666;">Cars Sold</div>
-                            <div style="font-size: 24px; font-weight: 700; color: #00D4FF;" id="week-cars">0</div>
-                        </div>
-                        <div>
-                            <div style="font-size: 12px; color: #666;">Revenue</div>
-                            <div style="font-size: 24px; font-weight: 700; color: #11998e;" id="week-revenue">₨0</div>
-                        </div>
-                    </div>
-                </div>
-
-                <div style="background: rgba(0, 212, 255, 0.1); padding: 20px; border-radius: 10px; margin-bottom: 20px; border: 1px solid rgba(0, 212, 255, 0.2);">
-                    <h4 style="color: #00D4FF; margin-bottom: 15px; font-weight: 700;">📆 This Month</h4>
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
-                        <div>
-                            <div style="font-size: 12px; color: #666;">Cars Sold</div>
-                            <div style="font-size: 24px; font-weight: 700; color: #00D4FF;" id="month-cars">0</div>
-                        </div>
-                        <div>
-                            <div style="font-size: 12px; color: #666;">Revenue</div>
-                            <div style="font-size: 24px; font-weight: 700; color: #11998e;" id="month-revenue">₨0</div>
-                        </div>
-                    </div>
-                </div>
-
-                <button class="btn btn-primary" onclick="calculateAnalytics()" style="margin-bottom: 15px;"><span data-lang-en="🔄 Refresh" data-lang-ur="🔄 تازہ کریں">🔄 Refresh</span> Analytics</button>
-            </div>
-
-            <!-- Profit/Loss Tab -->
-            <div id="profit-tab" class="tab-content">
-                <h3 style="color: #00D4FF; margin-bottom: 20px; text-align: center; font-weight: 800;">💵 Profit & Loss</h3>
-
-                <div style="background: linear-gradient(135deg, #00D4FF 0%, #6B46C1 100%); padding: 20px; border-radius: 15px; color: white; margin-bottom: 20px; box-shadow: 0 8px 25px rgba(0, 212, 255, 0.3);">
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
-                        <div>
-                            <div style="font-size: 12px; opacity: 0.9;">Total Revenue</div>
-                            <div style="font-size: 18px; font-weight: 700; word-break: break-all; line-height: 1.2;" id="profit-revenue">₨0</div>
-                        </div>
-                        <div>
-                            <div style="font-size: 12px; opacity: 0.9;">Purchase Cost</div>
-                            <div style="font-size: 18px; font-weight: 700; word-break: break-all; line-height: 1.2;" id="profit-purchase">₨0</div>
-                        </div>
-                    </div>
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
-                        <div>
-                            <div style="font-size: 12px; opacity: 0.9;">Total Expenses</div>
-                            <div style="font-size: 18px; font-weight: 700; word-break: break-all; line-height: 1.2;" id="profit-expenses">₨0</div>
-                        </div>
-                        <div>
-                            <div style="font-size: 12px; opacity: 0.9;">Profit Margin</div>
-                            <div style="font-size: 18px; font-weight: 700; line-height: 1.2;" id="profit-margin">0%</div>
-                        </div>
-                    </div>
-                    <div style="border-top: 2px solid rgba(255,255,255,0.3); padding-top: 15px; margin-top: 15px;">
-                        <div style="font-size: 14px; opacity: 0.9;">Net Profit</div>
-                        <div style="font-size: 26px; font-weight: 700; word-break: break-all; line-height: 1.2;" id="profit-net">₨0</div>
-                    </div>
-                </div>
-
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px;">
-                    <button class="btn btn-primary" onclick="exportSalesReport()" style="font-size: 14px;">📊 Sales</button>
-                    <button class="btn btn-primary" onclick="exportProfitReport()" style="font-size: 14px;">💵 Profit</button>
-                    <button class="btn btn-primary" onclick="exportPaymentReport()" style="font-size: 14px;">💰 Payments</button>
-                    <button class="btn btn-primary" onclick="exportExpenseReport()" style="font-size: 14px;">💸 Expenses</button>
-                </div>
-
-                <button class="btn btn-primary" onclick="calculateProfit()" style="margin-bottom: 15px;"><span data-lang-en="🔄 Refresh" data-lang-ur="🔄 تازہ کریں">🔄 Refresh</span></button>
-
-                <h4 style="color: #00D4FF; margin: 20px 0 15px 0; font-weight: 700;">Profit by Car</h4>
-                <div id="profit-breakdown"></div>
-            </div>
-
-            <!-- Created By Footer -->
-            <div style="text-align: center; padding: 20px 0 100px 0; color: #00D4FF; font-size: 13px; font-weight: 700;">
-                Created by WM with ❤️
-            </div>
-
-            <!-- Bottom Navigation -->
-            <div class="tab-buttons">
-                <button class="tab-btn active" onclick="switchTab('upload')">
-                    <span class="tab-icon">📤</span>
-                    <span data-lang-en="Upload" data-lang-ur="اپ لوڈ">Upload</span>
-                </button>
-                <button class="tab-btn" onclick="switchTab('payments')">
-                    <span class="tab-icon">💰</span>
-                    <span data-lang-en="Payments" data-lang-ur="ادائیگیاں">Payments</span>
-                    <span class="badge hidden" id="payment-badge">0</span>
-                </button>
-                <button class="tab-btn" onclick="switchTab('search')">
-                    <span class="tab-icon">🔍</span>
-                    <span data-lang-en="Search" data-lang-ur="تلاش">Search</span>
-                </button>
-                <button class="tab-btn" onclick="switchTab('all')">
-                    <span class="tab-icon">📋</span>
-                    <span data-lang-en="All" data-lang-ur="تمام">All</span>
-                </button>
-                <button class="tab-btn" onclick="switchTab('profit')">
-                    <span class="tab-icon">💵</span>
-                    <span data-lang-en="Profit" data-lang-ur="منافع">Profit</span>
-                </button>
-                <button class="tab-btn" onclick="switchTab('analytics')">
-                    <span class="tab-icon">📊</span>
-                    <span data-lang-en="Stats" data-lang-ur="اعدادوشمار">Stats</span>
-                </button>
-            </div>
-        </div>
+    <!-- PAYMENTS TAB -->
+    <div id="payments-tab" class="tab-content">
+      <h3 style="color:#00D4FF;margin-bottom:20px;font-weight:800;">💰 <span id="lbl-pay-track">Payment Tracking</span></h3>
+      <div class="alert-box danger" id="overdue-alert"><strong id="lbl-overdue-title">⚠️ Overdue Payments!</strong><div id="overdue-list" style="margin-top:10px;"></div></div>
+      <div class="alert-box" id="upcoming-alert"><strong id="lbl-upcoming-title">📅 Upcoming Payments</strong><div id="upcoming-list" style="margin-top:10px;"></div></div>
+      <div class="stats" style="display:grid;grid-template-columns:1fr 1fr;gap:15px;">
+        <div class="stat-item"><div class="stat-number" id="total-pending">₨0</div><div class="stat-label" id="lbl-total-pending">Total Pending</div></div>
+        <div class="stat-item"><div class="stat-number" id="total-received">₨0</div><div class="stat-label" id="lbl-total-received">Total Received</div></div>
+      </div>
+      <button class="btn btn-primary" onclick="loadPayments()" style="margin-bottom:15px;" id="btn-refresh-pay">🔄 Refresh</button>
+      <div id="payments-list"></div>
     </div>
 
-    <!-- Modal for viewing receipt -->
-    <div id="modal" class="modal">
-        <div class="modal-content">
-            <button class="close-modal" onclick="closeModal()">✕ Close</button>
-            <img id="modal-image" class="modal-image">
-            <div style="text-align: center; margin-top: 15px;">
-                <div style="color: white; font-size: 20px; font-weight: 700;" id="modal-reg"></div>
-                <div style="color: white; font-size: 14px; margin-top: 5px;" id="modal-details"></div>
-                <div id="modal-installments" style="margin-top: 15px;"></div>
-                <div style="margin-top: 15px; display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
-                    <button class="btn btn-primary" onclick="downloadReceipt()" style="width: auto; padding: 10px 20px; background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);"><span data-lang-en="💾 Download" data-lang-ur="💾 ڈاؤن لوڈ">💾 Download</span></button>
-                    <button class="btn btn-primary" onclick="editReceipt()" style="width: auto; padding: 10px 20px; background: linear-gradient(135deg, #D4AF37 0%, #FFD700 100%);"><span data-lang-en="✏️ Edit" data-lang-ur="✏️ ترمیم">✏️ Edit</span></button>
-                    <button class="btn btn-primary" onclick="openDriveLink()" style="width: auto; padding: 10px 20px;"><span data-lang-en="📁 Drive" data-lang-ur="📁 ڈرائیو">📁 Drive</span></button>
-                    <button class="delete-btn" onclick="deleteReceipt()"><span data-lang-en="🗑️ Delete" data-lang-ur="🗑️ حذف کریں">🗑️ Delete</span></button>
-                </div>
-            </div>
-        </div>
+    <!-- SEARCH TAB -->
+    <div id="search-tab" class="tab-content">
+      <div class="form-group"><label id="lbl-search-reg">Search by Registration Number</label><input type="text" id="search-input" placeholder="e.g., ABC-123" style="text-transform:uppercase"></div>
+      <div class="form-group"><label id="lbl-filter-emp">Filter by Employee</label><select id="search-employee"><option value="">All Employees</option></select></div>
+      <button class="btn btn-primary" onclick="performSearch()" id="btn-search">🔍 Search</button>
+      <div id="search-results"></div>
     </div>
 
-    <script>
-        const CONFIG = {
-            PASSWORD: 'hasnain123',
-            GOOGLE_SCRIPT_URL: 'https://script.google.com/macros/s/AKfycbzAaxqPHhGV9sLotNqpSLQXNliyZJyqywB31WGOUOmxRYHgF2zA8_ZDQYKqSSDk_PjDEA/exec'
-        };
-
-        // Translation Object
-        const translations = {
-            en: {
-                // Login
-                loginTitle: "CAR SHOWROOM MANAGER",
-                loginSubtitle: "Premium Sales Management System",
-                loginPassword: "Password",
-                loginButton: "Login",
-                loginError: "Incorrect password",
-                
-                // Header
-                appTitle: "CAR SHOWROOM MANAGER",
-                appSubtitle: "Premium Sales Management System",
-                createdBy: "Created by WM with ❤️",
-                
-                // Tabs
-                tabUpload: "Upload",
-                tabPayments: "Payments",
-                tabSearch: "Search",
-                tabAll: "All",
-                tabProfit: "Profit",
-                tabStats: "Stats",
-                
-                // Upload Form
-                carName: "Car Name/Model",
-                regNumber: "Car Registration Number",
-                customerName: "Customer Name",
-                customerPhone: "Customer Phone",
-                sellingDate: "Selling Date",
-                sellingPrice: "Selling Price (PKR)",
-                purchaseCost: "Purchase Cost (PKR)",
-                purchaseHint: "How much did you pay to buy this car?",
-                expenses: "Additional Expenses (Optional)",
-                expensesHint: "Repairs, maintenance, modifications, etc.",
-                addExpense: "Add Expense",
-                paymentType: "Payment Type",
-                cashFull: "Cash (Full Payment)",
-                installment: "Installment",
-                downPayment: "Down Payment (PKR)",
-                installmentCount: "Number of Installments",
-                soldBy: "Sold By (Employee)",
-                receiptPhoto: "Receipt Photo",
-                saveReceipt: "Save Receipt",
-                
-                // Messages
-                uploading: "Uploading...",
-                success: "Receipt saved successfully",
-                
-                // Profit Tab
-                profitTitle: "Profit & Loss",
-                totalRevenue: "Total Revenue",
-                totalPurchase: "Purchase Cost",
-                totalExpenses: "Total Expenses",
-                profitMargin: "Profit Margin",
-                netProfit: "Net Profit",
-                exportSales: "Sales",
-                exportProfit: "Profit",
-                exportPayments: "Payments",
-                exportExpenses: "Expenses",
-                refresh: "Refresh",
-                profitByCar: "Profit by Car",
-                
-                // Buttons
-                download: "Download",
-                edit: "Edit",
-                delete: "Delete",
-                save: "Save",
-                cancel: "Cancel",
-                close: "Close",
-                
-                // Stats
-                totalCars: "Total Cars Sold",
-                monthlyRevenue: "Monthly Revenue Trend",
-                salesByEmployee: "Sales by Employee",
-                bestSellingCars: "Best Selling Cars",
-                topSalespeople: "Top Salespeople",
-                thisWeek: "This Week",
-                thisMonth: "This Month",
-                carsSold: "Cars Sold",
-                revenue: "Revenue"
-            },
-            ur: {
-                // Login
-                loginTitle: "کار شو روم مینیجر",
-                loginSubtitle: "پریمیم سیلز مینجمنٹ سسٹم",
-                loginPassword: "پاس ورڈ",
-                loginButton: "لاگ ان",
-                loginError: "غلط پاس ورڈ",
-                
-                // Header
-                appTitle: "کار شو روم مینیجر",
-                appSubtitle: "پریمیم سیلز مینجمنٹ سسٹم",
-                createdBy: "WM نے محبت سے بنایا ❤️",
-                
-                // Tabs
-                tabUpload: "اپ لوڈ",
-                tabPayments: "ادائیگیاں",
-                tabSearch: "تلاش",
-                tabAll: "تمام",
-                tabProfit: "منافع",
-                tabStats: "اعدادوشمار",
-                
-                // Upload Form
-                carName: "گاڑی کا نام/ماڈل",
-                regNumber: "رجسٹریشن نمبر",
-                customerName: "گاہک کا نام",
-                customerPhone: "گاہک کا فون",
-                sellingDate: "فروخت کی تاریخ",
-                sellingPrice: "فروخت کی قیمت (PKR)",
-                purchaseCost: "خریداری کی قیمت (PKR)",
-                purchaseHint: "آپ نے یہ گاڑی کتنے میں خریدی؟",
-                expenses: "اضافی اخراجات (اختیاری)",
-                expensesHint: "مرمت، دیکھ بھال، تبدیلیاں وغیرہ",
-                addExpense: "اخراجات شامل کریں",
-                paymentType: "ادائیگی کی قسم",
-                cashFull: "نقد (مکمل ادائیگی)",
-                installment: "قسطیں",
-                downPayment: "پیشگی ادائیگی (PKR)",
-                installmentCount: "قسطوں کی تعداد",
-                soldBy: "فروخت کنندہ (ملازم)",
-                receiptPhoto: "رسید کی تصویر",
-                saveReceipt: "رسید محفوظ کریں",
-                
-                // Messages
-                uploading: "اپ لوڈ ہو رہا ہے...",
-                success: "رسید کامیابی سے محفوظ ہوگئی",
-                
-                // Profit Tab
-                profitTitle: "منافع اور نقصان",
-                totalRevenue: "کل آمدنی",
-                totalPurchase: "خریداری کی لاگت",
-                totalExpenses: "کل اخراجات",
-                profitMargin: "منافع کا مارجن",
-                netProfit: "خالص منافع",
-                exportSales: "فروخت",
-                exportProfit: "منافع",
-                exportPayments: "ادائیگیاں",
-                exportExpenses: "اخراجات",
-                refresh: "تازہ کریں",
-                profitByCar: "گاڑی کے لحاظ سے منافع",
-                
-                // Buttons
-                download: "ڈاؤن لوڈ",
-                edit: "ترمیم",
-                delete: "حذف کریں",
-                save: "محفوظ کریں",
-                cancel: "منسوخ کریں",
-                close: "بند کریں",
-                
-                // Stats
-                totalCars: "کل فروخت شدہ گاڑیاں",
-                monthlyRevenue: "ماہانہ آمدنی کا رجحان",
-                salesByEmployee: "ملازم کے لحاظ سے فروخت",
-                bestSellingCars: "سب سے زیادہ فروخت ہونے والی گاڑیاں",
-                topSalespeople: "اعلیٰ فروخت کنندگان",
-                thisWeek: "اس ہفتے",
-                thisMonth: "اس مہینے",
-                carsSold: "فروخت شدہ گاڑیاں",
-                revenue: "آمدنی"
-            }
-        };
-
-        let currentLang = localStorage.getItem('language') || 'en';
-        let employeesList = JSON.parse(localStorage.getItem('employees')) || [];
-        let currentViewingReceipt = null;
-        let allReceiptsCache = [];
-        let allInstallmentsCache = [];
-        let allExpensesCache = [];
-        let expenseFieldCount = 0;
-        let revenueChart, employeeChart, carsChart;
-        let deferredPrompt;
-
-        // Language Toggle Functions
-        function toggleLanguage() {
-            currentLang = currentLang === 'en' ? 'ur' : 'en';
-            localStorage.setItem('language', currentLang);
-            applyLanguage();
-        }
-
-        function applyLanguage() {
-            const body = document.body;
-            const lang = currentLang;
-            
-            // Toggle Urdu class for RTL
-            if (lang === 'ur') {
-                body.classList.add('urdu');
-                document.getElementById('lang-text').textContent = 'English';
-            } else {
-                body.classList.remove('urdu');
-                document.getElementById('lang-text').textContent = 'اردو';
-            }
-            
-            // Update all translatable elements
-            updateTranslations();
-        }
-
-        function updateTranslations() {
-            const t = translations[currentLang];
-            
-            // Login screen
-            const loginTitle = document.querySelector('.login-container h1');
-            if (loginTitle) loginTitle.textContent = '🚗 ' + t.loginTitle;
-            
-            // Header
-            const headerTitle = document.querySelector('.header h1');
-            if (headerTitle) headerTitle.textContent = '🚗 ' + t.appTitle;
-            
-            // Tab labels (using data attributes)
-            document.querySelectorAll('[data-lang-en]').forEach(el => {
-                if (currentLang === 'ur') {
-                    el.style.display = 'none';
-                } else {
-                    el.style.display = 'inline';
-                }
-            });
-            
-            document.querySelectorAll('[data-lang-ur]').forEach(el => {
-                if (currentLang === 'ur') {
-                    el.style.display = 'inline';
-                } else {
-                    el.style.display = 'none';
-                }
-            });
-        }
-
-        // Employee Management Functions
-        function loadEmployeesIntoDropdowns() {
-            const dropdowns = ['sold-by', 'search-employee'];
-            
-            dropdowns.forEach(id => {
-                const select = document.getElementById(id);
-                if (select) {
-                    const firstOption = select.options[0].textContent;
-                    select.innerHTML = `<option value="">${firstOption}</option>`;
-                    
-                    employeesList.forEach(emp => {
-                        const option = document.createElement('option');
-                        option.value = emp;
-                        option.textContent = emp;
-                        select.appendChild(option);
-                    });
-                }
-            });
-        }
-
-        function manageEmployees() {
-            const action = prompt('👥 Manage Employees\n\n1️⃣ View All\n2️⃣ Add New\n3️⃣ Remove\n\nEnter choice (1-3):');
-            
-            if (action === '1') {
-                if (employeesList.length === 0) {
-                    alert('❌ No employees added yet.\n\nClick "Employees" button and select option 2 to add your first employee!');
-                } else {
-                    alert('👥 Current Employees:\n\n' + employeesList.join('\n'));
-                }
-            } else if (action === '2') {
-                const name = prompt('✏️ Enter employee name:');
-                if (name && name.trim()) {
-                    const cleanName = name.trim();
-                    if (!employeesList.includes(cleanName)) {
-                        employeesList.push(cleanName);
-                        employeesList.sort();
-                        localStorage.setItem('employees', JSON.stringify(employeesList));
-                        loadEmployeesIntoDropdowns();
-                        alert('✅ Employee added: ' + cleanName);
-                    } else {
-                        alert('⚠️ This employee already exists!');
-                    }
-                }
-            } else if (action === '3') {
-                if (employeesList.length === 0) {
-                    alert('❌ No employees to remove.');
-                    return;
-                }
-                const toRemove = prompt('🗑️ Remove Employee:\n\n' + employeesList.join('\n') + '\n\nEnter name to remove:');
-                if (toRemove) {
-                    const index = employeesList.indexOf(toRemove.trim());
-                    if (index > -1) {
-                        employeesList.splice(index, 1);
-                        localStorage.setItem('employees', JSON.stringify(employeesList));
-                        loadEmployeesIntoDropdowns();
-                        alert('✅ Employee removed: ' + toRemove);
-                    } else {
-                        alert('❌ Employee not found!');
-                    }
-                }
-            }
-        }
-
-        // Expense Management Functions
-        function addExpenseField() {
-            expenseFieldCount++;
-            const container = document.getElementById('expenses-container');
-            const div = document.createElement('div');
-            div.className = 'installment-item';
-            div.id = 'expense-' + expenseFieldCount;
-            div.style.display = 'block';
-            div.style.marginBottom = '10px';
-            
-            div.innerHTML = `
-                <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
-                    <select id="expense-type-${expenseFieldCount}" style="flex: 1; min-width: 100px;">
-                        <option value="Repair">Repair</option>
-                        <option value="Maintenance">Maintenance</option>
-                        <option value="Modification">Modification</option>
-                        <option value="Other">Other</option>
-                    </select>
-                    <input type="text" id="expense-desc-${expenseFieldCount}" placeholder="Description" style="flex: 2; min-width: 120px;">
-                    <input type="number" id="expense-amount-${expenseFieldCount}" placeholder="Amount" min="0" step="1000" style="flex: 1; min-width: 80px;">
-                    <button type="button" onclick="removeExpenseField(${expenseFieldCount})" class="delete-btn" style="padding: 10px;">✕</button>
-                </div>
-            `;
-            
-            container.appendChild(div);
-        }
-
-        function removeExpenseField(id) {
-            const element = document.getElementById('expense-' + id);
-            if (element) element.remove();
-        }
-
-        // PWA Install
-        window.addEventListener('beforeinstallprompt', (e) => {
-            e.preventDefault();
-            deferredPrompt = e;
-            document.getElementById('install-prompt').style.display = 'flex';
-        });
-
-        function installApp() {
-            if (deferredPrompt) {
-                deferredPrompt.prompt();
-                deferredPrompt.userChoice.then(() => {
-                    deferredPrompt = null;
-                    document.getElementById('install-prompt').style.display = 'none';
-                });
-            }
-        }
-
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('sw.js').catch(() => {});
-            });
-        }
-
-        document.addEventListener('DOMContentLoaded', function() {
-            checkLogin();
-            applyLanguage();
-            loadEmployeesIntoDropdowns();
-            
-            document.getElementById('receipt-photo').addEventListener('change', function(e) {
-                const file = e.target.files[0];
-                if (file) {
-                    const reader = new FileReader();
-                    reader.onload = function(e) {
-                        document.getElementById('preview').src = e.target.result;
-                        document.getElementById('preview').style.display = 'block';
-                    };
-                    reader.readAsDataURL(file);
-                }
-            });
-
-            document.getElementById('login-password').addEventListener('keyup', function(e) {
-                if (e.key === 'Enter') login();
-            });
-
-            const today = new Date().toISOString().split('T')[0];
-            document.getElementById('selling-date').value = today;
-        });
-
-        function checkLogin() {
-            const isLoggedIn = sessionStorage.getItem('loggedIn');
-            if (isLoggedIn === 'true') {
-                showMainApp();
-            } else {
-                showLoginScreen();
-            }
-        }
-
-        function login() {
-            const password = document.getElementById('login-password').value;
-            const errorMsg = document.getElementById('login-error');
-            
-            if (password === CONFIG.PASSWORD) {
-                sessionStorage.setItem('loggedIn', 'true');
-                showMainApp();
-            } else {
-                errorMsg.textContent = '❌ Incorrect password';
-                errorMsg.style.display = 'block';
-            }
-        }
-
-        function logout() {
-            sessionStorage.removeItem('loggedIn');
-            showLoginScreen();
-        }
-
-        function showLoginScreen() {
-            document.getElementById('login-screen').classList.remove('hidden');
-            document.getElementById('main-app').classList.add('hidden');
-        }
-
-        function showMainApp() {
-            document.getElementById('login-screen').classList.add('hidden');
-            document.getElementById('main-app').classList.remove('hidden');
-            loadAllReceipts();
-            loadPayments();
-        }
-
-        function switchTab(tab) {
-            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-            event.target.closest('.tab-btn').classList.add('active');
-
-            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
-            document.getElementById(tab + '-tab').classList.add('active');
-
-            if (tab === 'all') {
-                loadAllReceipts();
-            } else if (tab === 'analytics') {
-                calculateAnalytics();
-                setTimeout(createCharts, 100);
-            } else if (tab === 'payments') {
-                loadPayments();
-            } else if (tab === 'profit') {
-                calculateProfit();
-            }
-        }
-
-        function switchTabDirect(tab) {
-            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-            document.querySelectorAll('.tab-btn').forEach(btn => {
-                if (btn.onclick && btn.onclick.toString().includes(tab)) {
-                    btn.classList.add('active');
-                }
-            });
-
-            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
-            document.getElementById(tab + '-tab').classList.add('active');
-
-            if (tab === 'payments') loadPayments();
-        }
-
-        function toggleInstallmentSection() {
-            const paymentType = document.querySelector('input[name="payment-type"]:checked').value;
-            const installmentSection = document.getElementById('installment-section');
-            
-            if (paymentType === 'INSTALLMENT') {
-                installmentSection.style.display = 'block';
-                generateInstallmentFields();
-            } else {
-                installmentSection.style.display = 'none';
-            }
-        }
-
-        function generateInstallmentFields() {
-            const count = parseInt(document.getElementById('installment-count').value);
-            const container = document.getElementById('installment-fields');
-            
-            let html = '<h4 style="color: #00D4FF; margin: 15px 0 10px 0; font-weight: 700;">Installment Details:</h4>';
-            
-            for (let i = 1; i <= count; i++) {
-                html += `
-                    <div class="installment-item">
-                        <strong>Installment ${i}</strong>
-                        <div class="form-group">
-                            <label>Due Date</label>
-                            <input type="date" id="inst-date-${i}" required>
-                        </div>
-                        <div class="form-group">
-                            <label>Amount (PKR)</label>
-                            <input type="number" id="inst-amount-${i}" placeholder="Amount" min="0" step="1000" required>
-                        </div>
-                    </div>
-                `;
-            }
-            
-            container.innerHTML = html;
-        }
-
-        async function uploadReceipt() {
-            const carName = document.getElementById('car-name').value.trim();
-            const regNumber = document.getElementById('reg-number').value.trim().toUpperCase();
-            const customerName = document.getElementById('customer-name').value.trim();
-            const customerPhone = document.getElementById('customer-phone').value.trim();
-            const sellingDate = document.getElementById('selling-date').value;
-            const sellingPrice = document.getElementById('selling-price').value.trim();
-            const purchaseCost = document.getElementById('purchase-cost').value.trim();
-            
-            // Collect expenses
-            const expenses = [];
-            for (let i = 1; i <= expenseFieldCount; i++) {
-                const typeEl = document.getElementById(`expense-type-${i}`);
-                const descEl = document.getElementById(`expense-desc-${i}`);
-                const amountEl = document.getElementById(`expense-amount-${i}`);
-                
-                if (typeEl && descEl && amountEl) {
-                    const amount = parseFloat(amountEl.value) || 0;
-                    if (amount > 0) {
-                        expenses.push({
-                            type: typeEl.value,
-                            description: descEl.value.trim() || 'No description',
-                            amount: amount
-                        });
-                    }
-                }
-            }
-            
-            const paymentType = document.querySelector('input[name="payment-type"]:checked').value;
-            const soldBy = document.getElementById('sold-by').value;
-            const photoInput = document.getElementById('receipt-photo');
-            const photoFile = photoInput.files[0];
-            
-            const successMsg = document.getElementById('upload-success');
-            const errorMsg = document.getElementById('upload-error');
-            
-            successMsg.style.display = 'none';
-            errorMsg.style.display = 'none';
-
-            // Validation
-            if (!carName) {
-                errorMsg.textContent = 'Please enter car name/model';
-                errorMsg.style.display = 'block';
-                return;
-            }
-
-            if (!regNumber) {
-                errorMsg.textContent = 'Please enter registration number';
-                errorMsg.style.display = 'block';
-                return;
-            }
-
-            if (!customerName) {
-                errorMsg.textContent = 'Please enter customer name';
-                errorMsg.style.display = 'block';
-                return;
-            }
-
-            if (!customerPhone) {
-                errorMsg.textContent = 'Please enter customer phone';
-                errorMsg.style.display = 'block';
-                return;
-            }
-
-            if (!sellingDate) {
-                errorMsg.textContent = 'Please select selling date';
-                errorMsg.style.display = 'block';
-                return;
-            }
-
-            if (!sellingPrice || parseFloat(sellingPrice) <= 0) {
-                errorMsg.textContent = 'Please enter a valid selling price';
-                errorMsg.style.display = 'block';
-                return;
-            }
-
-            if (!purchaseCost || parseFloat(purchaseCost) <= 0) {
-                errorMsg.textContent = 'Please enter purchase cost';
-                errorMsg.style.display = 'block';
-                return;
-            }
-
-            if (!soldBy) {
-                errorMsg.textContent = 'Please select employee';
-                errorMsg.style.display = 'block';
-                return;
-            }
-
-            let downPayment = 0;
-            let installments = [];
-
-            if (paymentType === 'INSTALLMENT') {
-                downPayment = parseFloat(document.getElementById('down-payment').value) || 0;
-                
-                if (downPayment <= 0) {
-                    errorMsg.textContent = 'Please enter down payment amount';
-                    errorMsg.style.display = 'block';
-                    return;
-                }
-
-                const count = parseInt(document.getElementById('installment-count').value);
-                
-                for (let i = 1; i <= count; i++) {
-                    const date = document.getElementById(`inst-date-${i}`).value;
-                    const amount = parseFloat(document.getElementById(`inst-amount-${i}`).value) || 0;
-                    
-                    if (!date || amount <= 0) {
-                        errorMsg.textContent = `Please fill installment ${i} details`;
-                        errorMsg.style.display = 'block';
-                        return;
-                    }
-                    
-                    installments.push({ dueDate: date, amount: amount });
-                }
-
-                const totalInstallments = installments.reduce((sum, inst) => sum + inst.amount, 0);
-                const totalExpected = parseFloat(sellingPrice) - downPayment;
-                
-                if (Math.abs(totalInstallments - totalExpected) > 100) {
-                    errorMsg.textContent = `Installments total (₨${totalInstallments.toLocaleString()}) doesn't match remaining amount (₨${totalExpected.toLocaleString()})`;
-                    errorMsg.style.display = 'block';
-                    return;
-                }
-            }
-
-            if (!photoFile) {
-                errorMsg.textContent = 'Please select a receipt photo';
-                errorMsg.style.display = 'block';
-                return;
-            }
-
-            const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
-            if (!validTypes.includes(photoFile.type)) {
-                errorMsg.textContent = 'Please select a valid image file';
-                errorMsg.style.display = 'block';
-                return;
-            }
-
-            if (photoFile.size > 10 * 1024 * 1024) {
-                errorMsg.textContent = 'Image too large. Please use an image under 10MB';
-                errorMsg.style.display = 'block';
-                return;
-            }
-
-            const uploadBtn = event.target;
-            const originalText = uploadBtn.textContent;
-            uploadBtn.textContent = '⏳ Uploading...';
-            uploadBtn.disabled = true;
-
-            try {
-                const imageData = await new Promise((resolve, reject) => {
-                    const reader = new FileReader();
-                    reader.onload = (e) => resolve(e.target.result);
-                    reader.onerror = () => reject(new Error('Failed to read image'));
-                    reader.readAsDataURL(photoFile);
-                });
-
-                const receiptId = regNumber + '_' + sellingDate + '_' + Date.now();
-                const fileName = receiptId + '.' + photoFile.name.split('.').pop();
-                
-                const receiptData = {
-                    action: 'upload',
-                    receiptId: receiptId,
-                    carName: carName,
-                    regNumber: regNumber,
-                    customerName: customerName,
-                    customerPhone: customerPhone,
-                    sellingDate: sellingDate,
-                    sellingPrice: parseFloat(sellingPrice),
-                    purchaseCost: parseFloat(purchaseCost),
-                    expenses: expenses,
-                    paymentType: paymentType,
-                    downPayment: downPayment,
-                    soldBy: soldBy,
-                    installments: installments,
-                    imageData: imageData,
-                    fileName: fileName,
-                    mimeType: photoFile.type,
-                    timestamp: new Date().toISOString()
-                };
-
-                const response = await fetch(CONFIG.GOOGLE_SCRIPT_URL, {
-                    method: 'POST',
-                    body: JSON.stringify(receiptData)
-                });
-
-                const result = await response.json();
-                
-                if (result.success) {
-                    successMsg.textContent = `✅ Receipt saved successfully for ${carName} (${regNumber})`;
-                    successMsg.style.display = 'block';
-                    
-                    // Clear form
-                    document.getElementById('car-name').value = '';
-                    document.getElementById('reg-number').value = '';
-                    document.getElementById('customer-name').value = '';
-                    document.getElementById('customer-phone').value = '';
-                    document.getElementById('selling-price').value = '';
-                    document.getElementById('purchase-cost').value = '';
-                    document.getElementById('expenses-container').innerHTML = '';
-                    expenseFieldCount = 0;
-                    document.getElementById('sold-by').value = '';
-                    photoInput.value = '';
-                    document.getElementById('preview').style.display = 'none';
-                    document.querySelector('input[name="payment-type"][value="CASH"]').checked = true;
-                    toggleInstallmentSection();
-                    
-                    window.scrollTo(0, 0);
-                } else {
-                    throw new Error(result.error || 'Upload failed');
-                }
-                
-            } catch (error) {
-                console.error('Error:', error);
-                errorMsg.textContent = '❌ Error: ' + error.message;
-                errorMsg.style.display = 'block';
-            } finally {
-                uploadBtn.textContent = originalText;
-                uploadBtn.disabled = false;
-            }
-        }
-
-        async function loadAllReceipts() {
-            const allReceiptsDiv = document.getElementById('all-receipts');
-            const totalDiv = document.getElementById('total-receipts');
-            
-            allReceiptsDiv.innerHTML = '<div class="loading">Loading receipts...</div>';
-
-            try {
-                const response = await fetch(CONFIG.GOOGLE_SCRIPT_URL, {
-                    method: 'POST',
-                    body: JSON.stringify({ action: 'getAll' })
-                });
-
-                const result = await response.json();
-                
-                if (result.success) {
-                    allReceiptsCache = result.receipts || [];
-                    allInstallmentsCache = result.installments || [];
-                    
-                    if (allReceiptsCache.length > 0) {
-                        totalDiv.textContent = allReceiptsCache.length;
-                        
-                        allReceiptsCache.sort((a, b) => new Date(b.sellingDate) - new Date(a.sellingDate));
-                        
-                        let html = '';
-                        allReceiptsCache.forEach(receipt => {
-                            const sellingDate = new Date(receipt.sellingDate).toLocaleDateString();
-                            const price = `₨${parseFloat(receipt.sellingPrice).toLocaleString()}`;
-                            
-                            let statusClass = '';
-                            let statusBadge = '';
-                            
-                            if (receipt.paymentType === 'CASH') {
-                                statusBadge = '<span class="payment-badge cash">💵 Paid in Full</span>';
-                            } else {
-                                const receiptInsts = allInstallmentsCache.filter(i => i.receiptId === receipt.receiptId);
-                                const pending = receiptInsts.filter(i => i.status === 'PENDING');
-                                const overdue = pending.filter(i => new Date(i.dueDate) < new Date());
-                                
-                                if (overdue.length > 0) {
-                                    statusClass = 'overdue-payment';
-                                    statusBadge = `<span class="payment-badge pending">⚠️ ${overdue.length} Overdue</span>`;
-                                } else if (pending.length > 0) {
-                                    statusClass = 'pending-payment';
-                                    statusBadge = `<span class="payment-badge installment">📅 ${pending.length} Pending</span>`;
-                                } else {
-                                    statusBadge = '<span class="payment-badge cash">✅ Completed</span>';
-                                }
-                            }
-                            
-                            html += `
-                                <div class="receipt-item ${statusClass}" onclick='viewReceiptByData(${JSON.stringify(receipt).replace(/'/g, "&#39;")})'>
-                                    <div class="receipt-reg">${receipt.carName || 'N/A'}</div>
-                                    <div class="receipt-date">Reg: ${receipt.regNumber}</div>
-                                    <div class="receipt-date">Customer: ${receipt.customerName || 'N/A'}</div>
-                                    <div class="receipt-date">Date: ${sellingDate} • Price: ${price}</div>
-                                    <div class="receipt-date">Sold by: ${receipt.soldBy || 'N/A'}</div>
-                                    ${statusBadge}
-                                </div>
-                            `;
-                        });
-                        
-                        allReceiptsDiv.innerHTML = html;
-                    } else {
-                        totalDiv.textContent = '0';
-                        allReceiptsDiv.innerHTML = '<div class="no-results">No receipts uploaded yet.</div>';
-                    }
-                } else {
-                    throw new Error(result.error || 'Failed to load receipts');
-                }
-            } catch (error) {
-                console.error('Error:', error);
-                allReceiptsDiv.innerHTML = '<div class="no-results">Error loading receipts.</div>';
-            }
-        }
-
-        async function loadPayments() {
-            try {
-                const response = await fetch(CONFIG.GOOGLE_SCRIPT_URL, {
-                    method: 'POST',
-                    body: JSON.stringify({ action: 'getAll' })
-                });
-
-                const result = await response.json();
-                
-                if (result.success) {
-                    allReceiptsCache = result.receipts || [];
-                    allInstallmentsCache = result.installments || [];
-                    
-                    displayPaymentSummary();
-                    checkOverduePayments();
-                }
-            } catch (error) {
-                console.error('Error:', error);
-            }
-        }
-
-        function displayPaymentSummary() {
-            const installmentReceipts = allReceiptsCache.filter(r => r.paymentType === 'INSTALLMENT');
-            
-            let totalPending = 0;
-            let totalReceived = 0;
-            let paymentsList = '';
-
-            installmentReceipts.forEach(receipt => {
-                const receiptInsts = allInstallmentsCache.filter(i => i.receiptId === receipt.receiptId);
-                const pending = receiptInsts.filter(i => i.status === 'PENDING');
-                const paid = receiptInsts.filter(i => i.status === 'PAID');
-                
-                totalPending += pending.reduce((sum, i) => sum + parseFloat(i.amount), 0);
-                totalReceived += parseFloat(receipt.downPayment || 0) + paid.reduce((sum, i) => sum + parseFloat(i.amount), 0);
-                
-                if (pending.length > 0) {
-                    const overdue = pending.filter(i => new Date(i.dueDate) < new Date());
-                    
-                    paymentsList += `
-                        <div class="receipt-item ${overdue.length > 0 ? 'overdue-payment' : 'pending-payment'}" onclick='viewReceiptByData(${JSON.stringify(receipt).replace(/'/g, "&#39;")})'>
-                            <div class="receipt-reg">${receipt.carName} (${receipt.regNumber})</div>
-                            <div class="receipt-date">Customer: ${receipt.customerName}</div>
-                            <div class="receipt-date">Pending: ₨${pending.reduce((s, i) => s + parseFloat(i.amount), 0).toLocaleString()}</div>
-                            ${overdue.length > 0 ? `<span class="payment-badge pending">⚠️ ${overdue.length} Overdue</span>` : `<span class="payment-badge installment">📅 ${pending.length} Pending</span>`}
-                        </div>
-                    `;
-                }
-            });
-
-            document.getElementById('total-pending').textContent = `₨${totalPending.toLocaleString()}`;
-            document.getElementById('total-received').textContent = `₨${totalReceived.toLocaleString()}`;
-            
-            const paymentsListDiv = document.getElementById('payments-list');
-            if (paymentsList) {
-                paymentsListDiv.innerHTML = paymentsList;
-            } else {
-                paymentsListDiv.innerHTML = '<div class="no-results">No pending payments</div>';
-            }
-        }
-
-        function checkOverduePayments() {
-            const today = new Date();
-            const overdue = allInstallmentsCache.filter(i => 
-                i.status === 'PENDING' && new Date(i.dueDate) < today
-            );
-            
-            const upcoming = allInstallmentsCache.filter(i => {
-                const dueDate = new Date(i.dueDate);
-                const daysDiff = Math.ceil((dueDate - today) / (1000 * 60 * 60 * 24));
-                return i.status === 'PENDING' && daysDiff >= 0 && daysDiff <= 7;
-            });
-
-            if (overdue.length > 0) {
-                document.getElementById('overdue-badge').classList.remove('hidden');
-                document.getElementById('overdue-count').textContent = overdue.length;
-                document.getElementById('payment-badge').classList.remove('hidden');
-                document.getElementById('payment-badge').textContent = overdue.length;
-            } else {
-                document.getElementById('overdue-badge').classList.add('hidden');
-                document.getElementById('payment-badge').classList.add('hidden');
-            }
-
-            if (overdue.length > 0) {
-                let overdueHTML = '';
-                overdue.forEach(inst => {
-                    const receipt = allReceiptsCache.find(r => r.receiptId === inst.receiptId);
-                    if (receipt) {
-                        const daysPast = Math.ceil((today - new Date(inst.dueDate)) / (1000 * 60 * 60 * 24));
-                        overdueHTML += `<div>• ${receipt.carName} (${receipt.regNumber}) - ₨${parseFloat(inst.amount).toLocaleString()} - ${daysPast} days overdue</div>`;
-                    }
-                });
-                document.getElementById('overdue-list').innerHTML = overdueHTML;
-                document.getElementById('overdue-alert').style.display = 'block';
-            } else {
-                document.getElementById('overdue-alert').style.display = 'none';
-            }
-
-            if (upcoming.length > 0) {
-                let upcomingHTML = '';
-                upcoming.forEach(inst => {
-                    const receipt = allReceiptsCache.find(r => r.receiptId === inst.receiptId);
-                    if (receipt) {
-                        const daysLeft = Math.ceil((new Date(inst.dueDate) - today) / (1000 * 60 * 60 * 24));
-                        upcomingHTML += `<div>• ${receipt.carName} (${receipt.regNumber}) - ₨${parseFloat(inst.amount).toLocaleString()} - Due in ${daysLeft} days</div>`;
-                    }
-                });
-                document.getElementById('upcoming-list').innerHTML = upcomingHTML;
-                document.getElementById('upcoming-alert').style.display = 'block';
-            } else {
-                document.getElementById('upcoming-alert').style.display = 'none';
-            }
-        }
-
-        async function performSearch() {
-            const searchInput = document.getElementById('search-input').value.trim().toUpperCase();
-            const searchEmployee = document.getElementById('search-employee').value;
-            const resultsDiv = document.getElementById('search-results');
-            
-            resultsDiv.innerHTML = '<div class="loading">Searching...</div>';
-
-            try {
-                if (allReceiptsCache.length === 0) {
-                    await loadAllReceipts();
-                }
-
-                let filtered = allReceiptsCache;
-                
-                if (searchInput) {
-                    filtered = filtered.filter(r => r.regNumber === searchInput);
-                }
-                
-                if (searchEmployee) {
-                    filtered = filtered.filter(r => r.soldBy === searchEmployee);
-                }
-                
-                if (filtered.length > 0) {
-                    let html = '';
-                    filtered.forEach(receipt => {
-                        const date = new Date(receipt.sellingDate).toLocaleDateString();
-                        const price = `₨${parseFloat(receipt.sellingPrice).toLocaleString()}`;
-                        
-                        html += `
-                            <div class="receipt-item" onclick='viewReceiptByData(${JSON.stringify(receipt).replace(/'/g, "&#39;")})'>
-                                <div class="receipt-reg">${receipt.carName || 'N/A'}</div>
-                                <div class="receipt-date">Reg: ${receipt.regNumber}</div>
-                                <div class="receipt-date">Customer: ${receipt.customerName || 'N/A'}</div>
-                                <div class="receipt-date">Date: ${date} • Price: ${price}</div>
-                                <div class="receipt-date">Sold by: ${receipt.soldBy || 'N/A'}</div>
-                            </div>
-                        `;
-                    });
-                    
-                    resultsDiv.innerHTML = html;
-                } else {
-                    resultsDiv.innerHTML = '<div class="no-results">❌ No receipt found</div>';
-                }
-            } catch (error) {
-                console.error('Search error:', error);
-                resultsDiv.innerHTML = '<div class="no-results">❌ Error searching</div>';
-            }
-        }
-
-        async function viewReceiptByData(receipt) {
-            const imageUrl = `https://drive.google.com/thumbnail?id=${receipt.driveFileId}&sz=w1000`;
-            
-            document.getElementById('modal-image').src = imageUrl;
-            document.getElementById('modal-image').onerror = function() {
-                this.src = `https://drive.google.com/uc?export=view&id=${receipt.driveFileId}`;
-            };
-            
-            document.getElementById('modal-reg').textContent = `${receipt.carName} (${receipt.regNumber})`;
-            
-            const sellingDate = new Date(receipt.sellingDate).toLocaleDateString();
-            let details = `Customer: ${receipt.customerName}<br>Phone: ${receipt.customerPhone}<br>`;
-            details += `Date: ${sellingDate}<br>Price: ₨${parseFloat(receipt.sellingPrice).toLocaleString()}<br>`;
-            details += `Sold by: ${receipt.soldBy}<br>Payment: ${receipt.paymentType}`;
-            
-            document.getElementById('modal-details').innerHTML = details;
-            
-            const modalInsts = document.getElementById('modal-installments');
-            if (receipt.paymentType === 'INSTALLMENT') {
-                const receiptInsts = allInstallmentsCache.filter(i => i.receiptId === receipt.receiptId);
-                
-                let instsHTML = '<div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 10px; margin-top: 15px;">';
-                instsHTML += `<div style="color: white; font-weight: 700; margin-bottom: 10px;">Down Payment: ₨${parseFloat(receipt.downPayment).toLocaleString()}</div>`;
-                instsHTML += '<div style="color: white; font-weight: 700; margin-bottom: 10px;">Installments:</div>';
-                
-                receiptInsts.forEach(inst => {
-                    const isPaid = inst.status === 'PAID';
-                    const isOverdue = !isPaid && new Date(inst.dueDate) < new Date();
-                    const statusColor = isPaid ? '#28a745' : isOverdue ? '#dc3545' : '#D4AF37';
-                    const statusText = isPaid ? '✅ Paid' : isOverdue ? '⚠️ Overdue' : '📅 Pending';
-                    
-                    instsHTML += `
-                        <div style="background: rgba(255,255,255,0.2); padding: 10px; border-radius: 8px; margin-bottom: 8px; border-left: 4px solid ${statusColor};">
-                            <div style="color: white;">Installment ${inst.installmentNumber}: ₨${parseFloat(inst.amount).toLocaleString()}</div>
-                            <div style="color: white; font-size: 12px;">Due: ${new Date(inst.dueDate).toLocaleDateString()}</div>
-                            <div style="color: ${statusColor}; font-weight: 700; font-size: 12px;">${statusText}</div>
-                            ${!isPaid ? `<button class="btn btn-success btn-small" style="margin-top: 8px;" onclick="markInstallmentPaid('${inst.installmentId}', event)">Mark as Paid</button>` : ''}
-                        </div>
-                    `;
-                });
-                
-                instsHTML += '</div>';
-                modalInsts.innerHTML = instsHTML;
-            } else {
-                modalInsts.innerHTML = '';
-            }
-            
-            document.getElementById('modal').classList.add('active');
-            currentViewingReceipt = receipt;
-        }
-
-        async function markInstallmentPaid(installmentId, event) {
-            event.stopPropagation();
-            
-            if (!confirm('Mark this installment as paid?')) return;
-            
-            try {
-                const response = await fetch(CONFIG.GOOGLE_SCRIPT_URL, {
-                    method: 'POST',
-                    body: JSON.stringify({
-                        action: 'markInstallmentPaid',
-                        installmentId: installmentId
-                    })
-                });
-
-                const result = await response.json();
-                
-                if (result.success) {
-                    alert('✅ Installment marked as paid');
-                    await loadAllReceipts();
-                    await loadPayments();
-                    closeModal();
-                } else {
-                    throw new Error(result.error || 'Failed to update');
-                }
-            } catch (error) {
-                console.error('Error:', error);
-                alert('❌ Error updating installment');
-            }
-        }
-
-        function closeModal() {
-            document.getElementById('modal').classList.remove('active');
-            currentViewingReceipt = null;
-        }
-
-        function openDriveLink() {
-            if (currentViewingReceipt && currentViewingReceipt.driveLink) {
-                window.open(currentViewingReceipt.driveLink, '_blank');
-            }
-        }
-
-        async function deleteReceipt() {
-            if (!currentViewingReceipt) return;
-            
-            if (confirm('Are you sure you want to delete this receipt?')) {
-                try {
-                    const response = await fetch(CONFIG.GOOGLE_SCRIPT_URL, {
-                        method: 'POST',
-                        body: JSON.stringify({
-                            action: 'delete',
-                            receiptId: currentViewingReceipt.receiptId,
-                            driveFileId: currentViewingReceipt.driveFileId
-                        })
-                    });
-
-                    const result = await response.json();
-                    
-                    if (result.success) {
-                        closeModal();
-                        loadAllReceipts();
-                        alert('✅ Receipt deleted successfully');
-                    } else {
-                        throw new Error(result.error || 'Delete failed');
-                    }
-                } catch (error) {
-                    console.error('Error:', error);
-                    alert('❌ Error deleting receipt');
-                }
-            }
-        }
-
-        async function calculateProfit() {
-            if (allReceiptsCache.length === 0) {
-                await loadAllReceipts();
-            }
-
-            const receipts = allReceiptsCache;
-            
-            let totalRevenue = 0;
-            let totalPurchase = 0;
-            let totalExpenses = 0;
-            
-            receipts.forEach(r => {
-                totalRevenue += parseFloat(r.sellingPrice) || 0;
-                totalPurchase += parseFloat(r.purchaseCost) || 0;
-                const expenses = (r.expenses || []).reduce((sum, e) => sum + (parseFloat(e.amount) || 0), 0);
-                totalExpenses += expenses;
-            });
-            
-            const netProfit = totalRevenue - totalPurchase - totalExpenses;
-            const profitMargin = totalRevenue > 0 ? ((netProfit / totalRevenue) * 100) : 0;
-            
-            document.getElementById('profit-revenue').textContent = '₨' + totalRevenue.toLocaleString();
-            document.getElementById('profit-purchase').textContent = '₨' + totalPurchase.toLocaleString();
-            document.getElementById('profit-expenses').textContent = '₨' + totalExpenses.toLocaleString();
-            document.getElementById('profit-net').textContent = '₨' + netProfit.toLocaleString();
-            document.getElementById('profit-margin').textContent = profitMargin.toFixed(1) + '%';
-            
-            showProfitBreakdown();
-        }
-
-        function showProfitBreakdown() {
-            const container = document.getElementById('profit-breakdown');
-            
-            if (allReceiptsCache.length === 0) {
-                container.innerHTML = '<div class="no-results">No data available</div>';
-                return;
-            }
-            
-            let html = '';
-            
-            allReceiptsCache.forEach(receipt => {
-                const selling = parseFloat(receipt.sellingPrice) || 0;
-                const purchase = parseFloat(receipt.purchaseCost) || 0;
-                const expenses = (receipt.expenses || []).reduce((sum, e) => sum + (parseFloat(e.amount) || 0), 0);
-                const profit = selling - purchase - expenses;
-                const margin = selling > 0 ? ((profit / selling) * 100) : 0;
-                
-                const profitColor = profit >= 0 ? '#28a745' : '#dc3545';
-                
-                html += `
-                    <div class="receipt-item" style="border-left: 4px solid ${profitColor};">
-                        <div class="receipt-reg">${receipt.carName || 'N/A'} (${receipt.regNumber})</div>
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; font-size: 12px;">
-                            <div>Selling: ₨${selling.toLocaleString()}</div>
-                            <div>Purchase: ₨${purchase.toLocaleString()}</div>
-                            <div>Expenses: ₨${expenses.toLocaleString()}</div>
-                            <div style="font-weight: 700; color: ${profitColor};">
-                                Profit: ₨${profit.toLocaleString()} (${margin.toFixed(1)}%)
-                            </div>
-                        </div>
-                        <div class="receipt-date" style="margin-top: 8px;">Sold by: ${receipt.soldBy || 'N/A'}</div>
-                    </div>
-                `;
-            });
-            
-            container.innerHTML = html;
-        }
-
-        // Excel Export Functions
-        function exportSalesReport() {
-            const data = allReceiptsCache.map(r => {
-                const expenses = (r.expenses || []).reduce((sum, e) => sum + (parseFloat(e.amount) || 0), 0);
-                const profit = (parseFloat(r.sellingPrice) || 0) - (parseFloat(r.purchaseCost) || 0) - expenses;
-                return {
-                    'Receipt ID': r.receiptId,
-                    'Car Name': r.carName,
-                    'Registration': r.regNumber,
-                    'Customer': r.customerName,
-                    'Phone': r.customerPhone,
-                    'Date': r.sellingDate,
-                    'Selling Price': r.sellingPrice,
-                    'Purchase Cost': r.purchaseCost || 0,
-                    'Expenses': expenses,
-                    'Profit': profit,
-                    'Payment Type': r.paymentType,
-                    'Sold By': r.soldBy
-                };
-            });
-            
-            exportToExcel(data, 'Sales_Report_' + new Date().toISOString().split('T')[0]);
-        }
-
-        function exportProfitReport() {
-            const data = allReceiptsCache.map(r => {
-                const selling = parseFloat(r.sellingPrice) || 0;
-                const purchase = parseFloat(r.purchaseCost) || 0;
-                const expenses = (r.expenses || []).reduce((sum, e) => sum + (parseFloat(e.amount) || 0), 0);
-                const profit = selling - purchase - expenses;
-                const margin = selling > 0 ? ((profit / selling) * 100).toFixed(2) : 0;
-                
-                return {
-                    'Car': r.carName,
-                    'Registration': r.regNumber,
-                    'Date': r.sellingDate,
-                    'Selling Price': selling,
-                    'Purchase Cost': purchase,
-                    'Expenses': expenses,
-                    'Gross Profit': selling - purchase,
-                    'Net Profit': profit,
-                    'Profit Margin %': margin,
-                    'Sold By': r.soldBy
-                };
-            });
-            
-            exportToExcel(data, 'Profit_Loss_Report_' + new Date().toISOString().split('T')[0]);
-        }
-
-        function exportPaymentReport() {
-            const data = [];
-            
-            allReceiptsCache.forEach(r => {
-                if (r.paymentType === 'INSTALLMENT') {
-                    const insts = allInstallmentsCache.filter(i => i.receiptId === r.receiptId);
-                    
-                    insts.forEach(inst => {
-                        data.push({
-                            'Car': r.carName,
-                            'Registration': r.regNumber,
-                            'Customer': r.customerName,
-                            'Phone': r.customerPhone,
-                            'Installment #': inst.installmentNumber,
-                            'Due Date': inst.dueDate,
-                            'Amount': inst.amount,
-                            'Status': inst.status,
-                            'Paid Date': inst.paidDate || 'N/A'
-                        });
-                    });
-                }
-            });
-            
-            exportToExcel(data, 'Payment_Report_' + new Date().toISOString().split('T')[0]);
-        }
-
-        function exportExpenseReport() {
-            const data = [];
-            
-            allReceiptsCache.forEach(r => {
-                if (r.expenses && r.expenses.length > 0) {
-                    r.expenses.forEach(e => {
-                        data.push({
-                            'Car': r.carName,
-                            'Registration': r.regNumber,
-                            'Expense Type': e.type,
-                            'Description': e.description,
-                            'Amount': e.amount,
-                            'Date': r.sellingDate
-                        });
-                    });
-                }
-            });
-            
-            exportToExcel(data, 'Expense_Report_' + new Date().toISOString().split('T')[0]);
-        }
-
-        function exportToExcel(data, filename) {
-            if (!data || data.length === 0) {
-                alert('❌ No data to export');
-                return;
-            }
-            
-            const ws = XLSX.utils.json_to_sheet(data);
-            const wb = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(wb, ws, "Report");
-            XLSX.writeFile(wb, filename + '.xlsx');
-        }
-
-        async function calculateAnalytics() {
-            if (allReceiptsCache.length === 0) {
-                await loadAllReceipts();
-            }
-
-            const receipts = allReceiptsCache;
-            const now = new Date();
-
-            const totalCars = receipts.length;
-            const totalRevenue = receipts.reduce((sum, r) => sum + (parseFloat(r.sellingPrice) || 0), 0);
-
-            const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-            const dayOfWeek = today.getDay();
-            const mondayOffset = dayOfWeek === 0 ? -6 : 1 - dayOfWeek;
-            const weekStart = new Date(today);
-            weekStart.setDate(today.getDate() + mondayOffset);
-            
-            const weekReceipts = receipts.filter(r => {
-                const date = new Date(r.sellingDate);
-                return date >= weekStart && date <= now;
-            });
-            const weekCars = weekReceipts.length;
-            const weekRevenue = weekReceipts.reduce((sum, r) => sum + (parseFloat(r.sellingPrice) || 0), 0);
-
-            const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
-            const monthReceipts = receipts.filter(r => {
-                const date = new Date(r.sellingDate);
-                return date >= monthStart && date <= now;
-            });
-            const monthCars = monthReceipts.length;
-            const monthRevenue = monthReceipts.reduce((sum, r) => sum + (parseFloat(r.sellingPrice) || 0), 0);
-
-            document.getElementById('total-cars').textContent = totalCars;
-            document.getElementById('total-revenue').textContent = `₨${totalRevenue.toLocaleString()}`;
-            document.getElementById('week-cars').textContent = weekCars;
-            document.getElementById('week-revenue').textContent = `₨${weekRevenue.toLocaleString()}`;
-            document.getElementById('month-cars').textContent = monthCars;
-            document.getElementById('month-revenue').textContent = `₨${monthRevenue.toLocaleString()}`;
-
-            calculateTopSalespeople();
-            calculateBestSellingCars();
-        }
-
-        function calculateTopSalespeople() {
-            const employeeStats = {};
-            
-            allReceiptsCache.forEach(r => {
-                const emp = r.soldBy || 'Unknown';
-                if (!employeeStats[emp]) {
-                    employeeStats[emp] = { count: 0, revenue: 0 };
-                }
-                employeeStats[emp].count += 1;
-                employeeStats[emp].revenue += parseFloat(r.sellingPrice) || 0;
-            });
-            
-            const sorted = Object.entries(employeeStats)
-                .sort((a, b) => b[1].count - a[1].count)
-                .slice(0, 5);
-            
-            const container = document.getElementById('top-salespeople-list');
-            if (sorted.length === 0) {
-                container.innerHTML = '<div class="no-results">No data available</div>';
-                return;
-            }
-            
-            let html = '';
-            sorted.forEach((item, index) => {
-                const [name, data] = item;
-                const medal = index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : '🏅';
-                html += `
-                    <div style="background:white; padding:12px; border-radius:8px; margin-bottom:10px; display:flex; align-items:center; gap:10px;">
-                        <span style="font-size:24px;">${medal}</span>
-                        <div style="flex:1;">
-                            <div style="font-weight:700; color:#00D4FF;">${name}</div>
-                            <div style="font-size:12px; color:#666;">${data.count} cars sold • ₨${data.revenue.toLocaleString()}</div>
-                        </div>
-                    </div>
-                `;
-            });
-            
-            container.innerHTML = html;
-        }
-
-        function calculateBestSellingCars() {
-            const carCounts = {};
-            
-            allReceiptsCache.forEach(r => {
-                const carName = r.carName || 'Unknown';
-                if (!carCounts[carName]) {
-                    carCounts[carName] = { count: 0, revenue: 0 };
-                }
-                carCounts[carName].count += 1;
-                carCounts[carName].revenue += parseFloat(r.sellingPrice) || 0;
-            });
-            
-            const sorted = Object.entries(carCounts)
-                .sort((a, b) => b[1].count - a[1].count)
-                .slice(0, 5);
-            
-            const container = document.getElementById('best-selling-list');
-            if (sorted.length === 0) {
-                container.innerHTML = '<div class="no-results">No data available</div>';
-                return;
-            }
-            
-            let html = '';
-            sorted.forEach((item, index) => {
-                const [carName, data] = item;
-                const medal = index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : '🏅';
-                html += `
-                    <div style="background:white; padding:12px; border-radius:8px; margin-bottom:10px; display:flex; align-items:center; gap:10px;">
-                        <span style="font-size:24px;">${medal}</span>
-                        <div style="flex:1;">
-                            <div style="font-weight:700; color:#00D4FF;">${carName}</div>
-                            <div style="font-size:12px; color:#666;">${data.count} sold • ₨${data.revenue.toLocaleString()}</div>
-                        </div>
-                    </div>
-                `;
-            });
-            
-            container.innerHTML = html;
-        }
-
-        function createCharts() {
-            // Destroy existing charts
-            if (revenueChart) revenueChart.destroy();
-            if (employeeChart) employeeChart.destroy();
-            if (carsChart) carsChart.destroy();
-            
-            // Revenue Chart - Monthly trend
-            const monthlyData = {};
-            allReceiptsCache.forEach(r => {
-                const date = new Date(r.sellingDate);
-                const monthKey = date.getFullYear() + '-' + String(date.getMonth() + 1).padStart(2, '0');
-                monthlyData[monthKey] = (monthlyData[monthKey] || 0) + (parseFloat(r.sellingPrice) || 0);
-            });
-            
-            const sortedMonths = Object.keys(monthlyData).sort();
-            const last6Months = sortedMonths.slice(-6);
-            
-            const revenueCtx = document.getElementById('revenueChart');
-            if (revenueCtx) {
-                revenueChart = new Chart(revenueCtx, {
-                    type: 'line',
-                    data: {
-                        labels: last6Months.map(m => {
-                            const [y, month] = m.split('-');
-                            return new Date(y, month - 1).toLocaleDateString('en', { month: 'short', year: '2-digit' });
-                        }),
-                        datasets: [{
-                            label: 'Revenue (₨)',
-                            data: last6Months.map(m => monthlyData[m]),
-                            borderColor: '#00D4FF',
-                            backgroundColor: 'rgba(0, 212, 255, 0.1)',
-                            tension: 0.4,
-                            fill: true
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: { legend: { display: false } },
-                        scales: {
-                            y: {
-                                beginAtZero: true,
-                                ticks: {
-                                    callback: function(value) {
-                                        if (value >= 1000000) return '₨' + (value / 1000000).toFixed(1) + 'M';
-                                        if (value >= 1000) return '₨' + (value / 1000).toFixed(0) + 'K';
-                                        return '₨' + value;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                });
-            }
-            
-            // Employee Chart - Pie
-            const employeeStats = {};
-            allReceiptsCache.forEach(r => {
-                const emp = r.soldBy || 'Unknown';
-                employeeStats[emp] = (employeeStats[emp] || 0) + 1;
-            });
-            
-            const empCtx = document.getElementById('employeeChart');
-            if (empCtx) {
-                employeeChart = new Chart(empCtx, {
-                    type: 'pie',
-                    data: {
-                        labels: Object.keys(employeeStats),
-                        datasets: [{
-                            data: Object.values(employeeStats),
-                            backgroundColor: [
-                                '#00D4FF',
-                                '#6B46C1',
-                                '#11998e',
-                                '#D4AF37',
-                                '#dc3545',
-                                '#ffc107'
-                            ]
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false
-                    }
-                });
-            }
-            
-            // Cars Chart - Bar
-            const carStats = {};
-            allReceiptsCache.forEach(r => {
-                const car = r.carName || 'Unknown';
-                carStats[car] = (carStats[car] || 0) + 1;
-            });
-            
-            const sortedCars = Object.entries(carStats)
-                .sort((a, b) => b[1] - a[1])
-                .slice(0, 5);
-            
-            const carsCtx = document.getElementById('carsChart');
-            if (carsCtx) {
-                carsChart = new Chart(carsCtx, {
-                    type: 'bar',
-                    data: {
-                        labels: sortedCars.map(c => c[0]),
-                        datasets: [{
-                            label: 'Cars Sold',
-                            data: sortedCars.map(c => c[1]),
-                            backgroundColor: 'rgba(0, 212, 255, 0.8)',
-                            borderColor: '#00D4FF',
-                            borderWidth: 2
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: { legend: { display: false } },
-                        scales: {
-                            y: {
-                                beginAtZero: true,
-                                ticks: { stepSize: 1 }
-                            }
-                        }
-                    }
-                });
-            }
-        }
-
-        document.getElementById('modal').addEventListener('click', function(e) {
-            if (e.target === this) {
-                closeModal();
-            }
-        });
-
-        // DOWNLOAD RECEIPT FUNCTION
-        async function downloadReceipt() {
-            if (!currentViewingReceipt) return;
-            
-            try {
-                const imageUrl = `https://drive.google.com/uc?export=download&id=${currentViewingReceipt.driveFileId}`;
-                const link = document.createElement('a');
-                link.href = imageUrl;
-                link.download = `${currentViewingReceipt.regNumber}_${currentViewingReceipt.carName}.jpg`;
-                link.target = '_blank';
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-                
-                alert('✅ Download started! Check your downloads folder.');
-            } catch (error) {
-                console.error('Download error:', error);
-                alert('❌ Error downloading. Please use "View in Drive" to download manually.');
-            }
-        }
-
-        // EDIT RECEIPT FUNCTIONS
-        function editReceipt() {
-            if (!currentViewingReceipt) return;
-            
-            // Close main modal
-            closeModal();
-            
-            // Populate edit form
-            document.getElementById('edit-car-name').value = currentViewingReceipt.carName || '';
-            document.getElementById('edit-reg-number').value = currentViewingReceipt.regNumber || '';
-            document.getElementById('edit-customer-name').value = currentViewingReceipt.customerName || '';
-            document.getElementById('edit-customer-phone').value = currentViewingReceipt.customerPhone || '';
-            document.getElementById('edit-selling-date').value = currentViewingReceipt.sellingDate || '';
-            document.getElementById('edit-selling-price').value = currentViewingReceipt.sellingPrice || '';
-            document.getElementById('edit-purchase-cost').value = currentViewingReceipt.purchaseCost || '';
-            
-            // Populate employee dropdown
-            const editSoldBy = document.getElementById('edit-sold-by');
-            editSoldBy.innerHTML = '<option value="">Select Employee</option>';
-            employeesList.forEach(emp => {
-                const option = document.createElement('option');
-                option.value = emp;
-                option.textContent = emp;
-                if (emp === currentViewingReceipt.soldBy) {
-                    option.selected = true;
-                }
-                editSoldBy.appendChild(option);
-            });
-            
-            // Show edit modal
-            document.getElementById('edit-modal').classList.add('active');
-            document.getElementById('edit-success').style.display = 'none';
-            document.getElementById('edit-error').style.display = 'none';
-        }
-
-        function closeEditModal() {
-            document.getElementById('edit-modal').classList.remove('active');
-        }
-
-        async function saveEditedReceipt() {
-            const successMsg = document.getElementById('edit-success');
-            const errorMsg = document.getElementById('edit-error');
-            
-            successMsg.style.display = 'none';
-            errorMsg.style.display = 'none';
-            
-            // Get edited values
-            const carName = document.getElementById('edit-car-name').value.trim();
-            const regNumber = document.getElementById('edit-reg-number').value.trim().toUpperCase();
-            const customerName = document.getElementById('edit-customer-name').value.trim();
-            const customerPhone = document.getElementById('edit-customer-phone').value.trim();
-            const sellingDate = document.getElementById('edit-selling-date').value;
-            const sellingPrice = document.getElementById('edit-selling-price').value.trim();
-            const purchaseCost = document.getElementById('edit-purchase-cost').value.trim();
-            const soldBy = document.getElementById('edit-sold-by').value;
-            
-            // Validation
-            if (!carName || !regNumber || !customerName || !customerPhone || !sellingDate || !sellingPrice || !purchaseCost || !soldBy) {
-                errorMsg.textContent = '❌ Please fill all fields';
-                errorMsg.style.display = 'block';
-                return;
-            }
-            
-            const saveBtn = event.target;
-            const originalText = saveBtn.textContent;
-            saveBtn.textContent = '⏳ Saving...';
-            saveBtn.disabled = true;
-            
-            try {
-                const response = await fetch(CONFIG.GOOGLE_SCRIPT_URL, {
-                    method: 'POST',
-                    body: JSON.stringify({
-                        action: 'updateReceipt',
-                        receiptId: currentViewingReceipt.receiptId,
-                        carName: carName,
-                        regNumber: regNumber,
-                        customerName: customerName,
-                        customerPhone: customerPhone,
-                        sellingDate: sellingDate,
-                        sellingPrice: parseFloat(sellingPrice),
-                        purchaseCost: parseFloat(purchaseCost),
-                        soldBy: soldBy
-                    })
-                });
-
-                const result = await response.json();
-                
-                if (result.success) {
-                    successMsg.textContent = '✅ Receipt updated successfully!';
-                    successMsg.style.display = 'block';
-                    
-                    // Reload data
-                    await loadAllReceipts();
-                    await loadPayments();
-                    
-                    setTimeout(() => {
-                        closeEditModal();
-                    }, 1500);
-                } else {
-                    throw new Error(result.error || 'Update failed');
-                }
-                
-            } catch (error) {
-                console.error('Error:', error);
-                errorMsg.textContent = '❌ Error: ' + error.message;
-                errorMsg.style.display = 'block';
-            } finally {
-                saveBtn.textContent = originalText;
-                saveBtn.disabled = false;
-            }
-        }
-
-        // Close edit modal on background click
-        document.getElementById('edit-modal').addEventListener('click', function(e) {
-            if (e.target === this) {
-                closeEditModal();
-            }
-        });
-    </script>
-
-    <!-- Edit Receipt Modal -->
-    <div id="edit-modal" class="modal">
-        <div class="modal-content" style="max-width: 600px;">
-            <button class="close-modal" onclick="closeEditModal()">✕ Close</button>
-            <div style="background: white; padding: 30px; border-radius: 16px; margin-top: 50px;">
-                <h3 style="color: #00D4FF; margin-bottom: 20px; font-weight: 800; text-align: center;"><span data-lang-en="✏️ Edit" data-lang-ur="✏️ ترمیم">✏️ Edit</span> Receipt</h3>
-                
-                <div class="success-msg" id="edit-success"></div>
-                <div class="error-msg" id="edit-error"></div>
-                
-                <div class="form-group">
-                    <label>Car Name/Model</label>
-                    <input type="text" id="edit-car-name">
-                </div>
-                
-                <div class="form-group">
-                    <label>Registration Number</label>
-                    <input type="text" id="edit-reg-number" style="text-transform: uppercase;">
-                </div>
-                
-                <div class="form-group">
-                    <label>Customer Name</label>
-                    <input type="text" id="edit-customer-name">
-                </div>
-                
-                <div class="form-group">
-                    <label>Customer Phone</label>
-                    <input type="text" id="edit-customer-phone">
-                </div>
-                
-                <div class="form-group">
-                    <label>Selling Date</label>
-                    <input type="date" id="edit-selling-date">
-                </div>
-                
-                <div class="form-group">
-                    <label>Selling Price (PKR)</label>
-                    <input type="number" id="edit-selling-price" min="0" step="1000">
-                </div>
-                
-                <div class="form-group">
-                    <label>Purchase Cost (PKR)</label>
-                    <input type="number" id="edit-purchase-cost" min="0" step="1000">
-                </div>
-                
-                <div class="form-group">
-                    <label>Sold By</label>
-                    <select id="edit-sold-by">
-                        <option value="">Select Employee</option>
-                    </select>
-                </div>
-                
-                <button class="btn btn-primary" onclick="saveEditedReceipt()">💾 Save Changes</button>
-                <button class="btn" onclick="closeEditModal()" style="background: #6c757d; color: white; margin-top: 10px;">Cancel</button>
-            </div>
-        </div>
+    <!-- ALL TAB -->
+    <div id="all-tab" class="tab-content">
+      <div class="stats"><div class="stat-item"><div class="stat-number" id="total-receipts">0</div><div class="stat-label" id="lbl-total-receipts">Total Receipts</div></div></div>
+      <button class="btn btn-primary" onclick="loadAllReceipts()" style="margin-bottom:15px;" id="btn-refresh-all">🔄 Refresh</button>
+      <div id="all-receipts"></div>
     </div>
 
+    <!-- PROFIT TAB -->
+    <div id="profit-tab" class="tab-content">
+      <h3 style="color:#00D4FF;margin-bottom:20px;text-align:center;font-weight:800;">💵 <span id="lbl-profit-title">Profit &amp; Loss</span></h3>
+      <div style="background:linear-gradient(135deg,#00D4FF 0%,#6B46C1 100%);padding:20px;border-radius:15px;color:white;margin-bottom:20px;">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:15px;margin-bottom:15px;">
+          <div><div style="font-size:12px;opacity:.9" id="lbl-tot-rev">Total Revenue</div><div style="font-size:18px;font-weight:700;word-break:break-all;line-height:1.2" id="profit-revenue">₨0</div></div>
+          <div><div style="font-size:12px;opacity:.9" id="lbl-purch-cost-p">Purchase Cost</div><div style="font-size:18px;font-weight:700;word-break:break-all;line-height:1.2" id="profit-purchase">₨0</div></div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:15px;margin-bottom:15px;">
+          <div><div style="font-size:12px;opacity:.9" id="lbl-tot-exp">Total Expenses</div><div style="font-size:18px;font-weight:700;word-break:break-all;line-height:1.2" id="profit-expenses">₨0</div></div>
+          <div><div style="font-size:12px;opacity:.9" id="lbl-profit-margin">Profit Margin</div><div style="font-size:18px;font-weight:700;line-height:1.2" id="profit-margin">0%</div></div>
+        </div>
+        <div style="border-top:2px solid rgba(255,255,255,.3);padding-top:15px;margin-top:15px;">
+          <div style="font-size:14px;opacity:.9" id="lbl-net-profit">Net Profit</div>
+          <div style="font-size:26px;font-weight:700;word-break:break-all;line-height:1.2" id="profit-net">₨0</div>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px;">
+        <button class="btn btn-primary" onclick="exportSalesReport()" style="font-size:14px;">📊 <span id="lbl-exp-sales">Sales</span></button>
+        <button class="btn btn-primary" onclick="exportProfitReport()" style="font-size:14px;">💵 <span id="lbl-exp-profit">Profit</span></button>
+        <button class="btn btn-primary" onclick="exportPaymentReport()" style="font-size:14px;">💰 <span id="lbl-exp-payments">Payments</span></button>
+        <button class="btn btn-primary" onclick="exportExpenseReport()" style="font-size:14px;">💸 <span id="lbl-exp-expenses">Expenses</span></button>
+      </div>
+      <button class="btn btn-primary" onclick="calculateProfit()" style="margin-bottom:15px;" id="btn-refresh-profit">🔄 Refresh</button>
+      <h4 style="color:#00D4FF;margin:20px 0 15px 0;font-weight:700;" id="lbl-profit-by-car">Profit by Car</h4>
+      <div id="profit-breakdown"></div>
+    </div>
+
+    <!-- ANALYTICS TAB -->
+    <div id="analytics-tab" class="tab-content">
+      <h3 style="color:#00D4FF;margin-bottom:20px;text-align:center;font-weight:800;">📊 <span id="lbl-analytics">Sales Analytics</span></h3>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:15px;margin-bottom:25px;">
+        <div style="background:linear-gradient(135deg,#00D4FF 0%,#6B46C1 100%);padding:20px;border-radius:10px;color:white;text-align:center;">
+          <div style="font-size:28px;font-weight:700" id="total-cars">0</div>
+          <div style="font-size:12px;margin-top:5px" id="lbl-total-cars">Total Cars Sold</div>
+        </div>
+        <div style="background:linear-gradient(135deg,#11998e 0%,#38ef7d 100%);padding:20px;border-radius:10px;color:white;text-align:center;">
+          <div style="font-size:22px;font-weight:700;word-break:break-all" id="total-revenue">₨0</div>
+          <div style="font-size:12px;margin-top:5px" id="lbl-total-rev-a">Total Revenue</div>
+        </div>
+      </div>
+      <div style="background:rgba(0,212,255,.1);padding:15px;border-radius:10px;margin-bottom:20px;border:1px solid rgba(0,212,255,.2);">
+        <h4 style="color:#00D4FF;margin-bottom:15px;font-weight:700;">🏆 <span id="lbl-top-sales">Top Salespeople</span></h4>
+        <div id="top-salespeople-list"></div>
+      </div>
+      <div style="background:rgba(0,212,255,.1);padding:15px;border-radius:10px;margin-bottom:20px;border:1px solid rgba(0,212,255,.2);">
+        <h4 style="color:#00D4FF;margin-bottom:15px;font-weight:700;">🚗 <span id="lbl-best-cars">Best Selling Cars</span></h4>
+        <div id="best-selling-list"></div>
+      </div>
+      <div style="background:rgba(0,212,255,.1);padding:20px;border-radius:10px;margin-bottom:20px;border:1px solid rgba(0,212,255,.2);">
+        <h4 style="color:#00D4FF;margin-bottom:15px;font-weight:700;">📅 <span id="lbl-this-week">This Week</span></h4>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:15px;">
+          <div><div style="font-size:12px;color:#666" id="lbl-cars-sold-w">Cars Sold</div><div style="font-size:24px;font-weight:700;color:#00D4FF" id="week-cars">0</div></div>
+          <div><div style="font-size:12px;color:#666" id="lbl-rev-w">Revenue</div><div style="font-size:22px;font-weight:700;color:#11998e;word-break:break-all" id="week-revenue">₨0</div></div>
+        </div>
+      </div>
+      <div style="background:rgba(0,212,255,.1);padding:20px;border-radius:10px;margin-bottom:20px;border:1px solid rgba(0,212,255,.2);">
+        <h4 style="color:#00D4FF;margin-bottom:15px;font-weight:700;">📆 <span id="lbl-this-month">This Month</span></h4>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:15px;">
+          <div><div style="font-size:12px;color:#666" id="lbl-cars-sold-m">Cars Sold</div><div style="font-size:24px;font-weight:700;color:#00D4FF" id="month-cars">0</div></div>
+          <div><div style="font-size:12px;color:#666" id="lbl-rev-m">Revenue</div><div style="font-size:22px;font-weight:700;color:#11998e;word-break:break-all" id="month-revenue">₨0</div></div>
+        </div>
+      </div>
+      <button class="btn btn-primary" onclick="calculateAnalytics()" style="margin-bottom:15px;" id="btn-refresh-analytics">🔄 Refresh Analytics</button>
+    </div>
+
+    <div style="text-align:center;padding:20px 0 100px 0;color:#00D4FF;font-size:13px;font-weight:700;">Created by WM ❤️</div>
+
+    <!-- BOTTOM NAV -->
+    <div class="tab-buttons">
+      <button class="tab-btn active" onclick="switchTab('upload',event)"><span class="tab-icon">📤</span><span id="tab-upload">Upload</span></button>
+      <button class="tab-btn" onclick="switchTab('payments',event)"><span class="tab-icon">💰</span><span id="tab-payments">Payments</span><span class="badge hidden" id="payment-badge">0</span></button>
+      <button class="tab-btn" onclick="switchTab('search',event)"><span class="tab-icon">🔍</span><span id="tab-search">Search</span></button>
+      <button class="tab-btn" onclick="switchTab('all',event)"><span class="tab-icon">📋</span><span id="tab-all">All</span></button>
+      <button class="tab-btn" onclick="switchTab('profit',event)"><span class="tab-icon">💵</span><span id="tab-profit">Profit</span></button>
+      <button class="tab-btn" onclick="switchTab('analytics',event)"><span class="tab-icon">📊</span><span id="tab-analytics">Stats</span></button>
+    </div>
+  </div>
+</div>
+
+<!-- RECEIPT MODAL -->
+<div id="modal" class="modal">
+  <div class="modal-content">
+    <button class="close-modal" onclick="closeModal()" id="btn-close-modal">✕ Close</button>
+    <img id="modal-image" class="modal-image">
+    <div style="text-align:center;margin-top:15px;">
+      <div style="color:white;font-size:20px;font-weight:700" id="modal-reg"></div>
+      <div style="color:white;font-size:14px;margin-top:5px" id="modal-details"></div>
+      <div id="modal-installments" style="margin-top:15px;"></div>
+      <div style="margin-top:15px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
+        <button class="btn btn-primary" onclick="downloadReceipt()" id="btn-download" style="width:auto;padding:10px 20px;background:linear-gradient(135deg,#11998e 0%,#38ef7d 100%);">💾 Download</button>
+        <button class="btn btn-primary" onclick="editReceipt()" id="btn-edit" style="width:auto;padding:10px 20px;background:linear-gradient(135deg,#D4AF37 0%,#FFD700 100%);color:#333;">✏️ Edit</button>
+        <button class="btn btn-primary" onclick="openDriveLink()" id="btn-drive" style="width:auto;padding:10px 20px;">📁 Drive</button>
+        <button class="delete-btn" onclick="deleteReceipt()" id="btn-delete">🗑️ Delete</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- EDIT MODAL -->
+<div id="edit-modal" class="modal">
+  <div class="modal-content" style="max-width:600px;">
+    <button class="close-modal" onclick="closeEditModal()" id="btn-close-edit">✕ Close</button>
+    <div style="background:white;padding:30px;border-radius:16px;margin-top:50px;">
+      <h3 style="color:#00D4FF;margin-bottom:20px;font-weight:800;text-align:center;">✏️ <span id="lbl-edit-title">Edit Receipt</span></h3>
+      <div class="success-msg" id="edit-success"></div>
+      <div class="error-msg" id="edit-error"></div>
+      <div class="form-group"><label id="lbl-edit-car">Car Name/Model</label><input type="text" id="edit-car-name"></div>
+      <div class="form-group"><label id="lbl-edit-reg">Registration Number</label><input type="text" id="edit-reg-number" style="text-transform:uppercase"></div>
+      <div class="form-group"><label id="lbl-edit-cust">Customer Name</label><input type="text" id="edit-customer-name"></div>
+      <div class="form-group"><label id="lbl-edit-phone">Customer Phone</label><input type="text" id="edit-customer-phone"></div>
+      <div class="form-group"><label id="lbl-edit-date">Selling Date</label><input type="date" id="edit-selling-date"></div>
+      <div class="form-group"><label id="lbl-edit-price">Selling Price (PKR)</label><input type="number" id="edit-selling-price" min="0" step="1000"></div>
+      <div class="form-group"><label id="lbl-edit-cost">Purchase Cost (PKR)</label><input type="number" id="edit-purchase-cost" min="0" step="1000"></div>
+      <div class="form-group"><label id="lbl-edit-sold">Sold By</label><select id="edit-sold-by"><option value="">Select Employee</option></select></div>
+      <button class="btn btn-primary" onclick="saveEditedReceipt()" id="btn-save-edit">💾 Save Changes</button>
+      <button class="btn" onclick="closeEditModal()" id="btn-cancel-edit" style="background:#6c757d;color:white;margin-top:10px;">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const CONFIG = {
+  PASSWORD: 'hasnain123',
+  SCRIPT_URL: 'https://script.google.com/macros/s/AKfycbzAaxqPHhGV9sLotNqpSLQXNliyZJyqywB31WGOUOmxRYHgF2zA8_ZDQYKqSSDk_PjDEA/exec'
+};
+
+// ===================== FULL TRANSLATIONS =====================
+const LANG = {
+  en: {
+    'login-title':'🚗 CAR SHOWROOM MANAGER','login-sub':'Premium Sales Management System',
+    'lbl-password':'Password','btn-login':'🔓 Login','login-error':'❌ Incorrect password',
+    'header-title':'🚗 CAR SHOWROOM MANAGER','lbl-overdue':'Overdue',
+    'lbl-employees':'Employees','lbl-logout':'Logout','lang-text':'اردو',
+    'lbl-install':'📱 Install this app for easier access!','btn-install':'Install',
+    'lbl-car-name':'Car Name/Model *','lbl-reg-number':'Car Registration Number *',
+    'lbl-cust-name':'Customer Name *','lbl-cust-phone':'Customer Phone *',
+    'lbl-sell-date':'Selling Date *','lbl-sell-price':'Selling Price (PKR) *',
+    'lbl-purch-cost':'Purchase Cost (PKR) *',
+    'lbl-purch-hint':'💡 How much did you pay to buy this car?',
+    'lbl-expenses':'Additional Expenses (Optional)',
+    'lbl-exp-hint':'Repairs, maintenance, modifications, etc.',
+    'btn-add-expense':'➕ Add Expense','lbl-pay-type':'Payment Type *',
+    'lbl-cash':'Cash (Full Payment)','lbl-inst':'Installment',
+    'lbl-down':'Down Payment (PKR) *','lbl-inst-count':'Number of Installments *',
+    'lbl-sold-by':'Sold By (Employee) *','lbl-receipt-photo':'Receipt Photo *',
+    'btn-save-receipt':'💾 Save Receipt',
+    'lbl-pay-track':'Payment Tracking','lbl-overdue-title':'⚠️ Overdue Payments!',
+    'lbl-upcoming-title':'📅 Upcoming Payments',
+    'lbl-total-pending':'Total Pending','lbl-total-received':'Total Received',
+    'btn-refresh-pay':'🔄 Refresh',
+    'lbl-search-reg':'Search by Registration Number','lbl-filter-emp':'Filter by Employee',
+    'btn-search':'🔍 Search',
+    'lbl-total-receipts':'Total Receipts','btn-refresh-all':'🔄 Refresh',
+    'lbl-profit-title':'Profit & Loss','lbl-tot-rev':'Total Revenue',
+    'lbl-purch-cost-p':'Purchase Cost','lbl-tot-exp':'Total Expenses',
+    'lbl-profit-margin':'Profit Margin','lbl-net-profit':'Net Profit',
+    'lbl-exp-sales':'Sales','lbl-exp-profit':'Profit',
+    'lbl-exp-payments':'Payments','lbl-exp-expenses':'Expenses',
+    'btn-refresh-profit':'🔄 Refresh','lbl-profit-by-car':'Profit by Car',
+    'lbl-analytics':'Sales Analytics','lbl-total-cars':'Total Cars Sold',
+    'lbl-total-rev-a':'Total Revenue','lbl-top-sales':'Top Salespeople',
+    'lbl-best-cars':'Best Selling Cars','lbl-this-week':'This Week',
+    'lbl-this-month':'This Month','lbl-cars-sold-w':'Cars Sold','lbl-rev-w':'Revenue',
+    'lbl-cars-sold-m':'Cars Sold','lbl-rev-m':'Revenue',
+    'btn-refresh-analytics':'🔄 Refresh Analytics',
+    'btn-close-modal':'✕ Close','btn-download':'💾 Download',
+    'btn-edit':'✏️ Edit','btn-drive':'📁 Drive','btn-delete':'🗑️ Delete',
+    'btn-close-edit':'✕ Close','lbl-edit-title':'Edit Receipt',
+    'lbl-edit-car':'Car Name/Model','lbl-edit-reg':'Registration Number',
+    'lbl-edit-cust':'Customer Name','lbl-edit-phone':'Customer Phone',
+    'lbl-edit-date':'Selling Date','lbl-edit-price':'Selling Price (PKR)',
+    'lbl-edit-cost':'Purchase Cost (PKR)','lbl-edit-sold':'Sold By',
+    'btn-save-edit':'💾 Save Changes','btn-cancel-edit':'Cancel',
+    'tab-upload':'Upload','tab-payments':'Payments','tab-search':'Search',
+    'tab-all':'All','tab-profit':'Profit','tab-analytics':'Stats'
+  },
+  ur: {
+    'login-title':'🚗 کار شو روم مینیجر','login-sub':'پریمیم سیلز مینجمنٹ سسٹم',
+    'lbl-password':'پاس ورڈ','btn-login':'🔓 لاگ ان','login-error':'❌ غلط پاس ورڈ',
+    'header-title':'🚗 کار شو روم مینیجر','lbl-overdue':'ادائیگی باقی',
+    'lbl-employees':'ملازمین','lbl-logout':'لاگ آؤٹ','lang-text':'English',
+    'lbl-install':'📱 آسان رسائی کے لیے انسٹال کریں!','btn-install':'انسٹال',
+    'lbl-car-name':'گاڑی کا نام/ماڈل *','lbl-reg-number':'رجسٹریشن نمبر *',
+    'lbl-cust-name':'گاہک کا نام *','lbl-cust-phone':'گاہک کا فون *',
+    'lbl-sell-date':'فروخت کی تاریخ *','lbl-sell-price':'فروخت کی قیمت (PKR) *',
+    'lbl-purch-cost':'خریداری کی قیمت (PKR) *',
+    'lbl-purch-hint':'💡 آپ نے یہ گاڑی کتنے میں خریدی؟',
+    'lbl-expenses':'اضافی اخراجات (اختیاری)',
+    'lbl-exp-hint':'مرمت، دیکھ بھال، تبدیلیاں وغیرہ',
+    'btn-add-expense':'➕ اخراجات شامل کریں','lbl-pay-type':'ادائیگی کی قسم *',
+    'lbl-cash':'نقد (مکمل ادائیگی)','lbl-inst':'قسطیں',
+    'lbl-down':'پیشگی ادائیگی (PKR) *','lbl-inst-count':'قسطوں کی تعداد *',
+    'lbl-sold-by':'فروخت کنندہ (ملازم) *','lbl-receipt-photo':'رسید کی تصویر *',
+    'btn-save-receipt':'💾 رسید محفوظ کریں',
+    'lbl-pay-track':'ادائیگی ٹریکنگ','lbl-overdue-title':'⚠️ ادائیگی میں تاخیر!',
+    'lbl-upcoming-title':'📅 آنے والی ادائیگیاں',
+    'lbl-total-pending':'کل باقی','lbl-total-received':'کل وصول شدہ',
+    'btn-refresh-pay':'🔄 تازہ کریں',
+    'lbl-search-reg':'رجسٹریشن نمبر سے تلاش','lbl-filter-emp':'ملازم سے فلٹر کریں',
+    'btn-search':'🔍 تلاش',
+    'lbl-total-receipts':'کل رسیدیں','btn-refresh-all':'🔄 تازہ کریں',
+    'lbl-profit-title':'منافع اور نقصان','lbl-tot-rev':'کل آمدنی',
+    'lbl-purch-cost-p':'خریداری کی لاگت','lbl-tot-exp':'کل اخراجات',
+    'lbl-profit-margin':'منافع کا مارجن','lbl-net-profit':'خالص منافع',
+    'lbl-exp-sales':'فروخت','lbl-exp-profit':'منافع',
+    'lbl-exp-payments':'ادائیگیاں','lbl-exp-expenses':'اخراجات',
+    'btn-refresh-profit':'🔄 تازہ کریں','lbl-profit-by-car':'گاڑی کے لحاظ سے منافع',
+    'lbl-analytics':'سیلز تجزیہ','lbl-total-cars':'کل فروخت شدہ گاڑیاں',
+    'lbl-total-rev-a':'کل آمدنی','lbl-top-sales':'اعلیٰ فروخت کنندگان',
+    'lbl-best-cars':'سب سے زیادہ فروخت ہونے والی گاڑیاں',
+    'lbl-this-week':'اس ہفتے','lbl-this-month':'اس مہینے',
+    'lbl-cars-sold-w':'فروخت شدہ گاڑیاں','lbl-rev-w':'آمدنی',
+    'lbl-cars-sold-m':'فروخت شدہ گاڑیاں','lbl-rev-m':'آمدنی',
+    'btn-refresh-analytics':'🔄 تجزیہ تازہ کریں',
+    'btn-close-modal':'✕ بند کریں','btn-download':'💾 ڈاؤن لوڈ',
+    'btn-edit':'✏️ ترمیم','btn-drive':'📁 ڈرائیو','btn-delete':'🗑️ حذف کریں',
+    'btn-close-edit':'✕ بند کریں','lbl-edit-title':'رسید میں ترمیم',
+    'lbl-edit-car':'گاڑی کا نام/ماڈل','lbl-edit-reg':'رجسٹریشن نمبر',
+    'lbl-edit-cust':'گاہک کا نام','lbl-edit-phone':'گاہک کا فون',
+    'lbl-edit-date':'فروخت کی تاریخ','lbl-edit-price':'فروخت کی قیمت (PKR)',
+    'lbl-edit-cost':'خریداری کی قیمت (PKR)','lbl-edit-sold':'فروخت کنندہ',
+    'btn-save-edit':'💾 تبدیلیاں محفوظ کریں','btn-cancel-edit':'منسوخ کریں',
+    'tab-upload':'اپ لوڈ','tab-payments':'ادائیگیاں','tab-search':'تلاش',
+    'tab-all':'تمام','tab-profit':'منافع','tab-analytics':'اعدادوشمار'
+  }
+};
+
+let currentLang = localStorage.getItem('lang') || 'en';
+let employeesList = JSON.parse(localStorage.getItem('employees')) || [];
+let currentViewingReceipt = null;
+let allReceiptsCache = [];
+let allInstallmentsCache = [];
+let allExpensesCache = [];
+let expenseFieldCount = 0;
+let deferredPrompt;
+
+// ===================== LANGUAGE =====================
+function applyLanguage() {
+  const t = LANG[currentLang];
+  const isUrdu = currentLang === 'ur';
+  document.body.classList.toggle('urdu', isUrdu);
+  // update every translatable element by id
+  Object.keys(t).forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.innerHTML = t[id];
+  });
+}
+
+function toggleLanguage() {
+  currentLang = currentLang === 'en' ? 'ur' : 'en';
+  localStorage.setItem('lang', currentLang);
+  applyLanguage();
+}
+
+// ===================== EMPLOYEES =====================
+function loadEmployeesIntoDropdowns() {
+  ['sold-by','search-employee'].forEach(id => {
+    const sel = document.getElementById(id);
+    if (!sel) return;
+    const first = sel.options[0].textContent;
+    sel.innerHTML = `<option value="">${first}</option>`;
+    employeesList.forEach(e => { const o = document.createElement('option'); o.value = o.textContent = e; sel.appendChild(o); });
+  });
+}
+
+function manageEmployees() {
+  const a = prompt('👥 Manage Employees\n\n1 - View All\n2 - Add New\n3 - Remove\n\nEnter choice (1/2/3):');
+  if (a === '1') { alert(employeesList.length ? 'Employees:\n' + employeesList.join('\n') : 'No employees yet.'); }
+  else if (a === '2') {
+    const n = prompt('Enter employee name:');
+    if (n && n.trim() && !employeesList.includes(n.trim())) {
+      employeesList.push(n.trim()); employeesList.sort();
+      localStorage.setItem('employees', JSON.stringify(employeesList));
+      loadEmployeesIntoDropdowns(); alert('✅ Added: ' + n.trim());
+    }
+  } else if (a === '3') {
+    const r = prompt('Remove:\n' + employeesList.join('\n') + '\n\nEnter name:');
+    const i = employeesList.indexOf(r && r.trim());
+    if (i > -1) { employeesList.splice(i,1); localStorage.setItem('employees', JSON.stringify(employeesList)); loadEmployeesIntoDropdowns(); alert('✅ Removed'); }
+  }
+}
+
+// ===================== EXPENSES =====================
+function addExpenseField() {
+  expenseFieldCount++;
+  const c = document.getElementById('expenses-container');
+  const d = document.createElement('div');
+  d.className = 'installment-item'; d.id = 'expense-' + expenseFieldCount; d.style.marginBottom = '10px';
+  d.innerHTML = `<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+    <select id="expense-type-${expenseFieldCount}" style="flex:1;min-width:90px;">
+      <option value="Repair">Repair</option><option value="Maintenance">Maintenance</option>
+      <option value="Modification">Modification</option><option value="Other">Other</option>
+    </select>
+    <input type="text" id="expense-desc-${expenseFieldCount}" placeholder="Description" style="flex:2;min-width:100px;">
+    <input type="number" id="expense-amount-${expenseFieldCount}" placeholder="Amount" min="0" step="1000" style="flex:1;min-width:80px;">
+    <button type="button" onclick="removeExpenseField(${expenseFieldCount})" class="delete-btn" style="padding:8px 12px;">✕</button>
+  </div>`;
+  c.appendChild(d);
+}
+function removeExpenseField(id) { const el = document.getElementById('expense-'+id); if(el) el.remove(); }
+
+// ===================== PWA =====================
+window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); deferredPrompt = e; document.getElementById('install-prompt').style.display = 'flex'; });
+function installApp() { if(deferredPrompt){ deferredPrompt.prompt(); deferredPrompt.userChoice.then(()=>{ deferredPrompt=null; document.getElementById('install-prompt').style.display='none'; }); } }
+if ('serviceWorker' in navigator) { window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(()=>{})); }
+
+// ===================== INIT =====================
+document.addEventListener('DOMContentLoaded', () => {
+  checkLogin(); applyLanguage(); loadEmployeesIntoDropdowns();
+  document.getElementById('receipt-photo').addEventListener('change', e => {
+    const f = e.target.files[0];
+    if (f) { const r = new FileReader(); r.onload = ev => { const p = document.getElementById('preview'); p.src = ev.target.result; p.style.display = 'block'; }; r.readAsDataURL(f); }
+  });
+  document.getElementById('login-password').addEventListener('keyup', e => { if(e.key==='Enter') login(); });
+  document.getElementById('selling-date').value = new Date().toISOString().split('T')[0];
+});
+
+function checkLogin() { if(sessionStorage.getItem('loggedIn')==='true') showMainApp(); else showLoginScreen(); }
+function login() {
+  const pw = document.getElementById('login-password').value;
+  const err = document.getElementById('login-error');
+  if (pw === CONFIG.PASSWORD) { sessionStorage.setItem('loggedIn','true'); showMainApp(); }
+  else { err.textContent = LANG[currentLang]['login-error'] || '❌ Incorrect password'; err.style.display = 'block'; }
+}
+function logout() { sessionStorage.removeItem('loggedIn'); showLoginScreen(); }
+function showLoginScreen() { document.getElementById('login-screen').classList.remove('hidden'); document.getElementById('main-app').classList.add('hidden'); }
+function showMainApp() { document.getElementById('login-screen').classList.add('hidden'); document.getElementById('main-app').classList.remove('hidden'); loadAllReceipts(); loadPayments(); }
+
+function switchTab(tab, ev) {
+  if (ev) { document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active')); ev.target.closest('.tab-btn').classList.add('active'); }
+  document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+  document.getElementById(tab+'-tab').classList.add('active');
+  if (tab==='all') loadAllReceipts();
+  else if (tab==='analytics') calculateAnalytics();
+  else if (tab==='payments') loadPayments();
+  else if (tab==='profit') calculateProfit();
+}
+function switchTabDirect(tab) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+  document.getElementById(tab+'-tab').classList.add('active');
+  if (tab==='payments') loadPayments();
+}
+
+function toggleInstallmentSection() {
+  const pt = document.querySelector('input[name="payment-type"]:checked').value;
+  document.getElementById('installment-section').style.display = pt==='INSTALLMENT' ? 'block' : 'none';
+  if (pt==='INSTALLMENT') generateInstallmentFields();
+}
+function generateInstallmentFields() {
+  const cnt = parseInt(document.getElementById('installment-count').value);
+  let h = '<h4 style="color:#00D4FF;margin:15px 0 10px 0;font-weight:700;">Installment Details:</h4>';
+  for (let i=1; i<=cnt; i++) {
+    h += `<div class="installment-item"><strong>Installment ${i}</strong>
+      <div class="form-group"><label>Due Date</label><input type="date" id="inst-date-${i}"></div>
+      <div class="form-group"><label>Amount (PKR)</label><input type="number" id="inst-amount-${i}" placeholder="Amount" min="0" step="1000"></div></div>`;
+  }
+  document.getElementById('installment-fields').innerHTML = h;
+}
+
+// ===================== UPLOAD =====================
+async function uploadReceipt() {
+  const v = {
+    carName: document.getElementById('car-name').value.trim(),
+    regNumber: document.getElementById('reg-number').value.trim().toUpperCase(),
+    customerName: document.getElementById('customer-name').value.trim(),
+    customerPhone: document.getElementById('customer-phone').value.trim(),
+    sellingDate: document.getElementById('selling-date').value,
+    sellingPrice: document.getElementById('selling-price').value.trim(),
+    purchaseCost: document.getElementById('purchase-cost').value.trim(),
+    soldBy: document.getElementById('sold-by').value
+  };
+  const expenses = [];
+  for (let i=1; i<=expenseFieldCount; i++) {
+    const tEl=document.getElementById(`expense-type-${i}`), dEl=document.getElementById(`expense-desc-${i}`), aEl=document.getElementById(`expense-amount-${i}`);
+    if (tEl&&dEl&&aEl) { const amt=parseFloat(aEl.value)||0; if(amt>0) expenses.push({type:tEl.value, description:dEl.value.trim()||'No description', amount:amt}); }
+  }
+  const paymentType = document.querySelector('input[name="payment-type"]:checked').value;
+  const photoFile = document.getElementById('receipt-photo').files[0];
+  const sMsg = document.getElementById('upload-success'), eMsg = document.getElementById('upload-error');
+  sMsg.style.display='none'; eMsg.style.display='none';
+  if (!v.carName||!v.regNumber||!v.customerName||!v.customerPhone||!v.sellingDate||!v.sellingPrice||parseFloat(v.sellingPrice)<=0||!v.purchaseCost||parseFloat(v.purchaseCost)<=0||!v.soldBy||!photoFile) {
+    eMsg.textContent='Please fill all required fields'; eMsg.style.display='block'; return;
+  }
+  let downPayment=0, installments=[];
+  if (paymentType==='INSTALLMENT') {
+    downPayment = parseFloat(document.getElementById('down-payment').value)||0;
+    if (downPayment<=0) { eMsg.textContent='Please enter down payment'; eMsg.style.display='block'; return; }
+    const cnt = parseInt(document.getElementById('installment-count').value);
+    for (let i=1; i<=cnt; i++) {
+      const dt=document.getElementById(`inst-date-${i}`).value, am=parseFloat(document.getElementById(`inst-amount-${i}`).value)||0;
+      if (!dt||am<=0) { eMsg.textContent=`Fill installment ${i} details`; eMsg.style.display='block'; return; }
+      installments.push({dueDate:dt, amount:am});
+    }
+    const ti = installments.reduce((s,x)=>s+x.amount,0), te = parseFloat(v.sellingPrice)-downPayment;
+    if (Math.abs(ti-te)>100) { eMsg.textContent=`Installments ₨${ti.toLocaleString()} does not match remaining ₨${te.toLocaleString()}`; eMsg.style.display='block'; return; }
+  }
+  if (photoFile.size>10*1024*1024) { eMsg.textContent='Image too large (max 10MB)'; eMsg.style.display='block'; return; }
+  const btn=event.target, origTxt=btn.innerHTML; btn.innerHTML='⏳ Uploading...'; btn.disabled=true;
+  try {
+    const imageData = await new Promise((res,rej)=>{const r=new FileReader();r.onload=e=>res(e.target.result);r.onerror=()=>rej(new Error('Failed to read image'));r.readAsDataURL(photoFile);});
+    const receiptId = v.regNumber+'_'+v.sellingDate+'_'+Date.now();
+    const result = await post({action:'upload', receiptId, ...v, sellingPrice:parseFloat(v.sellingPrice), purchaseCost:parseFloat(v.purchaseCost), expenses, paymentType, downPayment, installments, imageData, fileName:receiptId+'.'+photoFile.name.split('.').pop(), mimeType:photoFile.type, timestamp:new Date().toISOString()});
+    if (result.success) {
+      sMsg.textContent=`✅ Receipt saved for ${v.carName} (${v.regNumber})`; sMsg.style.display='block';
+      ['car-name','reg-number','customer-name','customer-phone','selling-price','purchase-cost','sold-by'].forEach(id=>document.getElementById(id).value='');
+      document.getElementById('expenses-container').innerHTML=''; expenseFieldCount=0;
+      document.getElementById('receipt-photo').value=''; document.getElementById('preview').style.display='none';
+      document.querySelector('input[name="payment-type"][value="CASH"]').checked=true; toggleInstallmentSection();
+      window.scrollTo(0,0);
+    } else throw new Error(result.error||'Upload failed');
+  } catch(err) { eMsg.textContent='❌ '+err.message; eMsg.style.display='block'; }
+  finally { btn.innerHTML=origTxt; btn.disabled=false; }
+}
+
+// ===================== API HELPER =====================
+async function post(data) {
+  const res = await fetch(CONFIG.SCRIPT_URL, {method:'POST', body:JSON.stringify(data)});
+  return res.json();
+}
+
+// ===================== LOAD DATA - FIXED EXPENSE MERGE =====================
+async function loadAllData() {
+  const result = await post({action:'getAll'});
+  if (result.success) {
+    allReceiptsCache = result.receipts || [];
+    allInstallmentsCache = result.installments || [];
+    allExpensesCache = result.expenses || [];
+    // KEY FIX: merge expenses from sheet into each receipt object
+    allReceiptsCache.forEach(r => {
+      const sheetExps = allExpensesCache.filter(e => e.receiptId === r.receiptId);
+      if (sheetExps.length > 0) {
+        // Always use sheet expenses (they are the source of truth)
+        r.expenses = sheetExps.map(e => ({
+          type: e.expenseType || e.type || 'Other',
+          description: e.description || '',
+          amount: parseFloat(e.amount) || 0
+        }));
+      } else if (!r.expenses) {
+        r.expenses = [];
+      }
+    });
+  }
+  return result;
+}
+
+async function loadAllReceipts() {
+  const div = document.getElementById('all-receipts');
+  div.innerHTML='<div class="loading">Loading...</div>';
+  try {
+    await loadAllData();
+    document.getElementById('total-receipts').textContent = allReceiptsCache.length;
+    if (allReceiptsCache.length > 0) {
+      allReceiptsCache.sort((a,b)=>new Date(b.sellingDate)-new Date(a.sellingDate));
+      div.innerHTML = allReceiptsCache.map(r => receiptCardHTML(r)).join('');
+    } else {
+      div.innerHTML='<div class="no-results">No receipts yet</div>';
+    }
+  } catch(err) { div.innerHTML='<div class="no-results">Error loading receipts</div>'; console.error(err); }
+}
+
+async function loadPayments() {
+  try {
+    await loadAllData();
+    displayPaymentSummary(); checkOverduePayments();
+  } catch(err) { console.error(err); }
+}
+
+function receiptCardHTML(r) {
+  const dt = new Date(r.sellingDate).toLocaleDateString();
+  const pr = '₨'+parseFloat(r.sellingPrice).toLocaleString();
+  let sc='', sb='';
+  if (r.paymentType==='CASH') { sb='<span class="payment-badge cash">💵 Paid in Full</span>'; }
+  else {
+    const ri=allInstallmentsCache.filter(i=>i.receiptId===r.receiptId);
+    const pend=ri.filter(i=>i.status==='PENDING'), over=pend.filter(i=>new Date(i.dueDate)<new Date());
+    if(over.length>0){sc='overdue-payment';sb=`<span class="payment-badge pending">⚠️ ${over.length} Overdue</span>`;}
+    else if(pend.length>0){sc='pending-payment';sb=`<span class="payment-badge installment">📅 ${pend.length} Pending</span>`;}
+    else sb='<span class="payment-badge cash">✅ Completed</span>';
+  }
+  return `<div class="receipt-item ${sc}" onclick='viewReceiptByData(${JSON.stringify(r).replace(/'/g,"&#39;")})'>
+    <div class="receipt-reg">${r.carName||'N/A'}</div>
+    <div class="receipt-date">Reg: ${r.regNumber}</div>
+    <div class="receipt-date">Customer: ${r.customerName||'N/A'}</div>
+    <div class="receipt-date">Date: ${dt} · Price: ${pr}</div>
+    <div class="receipt-date">Sold by: ${r.soldBy||'N/A'}</div>
+    ${sb}</div>`;
+}
+
+function displayPaymentSummary() {
+  const ir = allReceiptsCache.filter(r=>r.paymentType==='INSTALLMENT');
+  let tp=0, tr=0, pl='';
+  ir.forEach(r=>{
+    const ri=allInstallmentsCache.filter(i=>i.receiptId===r.receiptId);
+    const pend=ri.filter(i=>i.status==='PENDING'), paid=ri.filter(i=>i.status==='PAID');
+    tp+=pend.reduce((s,i)=>s+parseFloat(i.amount),0);
+    tr+=parseFloat(r.downPayment||0)+paid.reduce((s,i)=>s+parseFloat(i.amount),0);
+    if(pend.length>0){const ov=pend.filter(i=>new Date(i.dueDate)<new Date()); pl+=`<div class="receipt-item ${ov.length>0?'overdue-payment':'pending-payment'}" onclick='viewReceiptByData(${JSON.stringify(r).replace(/'/g,"&#39;")})'><div class="receipt-reg">${r.carName} (${r.regNumber})</div><div class="receipt-date">Customer: ${r.customerName}</div><div class="receipt-date">Pending: ₨${pend.reduce((s,i)=>s+parseFloat(i.amount),0).toLocaleString()}</div>${ov.length>0?`<span class="payment-badge pending">⚠️ ${ov.length} Overdue</span>`:`<span class="payment-badge installment">📅 ${pend.length} Pending</span>`}</div>`;}
+  });
+  document.getElementById('total-pending').textContent='₨'+tp.toLocaleString();
+  document.getElementById('total-received').textContent='₨'+tr.toLocaleString();
+  document.getElementById('payments-list').innerHTML=pl||'<div class="no-results">No pending payments</div>';
+}
+
+function checkOverduePayments() {
+  const today=new Date();
+  const ov=allInstallmentsCache.filter(i=>i.status==='PENDING'&&new Date(i.dueDate)<today);
+  const up=allInstallmentsCache.filter(i=>{const d=new Date(i.dueDate),df=Math.ceil((d-today)/86400000);return i.status==='PENDING'&&df>=0&&df<=7;});
+  if(ov.length>0){document.getElementById('overdue-badge').classList.remove('hidden');document.getElementById('overdue-count').textContent=ov.length;document.getElementById('payment-badge').classList.remove('hidden');document.getElementById('payment-badge').textContent=ov.length;}
+  else{document.getElementById('overdue-badge').classList.add('hidden');document.getElementById('payment-badge').classList.add('hidden');}
+  if(ov.length>0){document.getElementById('overdue-list').innerHTML=ov.map(i=>{const r=allReceiptsCache.find(x=>x.receiptId===i.receiptId);return r?`<div>• ${r.carName} (${r.regNumber}) - ₨${parseFloat(i.amount).toLocaleString()} - ${Math.ceil((today-new Date(i.dueDate))/86400000)} days overdue</div>`:''}).join('');document.getElementById('overdue-alert').style.display='block';}
+  else document.getElementById('overdue-alert').style.display='none';
+  if(up.length>0){document.getElementById('upcoming-list').innerHTML=up.map(i=>{const r=allReceiptsCache.find(x=>x.receiptId===i.receiptId);return r?`<div>• ${r.carName} (${r.regNumber}) - ₨${parseFloat(i.amount).toLocaleString()} - Due in ${Math.ceil((new Date(i.dueDate)-today)/86400000)} days</div>`:''}).join('');document.getElementById('upcoming-alert').style.display='block';}
+  else document.getElementById('upcoming-alert').style.display='none';
+}
+
+async function performSearch() {
+  const si=document.getElementById('search-input').value.trim().toUpperCase();
+  const se=document.getElementById('search-employee').value;
+  const rd=document.getElementById('search-results');
+  rd.innerHTML='<div class="loading">Searching...</div>';
+  if(allReceiptsCache.length===0) await loadAllData();
+  let f=allReceiptsCache;
+  if(si) f=f.filter(r=>r.regNumber.includes(si)||(r.carName||'').toUpperCase().includes(si)||(r.customerName||'').toUpperCase().includes(si));
+  if(se) f=f.filter(r=>r.soldBy===se);
+  rd.innerHTML = f.length ? f.map(r=>receiptCardHTML(r)).join('') : '<div class="no-results">❌ Not found</div>';
+}
+
+async function viewReceiptByData(receipt) {
+  const mi=document.getElementById('modal-image');
+  mi.src=`https://drive.google.com/thumbnail?id=${receipt.driveFileId}&sz=w1000`;
+  mi.onerror=function(){this.src=`https://drive.google.com/uc?export=view&id=${receipt.driveFileId}`;};
+  document.getElementById('modal-reg').textContent=`${receipt.carName} (${receipt.regNumber})`;
+  const dt=new Date(receipt.sellingDate).toLocaleDateString();
+  document.getElementById('modal-details').innerHTML=`Customer: ${receipt.customerName}<br>Phone: ${receipt.customerPhone}<br>Date: ${dt}<br>Price: ₨${parseFloat(receipt.sellingPrice).toLocaleString()}<br>Sold by: ${receipt.soldBy}<br>Payment: ${receipt.paymentType}`;
+  const mi2=document.getElementById('modal-installments');
+  if(receipt.paymentType==='INSTALLMENT'){
+    const ri=allInstallmentsCache.filter(i=>i.receiptId===receipt.receiptId);
+    let h='<div style="background:rgba(255,255,255,.1);padding:15px;border-radius:10px;margin-top:15px;">';
+    h+=`<div style="color:white;font-weight:700;margin-bottom:10px;">Down Payment: ₨${parseFloat(receipt.downPayment).toLocaleString()}</div>`;
+    ri.forEach(i=>{
+      const ip=i.status==='PAID',io=!ip&&new Date(i.dueDate)<new Date();
+      const sc=ip?'#28a745':io?'#dc3545':'#D4AF37', st=ip?'✅ Paid':io?'⚠️ Overdue':'📅 Pending';
+      h+=`<div style="background:rgba(255,255,255,.2);padding:10px;border-radius:8px;margin-bottom:8px;border-left:4px solid ${sc};">
+        <div style="color:white;">Installment ${i.installmentNumber}: ₨${parseFloat(i.amount).toLocaleString()}</div>
+        <div style="color:white;font-size:12px;">Due: ${new Date(i.dueDate).toLocaleDateString()}</div>
+        <div style="color:${sc};font-weight:700;font-size:12px;">${st}</div>
+        ${!ip?`<button class="btn btn-success btn-small" style="margin-top:8px;" onclick="markInstallmentPaid('${i.installmentId}',event)">Mark as Paid</button>`:''}
+      </div>`;
+    });
+    h+='</div>'; mi2.innerHTML=h;
+  } else mi2.innerHTML='';
+  document.getElementById('modal').classList.add('active');
+  currentViewingReceipt=receipt;
+}
+
+async function markInstallmentPaid(iid,ev) {
+  ev.stopPropagation();
+  if(!confirm('Mark as paid?')) return;
+  try {
+    const r=await post({action:'markInstallmentPaid', installmentId:iid});
+    if(r.success){alert('✅ Marked as paid');await loadAllReceipts();await loadPayments();closeModal();}
+    else throw new Error(r.error);
+  } catch(e){alert('❌ Error: '+e.message);}
+}
+
+function closeModal(){document.getElementById('modal').classList.remove('active');currentViewingReceipt=null;}
+function openDriveLink(){if(currentViewingReceipt&&currentViewingReceipt.driveLink)window.open(currentViewingReceipt.driveLink,'_blank');}
+
+async function deleteReceipt() {
+  if(!currentViewingReceipt||!confirm('Delete this receipt?')) return;
+  try {
+    const r=await post({action:'delete', receiptId:currentViewingReceipt.receiptId, driveFileId:currentViewingReceipt.driveFileId});
+    if(r.success){closeModal();loadAllReceipts();alert('✅ Deleted');}
+    else throw new Error(r.error);
+  } catch(e){alert('❌ Error: '+e.message);}
+}
+
+async function downloadReceipt() {
+  if(!currentViewingReceipt) return;
+  const link=document.createElement('a');
+  link.href=`https://drive.google.com/uc?export=download&id=${currentViewingReceipt.driveFileId}`;
+  link.download=`${currentViewingReceipt.regNumber}_${currentViewingReceipt.carName}.jpg`;
+  link.target='_blank'; document.body.appendChild(link); link.click(); document.body.removeChild(link);
+  alert('✅ Download started!');
+}
+
+function editReceipt() {
+  if(!currentViewingReceipt) return;
+  closeModal();
+  const r=currentViewingReceipt;
+  document.getElementById('edit-car-name').value=r.carName||'';
+  document.getElementById('edit-reg-number').value=r.regNumber||'';
+  document.getElementById('edit-customer-name').value=r.customerName||'';
+  document.getElementById('edit-customer-phone').value=r.customerPhone||'';
+  document.getElementById('edit-selling-date').value=r.sellingDate||'';
+  document.getElementById('edit-selling-price').value=r.sellingPrice||'';
+  document.getElementById('edit-purchase-cost').value=r.purchaseCost||'';
+  const sel=document.getElementById('edit-sold-by');
+  sel.innerHTML='<option value="">Select Employee</option>';
+  employeesList.forEach(e=>{const o=document.createElement('option');o.value=o.textContent=e;if(e===r.soldBy)o.selected=true;sel.appendChild(o);});
+  document.getElementById('edit-modal').classList.add('active');
+  ['edit-success','edit-error'].forEach(id=>document.getElementById(id).style.display='none');
+}
+function closeEditModal(){document.getElementById('edit-modal').classList.remove('active');}
+
+async function saveEditedReceipt() {
+  const vals={carName:document.getElementById('edit-car-name').value.trim(),regNumber:document.getElementById('edit-reg-number').value.trim().toUpperCase(),customerName:document.getElementById('edit-customer-name').value.trim(),customerPhone:document.getElementById('edit-customer-phone').value.trim(),sellingDate:document.getElementById('edit-selling-date').value,sellingPrice:document.getElementById('edit-selling-price').value.trim(),purchaseCost:document.getElementById('edit-purchase-cost').value.trim(),soldBy:document.getElementById('edit-sold-by').value};
+  const err=document.getElementById('edit-error'), suc=document.getElementById('edit-success');
+  err.style.display='none'; suc.style.display='none';
+  if(Object.values(vals).some(v=>!v)){err.textContent='Please fill all fields';err.style.display='block';return;}
+  const btn=event.target, ot=btn.innerHTML; btn.innerHTML='⏳ Saving...'; btn.disabled=true;
+  try {
+    const r=await post({action:'updateReceipt', receiptId:currentViewingReceipt.receiptId, ...vals, sellingPrice:parseFloat(vals.sellingPrice), purchaseCost:parseFloat(vals.purchaseCost)});
+    if(r.success){suc.textContent='✅ Updated!';suc.style.display='block';await loadAllReceipts();await loadPayments();setTimeout(closeEditModal,1500);}
+    else throw new Error(r.error||'Update failed');
+  } catch(e){err.textContent='❌ '+e.message;err.style.display='block';}
+  finally{btn.innerHTML=ot;btn.disabled=false;}
+}
+
+// ===================== PROFIT - FIXED: reads expenses from sheet =====================
+function getExpensesForReceipt(r) {
+  // Priority: merged expenses on receipt object (from sheet), fallback to inline
+  if (r.expenses && r.expenses.length > 0) return r.expenses;
+  return allExpensesCache
+    .filter(e => e.receiptId === r.receiptId)
+    .map(e => ({ type: e.expenseType||e.type||'Other', description: e.description||'', amount: parseFloat(e.amount)||0 }));
+}
+
+async function calculateProfit() {
+  if(allReceiptsCache.length===0) await loadAllData();
+  let tr=0, tp=0, te=0;
+  allReceiptsCache.forEach(r=>{
+    tr+=parseFloat(r.sellingPrice)||0;
+    tp+=parseFloat(r.purchaseCost)||0;
+    te+=getExpensesForReceipt(r).reduce((s,e)=>s+(parseFloat(e.amount)||0),0);
+  });
+  const np=tr-tp-te, pm=tr>0?((np/tr)*100):0;
+  document.getElementById('profit-revenue').textContent='₨'+tr.toLocaleString();
+  document.getElementById('profit-purchase').textContent='₨'+tp.toLocaleString();
+  document.getElementById('profit-expenses').textContent='₨'+te.toLocaleString();
+  document.getElementById('profit-net').textContent='₨'+np.toLocaleString();
+  document.getElementById('profit-margin').textContent=pm.toFixed(1)+'%';
+  showProfitBreakdown();
+}
+
+function showProfitBreakdown() {
+  const c=document.getElementById('profit-breakdown');
+  if(!allReceiptsCache.length){c.innerHTML='<div class="no-results">No data</div>';return;}
+  c.innerHTML=allReceiptsCache.map(r=>{
+    const s=parseFloat(r.sellingPrice)||0, p=parseFloat(r.purchaseCost)||0;
+    const e=getExpensesForReceipt(r).reduce((sum,x)=>sum+(parseFloat(x.amount)||0),0);
+    const pf=s-p-e, mg=s>0?((pf/s)*100):0, col=pf>=0?'#28a745':'#dc3545';
+    return `<div class="receipt-item" style="border-left:4px solid ${col};">
+      <div class="receipt-reg">${r.carName||'N/A'} (${r.regNumber})</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px;font-size:12px;">
+        <div>Selling: ₨${s.toLocaleString()}</div><div>Purchase: ₨${p.toLocaleString()}</div>
+        <div>Expenses: ₨${e.toLocaleString()}</div>
+        <div style="font-weight:700;color:${col};">Profit: ₨${pf.toLocaleString()} (${mg.toFixed(1)}%)</div>
+      </div>
+      <div class="receipt-date" style="margin-top:8px;">Sold by: ${r.soldBy||'N/A'}</div></div>`;
+  }).join('');
+}
+
+// ===================== EXPORT =====================
+function exportSalesReport(){
+  const d=allReceiptsCache.map(r=>{const e=getExpensesForReceipt(r).reduce((s,x)=>s+(parseFloat(x.amount)||0),0);const pf=(parseFloat(r.sellingPrice)||0)-(parseFloat(r.purchaseCost)||0)-e;return{'Receipt ID':r.receiptId,'Car':r.carName,'Reg':r.regNumber,'Customer':r.customerName,'Phone':r.customerPhone,'Date':r.sellingDate,'Selling':r.sellingPrice,'Purchase':r.purchaseCost||0,'Expenses':e,'Profit':pf,'Payment':r.paymentType,'Sold By':r.soldBy};});
+  exportToExcel(d,'Sales_Report_'+new Date().toISOString().split('T')[0]);
+}
+function exportProfitReport(){
+  const d=allReceiptsCache.map(r=>{const s=parseFloat(r.sellingPrice)||0,p=parseFloat(r.purchaseCost)||0,e=getExpensesForReceipt(r).reduce((s2,x)=>s2+(parseFloat(x.amount)||0),0),pf=s-p-e;return{'Car':r.carName,'Reg':r.regNumber,'Date':r.sellingDate,'Selling':s,'Purchase':p,'Expenses':e,'Gross':s-p,'Net Profit':pf,'Margin %':(s>0?((pf/s)*100).toFixed(2):0),'Sold By':r.soldBy};});
+  exportToExcel(d,'Profit_Report_'+new Date().toISOString().split('T')[0]);
+}
+function exportPaymentReport(){
+  const d=[];allReceiptsCache.forEach(r=>{if(r.paymentType==='INSTALLMENT'){allInstallmentsCache.filter(i=>i.receiptId===r.receiptId).forEach(i=>{d.push({'Car':r.carName,'Reg':r.regNumber,'Customer':r.customerName,'Phone':r.customerPhone,'Inst #':i.installmentNumber,'Due':i.dueDate,'Amount':i.amount,'Status':i.status,'Paid':i.paidDate||'N/A'});});}});
+  exportToExcel(d,'Payment_Report_'+new Date().toISOString().split('T')[0]);
+}
+function exportExpenseReport(){
+  const d=allExpensesCache.map(e=>{const r=allReceiptsCache.find(x=>x.receiptId===e.receiptId);return{'Car':r?r.carName:'N/A','Reg':e.receiptId,'Type':e.expenseType||e.type,'Description':e.description,'Amount':e.amount,'Date':e.date};});
+  exportToExcel(d,'Expense_Report_'+new Date().toISOString().split('T')[0]);
+}
+function exportToExcel(data,name){
+  if(!data||!data.length){alert('❌ No data to export');return;}
+  const ws=XLSX.utils.json_to_sheet(data),wb=XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb,ws,'Report');XLSX.writeFile(wb,name+'.xlsx');
+}
+
+// ===================== ANALYTICS =====================
+async function calculateAnalytics() {
+  if(allReceiptsCache.length===0) await loadAllData();
+  const now=new Date();
+  const total=allReceiptsCache.length;
+  const rev=allReceiptsCache.reduce((s,r)=>s+(parseFloat(r.sellingPrice)||0),0);
+  const today=new Date(now.getFullYear(),now.getMonth(),now.getDate());
+  const dw=today.getDay(), mo=dw===0?-6:1-dw;
+  const ws=new Date(today); ws.setDate(today.getDate()+mo);
+  const wr=allReceiptsCache.filter(r=>new Date(r.sellingDate)>=ws);
+  const mr=allReceiptsCache.filter(r=>new Date(r.sellingDate)>=new Date(now.getFullYear(),now.getMonth(),1));
+  document.getElementById('total-cars').textContent=total;
+  document.getElementById('total-revenue').textContent='₨'+rev.toLocaleString();
+  document.getElementById('week-cars').textContent=wr.length;
+  document.getElementById('week-revenue').textContent='₨'+wr.reduce((s,r)=>s+(parseFloat(r.sellingPrice)||0),0).toLocaleString();
+  document.getElementById('month-cars').textContent=mr.length;
+  document.getElementById('month-revenue').textContent='₨'+mr.reduce((s,r)=>s+(parseFloat(r.sellingPrice)||0),0).toLocaleString();
+  calculateTopSalespeople(); calculateBestSellingCars();
+}
+
+function calculateTopSalespeople(){
+  const es={};allReceiptsCache.forEach(r=>{const e=r.soldBy||'Unknown';if(!es[e])es[e]={count:0,revenue:0};es[e].count++;es[e].revenue+=parseFloat(r.sellingPrice)||0;});
+  const s=Object.entries(es).sort((a,b)=>b[1].count-a[1].count).slice(0,5);
+  const medals=['🥇','🥈','🥉','🏅'];
+  document.getElementById('top-salespeople-list').innerHTML=s.length?s.map(([n,d],i)=>`<div style="background:white;padding:12px;border-radius:8px;margin-bottom:10px;display:flex;align-items:center;gap:10px;"><span style="font-size:24px;">${medals[Math.min(i,3)]}</span><div><div style="font-weight:700;color:#00D4FF;">${n}</div><div style="font-size:12px;color:#666;">${d.count} cars · ₨${d.revenue.toLocaleString()}</div></div></div>`).join(''):'<div class="no-results">No data</div>';
+}
+function calculateBestSellingCars(){
+  const cc={};allReceiptsCache.forEach(r=>{const c=r.carName||'Unknown';if(!cc[c])cc[c]={count:0,revenue:0};cc[c].count++;cc[c].revenue+=parseFloat(r.sellingPrice)||0;});
+  const s=Object.entries(cc).sort((a,b)=>b[1].count-a[1].count).slice(0,5);
+  const medals=['🥇','🥈','🥉','🏅'];
+  document.getElementById('best-selling-list').innerHTML=s.length?s.map(([n,d],i)=>`<div style="background:white;padding:12px;border-radius:8px;margin-bottom:10px;display:flex;align-items:center;gap:10px;"><span style="font-size:24px;">${medals[Math.min(i,3)]}</span><div><div style="font-weight:700;color:#00D4FF;">${n}</div><div style="font-size:12px;color:#666;">${d.count} sold · ₨${d.revenue.toLocaleString()}</div></div></div>`).join(''):'<div class="no-results">No data</div>';
+}
+
+document.getElementById('modal').addEventListener('click',e=>{if(e.target===document.getElementById('modal'))closeModal();});
+document.getElementById('edit-modal').addEventListener('click',e=>{if(e.target===document.getElementById('edit-modal'))closeEditModal();});
+</script>
 </body>
 </html>
