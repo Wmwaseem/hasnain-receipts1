@@ -818,13 +818,39 @@ function editReceipt() {
 function closeEditModal(){document.getElementById('edit-modal').classList.remove('active');}
 
 async function saveEditedReceipt() {
-  const vals={carName:document.getElementById('edit-car-name').value.trim(),regNumber:document.getElementById('edit-reg-number').value.trim().toUpperCase(),customerName:document.getElementById('edit-customer-name').value.trim(),customerPhone:document.getElementById('edit-customer-phone').value.trim(),sellingDate:document.getElementById('edit-selling-date').value,sellingPrice:document.getElementById('edit-selling-price').value.trim(),purchaseCost:document.getElementById('edit-purchase-cost').value.trim(),soldBy:document.getElementById('edit-sold-by').value};
+  const vals={
+    carName:document.getElementById('edit-car-name').value.trim(),
+    regNumber:document.getElementById('edit-reg-number').value.trim().toUpperCase(),
+    customerName:document.getElementById('edit-customer-name').value.trim(),
+    customerPhone:document.getElementById('edit-customer-phone').value.trim(),
+    sellingDate:document.getElementById('edit-selling-date').value,
+    sellingPrice:document.getElementById('edit-selling-price').value.trim(),
+    purchaseCost:document.getElementById('edit-purchase-cost').value.trim(),
+    soldBy:document.getElementById('edit-sold-by').value,
+    paymentType:currentViewingReceipt.paymentType,
+    downPayment:currentViewingReceipt.downPayment||0
+  };
   const err=document.getElementById('edit-error'), suc=document.getElementById('edit-success');
   err.style.display='none'; suc.style.display='none';
-  if(Object.values(vals).some(v=>!v)){err.textContent='Please fill all fields';err.style.display='block';return;}
+  if(!vals.carName||!vals.regNumber||!vals.customerName||!vals.customerPhone||!vals.sellingDate||!vals.sellingPrice||!vals.purchaseCost||!vals.soldBy){
+    err.textContent='Please fill all fields';err.style.display='block';return;
+  }
   const btn=event.target, ot=btn.innerHTML; btn.innerHTML='⏳ Saving...'; btn.disabled=true;
   try {
-    const r=await post({action:'updateReceipt', receiptId:currentViewingReceipt.receiptId, ...vals, sellingPrice:parseFloat(vals.sellingPrice), purchaseCost:parseFloat(vals.purchaseCost)});
+    const r=await post({
+      action:'updateReceipt',
+      receiptId:currentViewingReceipt.receiptId,
+      carName:vals.carName,
+      regNumber:vals.regNumber,
+      customerName:vals.customerName,
+      customerPhone:vals.customerPhone,
+      sellingDate:vals.sellingDate,
+      sellingPrice:parseFloat(vals.sellingPrice),
+      purchaseCost:parseFloat(vals.purchaseCost),
+      soldBy:vals.soldBy,
+      paymentType:vals.paymentType,
+      downPayment:vals.downPayment
+    });
     if(r.success){suc.textContent='✅ Updated!';suc.style.display='block';await loadAllReceipts();await loadPayments();setTimeout(closeEditModal,1500);}
     else throw new Error(r.error||'Update failed');
   } catch(e){err.textContent='❌ '+e.message;err.style.display='block';}
