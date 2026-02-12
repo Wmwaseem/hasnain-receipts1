@@ -1,0 +1,42 @@
+{
+  "name": "Car Showroom Manager",
+  "short_name": "Showroom",
+  "description": "Premium Car Showroom Management System",
+  "start_url": "/hasnain-receipts/",
+  "display": "standalone",
+  "background_color": "#0A1628",
+  "theme_color": "#0A1628",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["business", "productivity"],
+  "screenshots": [],
+  "shortcuts": [
+    {
+      "name": "Upload Receipt",
+      "short_name": "Upload",
+      "description": "Upload a new receipt",
+      "url": "/hasnain-receipts/?tab=upload",
+      "icons": [{ "src": "icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "View Payments",
+      "short_name": "Payments",
+      "description": "Check payment status",
+      "url": "/hasnain-receipts/?tab=payments",
+      "icons": [{ "src": "icon-192.png", "sizes": "192x192" }]
+    }
+  ]
+}
