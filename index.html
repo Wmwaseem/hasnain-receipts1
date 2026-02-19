@@ -219,65 +219,9 @@ body.urdu input,body.urdu select { text-align:right; direction:rtl; }
 @keyframes scale-in { from{transform:scale(0.92);opacity:0} to{transform:scale(1);opacity:1} }
 
 /* ── THEME SWITCHER ──────────────────────────────────────── */
-.theme-switcher {
-  position:fixed; bottom:80px; right:14px; z-index:200;
-  display:flex; flex-direction:column; align-items:flex-end; gap:8px;
-}
+/* theme-switcher moved to header */
 
-.theme-toggle-btn {
-  width:44px; height:44px; border-radius:50%;
-  background:var(--surface2); border:1px solid var(--border-hi);
-  box-shadow:var(--glow-soft), var(--card-shadow);
-  cursor:pointer; font-size:20px;
-  display:flex; align-items:center; justify-content:center;
-  transition:all 0.3s ease;
-  animation:float 3s ease-in-out infinite;
-}
-.theme-toggle-btn:hover { transform:scale(1.1); box-shadow:var(--glow-strong); }
-
-.theme-panel {
-  background:var(--surface);
-  border:1px solid var(--border-hi);
-  border-radius:20px; padding:16px;
-  box-shadow:var(--card-shadow), var(--glow-soft);
-  display:none; flex-direction:column; gap:10px;
-  min-width:190px;
-  animation:scale-in 0.25s cubic-bezier(.4,0,.2,1) both;
-  backdrop-filter:blur(30px);
-  -webkit-backdrop-filter:blur(30px);
-}
-.theme-panel.open { display:flex; }
-
-.theme-panel-title {
-  font-size:10px; font-weight:700; color:var(--text-3);
-  letter-spacing:1.2px; text-transform:uppercase; margin-bottom:4px;
-}
-
-.theme-option {
-  display:flex; align-items:center; gap:10px;
-  padding:10px 12px; border-radius:12px;
-  cursor:pointer; border:1px solid transparent;
-  transition:all 0.2s ease; background:transparent;
-}
-.theme-option:hover { background:var(--surface2); border-color:var(--border-hi); }
-.theme-option.active { background:var(--accent-dim); border-color:var(--border-hi); }
-
-.theme-swatch {
-  width:28px; height:28px; border-radius:8px; flex-shrink:0;
-  position:relative; overflow:hidden;
-}
-.theme-swatch::after {
-  content:''; position:absolute; inset:0; border-radius:8px;
-  background:inherit; filter:brightness(1.3);
-  clip-path:polygon(0 0,50% 0,50% 100%,0 100%);
-}
-
-.theme-option-info { flex:1; }
-.theme-option-name { font-size:13px; font-weight:600; color:var(--text-1); }
-.theme-option-desc { font-size:10px; color:var(--text-3); margin-top:1px; }
-
-.theme-check { font-size:14px; color:var(--accent); opacity:0; transition:opacity 0.2s; }
-.theme-option.active .theme-check { opacity:1; }
+/* theme-panel styles now in header panel section */
 
 /* ── LOGIN ───────────────────────────────────────────────── */
 .login-container {
@@ -767,13 +711,13 @@ body.urdu .close-modal { right:auto; left:0; }
   .receipt-item:hover { transform: translateX(4px); }
   input[type=text],input[type=password],input[type=date],input[type=number],select { padding: 14px 16px; font-size: 15px; }
   .login-container { max-width: 480px; margin: 80px auto; }
-  .theme-switcher { right: calc(50% - 390px - 60px); }
+
 }
 
 /* Large Desktop: 1400px+ */
 @media (min-width: 1400px) {
   .container { max-width: 900px; }
-  .theme-switcher { right: calc(50% - 450px - 70px); }
+
 }
 
 /* ═══════════════════════════════════════
@@ -1021,26 +965,133 @@ body.urdu .close-modal { right:auto; left:0; }
 .mp-mb-fill { height:100%; background:linear-gradient(90deg,var(--danger),var(--warn),var(--accent)); border-radius:3px; width:0; transition:width 0.8s cubic-bezier(.4,0,.2,1); }
 .mp-mb-label { position:absolute; right:0; top:-16px; font-size:10px; color:var(--accent); font-weight:700; }
 
-/* ═══════════════════════════════
-   ICON PACK SWITCHER
-═══════════════════════════════ */
-.icon-panel-title {
-  font-size:10px; font-weight:700; color:var(--text-3);
-  letter-spacing:1.2px; text-transform:uppercase;
-  margin:12px 0 6px; border-top:1px solid var(--border); padding-top:12px;
+/* icon-option styles now in header panel section */
+
+/* ═══════════════════════════════════════════════
+   HEADER THEME PANEL (moved from floating button)
+═══════════════════════════════════════════════ */
+.theme-hdr-btn {
+  background: var(--accent-dim) !important;
+  border-color: var(--border-hi) !important;
+  color: var(--accent) !important;
 }
-.icon-options { display:grid; grid-template-columns:1fr 1fr; gap:6px; }
+
+.theme-panel {
+  position: absolute;
+  top: calc(100% + 10px);
+  left: 50%; transform: translateX(-50%);
+  width: min(420px, calc(100vw - 28px));
+  background: var(--surface);
+  border: 1px solid var(--border-hi);
+  border-radius: 20px;
+  padding: 18px;
+  box-shadow: var(--card-shadow), var(--glow-soft);
+  display: none;
+  flex-direction: column;
+  gap: 12px;
+  z-index: 500;
+  backdrop-filter: blur(30px);
+  -webkit-backdrop-filter: blur(30px);
+  animation: scale-in 0.22s cubic-bezier(.4,0,.2,1) both;
+}
+.theme-panel.open { display: flex; }
+
+.tp-header {
+  display: flex; align-items: center; justify-content: space-between;
+}
+.tp-title {
+  font-size: 14px; font-weight: 700; color: var(--text-1); letter-spacing: -0.2px;
+}
+.tp-close {
+  background: var(--surface2); border: 1px solid var(--border);
+  color: var(--text-3); width: 28px; height: 28px; border-radius: 8px;
+  cursor: pointer; font-size: 13px; display: flex;
+  align-items: center; justify-content: center;
+  transition: all 0.2s ease; font-family: inherit;
+}
+.tp-close:hover { background: var(--surface3); color: var(--text-1); }
+
+.tp-section-label {
+  font-size: 9.5px; font-weight: 700; letter-spacing: 1.2px;
+  text-transform: uppercase; color: var(--text-3);
+  margin-bottom: -4px;
+}
+
+/* 2×2 theme grid */
+.theme-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 8px;
+}
+.theme-option {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 12px; border-radius: 12px; cursor: pointer;
+  border: 1px solid transparent; transition: all 0.2s ease; background: transparent;
+}
+.theme-option:hover { background: var(--surface2); border-color: var(--border-hi); }
+.theme-option.active { background: var(--accent-dim); border-color: var(--border-hi); }
+.theme-swatch {
+  width: 26px; height: 26px; border-radius: 8px; flex-shrink: 0;
+}
+.theme-option-name { font-size: 12.5px; font-weight: 600; color: var(--text-1); flex: 1; }
+.theme-check { font-size: 13px; color: var(--accent); opacity: 0; transition: opacity 0.2s; }
+.theme-option.active .theme-check { opacity: 1; }
+
+/* 4×2 icon grid */
+.icon-grid {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px;
+}
 .icon-option {
-  display:flex; align-items:center; gap:8px;
-  padding:8px 10px; border-radius:10px; cursor:pointer;
-  border:1px solid transparent; transition:all 0.2s ease; background:transparent;
+  display: flex; flex-direction: column; align-items: center; gap: 4px;
+  padding: 10px 6px; border-radius: 12px; cursor: pointer;
+  border: 1px solid transparent; transition: all 0.2s ease; background: transparent;
+  position: relative;
 }
-.icon-option:hover { background:var(--surface2); border-color:var(--border-hi); }
-.icon-option.active { background:var(--accent-dim); border-color:var(--border-hi); }
-.icon-preview { font-size:16px; line-height:1; }
-.icon-opt-name { font-size:11.5px; font-weight:600; color:var(--text-1); }
-.icon-check { font-size:12px; color:var(--accent); opacity:0; margin-left:auto; }
-.icon-option.active .icon-check { opacity:1; }
+.icon-option:hover { background: var(--surface2); border-color: var(--border-hi); }
+.icon-option.active { background: var(--accent-dim); border-color: var(--border-hi); }
+.icon-preview { font-size: 15px; line-height: 1; letter-spacing: -2px; }
+.icon-opt-name { font-size: 9.5px; font-weight: 600; color: var(--text-2); }
+.icon-check {
+  position: absolute; top: 3px; right: 5px;
+  font-size: 10px; color: var(--accent); opacity: 0; transition: opacity 0.2s;
+}
+.icon-option.active .icon-check { opacity: 1; }
+
+/* Install button inside panel */
+.install-inline-btn {
+  display: flex; align-items: center; gap: 12px;
+  background: var(--surface2); border: 1px solid var(--border-hi);
+  border-radius: 14px; padding: 13px 15px; cursor: pointer;
+  transition: all 0.25s ease; width: 100%; font-family: inherit;
+  text-align: left;
+}
+.install-inline-btn:hover {
+  background: var(--accent-dim);
+  box-shadow: var(--glow-soft);
+  transform: translateY(-1px);
+}
+.install-inline-btn:disabled {
+  opacity: 0.4; cursor: default; transform: none;
+}
+.iib-icon {
+  font-size: 22px; color: var(--accent); line-height: 1;
+  width: 36px; height: 36px; background: var(--accent-dim);
+  border-radius: 10px; display: flex; align-items: center;
+  justify-content: center; flex-shrink: 0;
+}
+.iib-text { flex: 1; display: flex; flex-direction: column; gap: 2px; }
+.iib-title { font-size: 13px; font-weight: 700; color: var(--text-1); }
+.iib-sub { font-size: 10.5px; color: var(--text-3); }
+.iib-arrow { font-size: 20px; color: var(--text-3); }
+.install-inline-btn:hover .iib-arrow { color: var(--accent); }
+
+.install-ios-hint {
+  background: var(--accent-dim); border: 1px solid var(--border-hi);
+  border-radius: 10px; padding: 10px 14px;
+  font-size: 12px; color: var(--text-2); text-align: center;
+  line-height: 1.5;
+}
+
+/* Header positioning context */
+.header { position: relative; overflow: visible !important; }
 </style>
 </head>
 <body>
@@ -1122,13 +1173,100 @@ body.urdu .close-modal { right:auto; left:0; }
     </div>
     <button class="logout-btn lang-btn" onclick="toggleLanguage()">🌐 <span id="lang-text">اردو</span></button>
     <button class="logout-btn manage-btn" onclick="manageEmployees()">👥 <span id="lbl-employees">Employees</span></button>
+    <button class="logout-btn theme-hdr-btn" onclick="toggleThemePanel()" id="theme-hdr-btn">🎨 <span>Style</span></button>
     <button class="logout-btn" onclick="logout()">🚪 <span id="lbl-logout">Logout</span></button>
   </div>
 
-  <div class="install-prompt" id="install-prompt">
-    <span id="lbl-install">📱 Install this app for easier access!</span>
-    <button onclick="installApp()" id="btn-install">Install</button>
+  <!-- THEME PANEL — anchored to header -->
+  <div class="theme-panel" id="theme-panel">
+    <div class="tp-header">
+      <span class="tp-title">Appearance</span>
+      <button class="tp-close" onclick="toggleThemePanel()">✕</button>
+    </div>
+
+    <div class="tp-section-label">Theme</div>
+    <div class="theme-grid">
+      <div class="theme-option active" data-theme="phantom" onclick="setTheme('phantom',this)">
+        <div class="theme-swatch" style="background:linear-gradient(135deg,#8B5CF6,#1D2230);"></div>
+        <div class="theme-option-name">Phantom</div>
+        <span class="theme-check">✓</span>
+      </div>
+      <div class="theme-option" data-theme="inferno" onclick="setTheme('inferno',this)">
+        <div class="theme-swatch" style="background:linear-gradient(135deg,#F97316,#1C1108);"></div>
+        <div class="theme-option-name">Inferno</div>
+        <span class="theme-check">✓</span>
+      </div>
+      <div class="theme-option" data-theme="arctic" onclick="setTheme('arctic',this)">
+        <div class="theme-swatch" style="background:linear-gradient(135deg,#38BDF8,#060C14);"></div>
+        <div class="theme-option-name">Arctic</div>
+        <span class="theme-check">✓</span>
+      </div>
+      <div class="theme-option" data-theme="obsidian" onclick="setTheme('obsidian',this)">
+        <div class="theme-swatch" style="background:linear-gradient(135deg,#D4AF37,#000000);"></div>
+        <div class="theme-option-name">Obsidian</div>
+        <span class="theme-check">✓</span>
+      </div>
+    </div>
+
+    <div class="tp-section-label">Icon Style</div>
+    <div class="icon-grid">
+      <div class="icon-option active" onclick="setIconPack('minimal',this)">
+        <span class="icon-preview">⊕◎≡</span>
+        <span class="icon-opt-name">Minimal</span>
+        <span class="icon-check">✓</span>
+      </div>
+      <div class="icon-option" onclick="setIconPack('arrows',this)">
+        <span class="icon-preview">→⬆⬇</span>
+        <span class="icon-opt-name">Arrows</span>
+        <span class="icon-check">✓</span>
+      </div>
+      <div class="icon-option" onclick="setIconPack('emoji',this)">
+        <span class="icon-preview">🚗💰📊</span>
+        <span class="icon-opt-name">Emoji</span>
+        <span class="icon-check">✓</span>
+      </div>
+      <div class="icon-option" onclick="setIconPack('sharp',this)">
+        <span class="icon-preview">▲◆●</span>
+        <span class="icon-opt-name">Sharp</span>
+        <span class="icon-check">✓</span>
+      </div>
+      <div class="icon-option" onclick="setIconPack('neon',this)">
+        <span class="icon-preview">⚡★◉</span>
+        <span class="icon-opt-name">Neon</span>
+        <span class="icon-check">✓</span>
+      </div>
+      <div class="icon-option" onclick="setIconPack('rounded',this)">
+        <span class="icon-preview">⬡⬢⬣</span>
+        <span class="icon-opt-name">Hex</span>
+        <span class="icon-check">✓</span>
+      </div>
+      <div class="icon-option" onclick="setIconPack('dots',this)">
+        <span class="icon-preview">•••</span>
+        <span class="icon-opt-name">Dots</span>
+        <span class="icon-check">✓</span>
+      </div>
+      <div class="icon-option" onclick="setIconPack('lines',this)">
+        <span class="icon-preview">⌇⌇⌇</span>
+        <span class="icon-opt-name">Lines</span>
+        <span class="icon-check">✓</span>
+      </div>
+    </div>
+
+    <div class="tp-section-label">Install App</div>
+    <button class="install-inline-btn" id="install-inline-btn" onclick="installApp()">
+      <span class="iib-icon">⊕</span>
+      <div class="iib-text">
+        <span class="iib-title">Install on Device</span>
+        <span class="iib-sub">Open like a native app</span>
+      </div>
+      <span class="iib-arrow">›</span>
+    </button>
+    <div class="install-ios-hint" id="ios-hint" style="display:none;">
+      <span>📱 iOS: Tap <strong>Share</strong> → <strong>Add to Home Screen</strong></span>
+    </div>
   </div>
+
+<!-- install moved to theme panel -->
 
   <div class="card">
 
@@ -1706,9 +1844,104 @@ function addExpenseField() {
 function removeExpenseField(id) { const el = document.getElementById('expense-'+id); if(el) el.remove(); }
 
 // ===================== PWA =====================
-window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); deferredPrompt = e; document.getElementById('install-prompt').style.display = 'flex'; });
-function installApp() { if(deferredPrompt){ deferredPrompt.prompt(); deferredPrompt.userChoice.then(()=>{ deferredPrompt=null; document.getElementById('install-prompt').style.display='none'; }); } }
-if ('serviceWorker' in navigator) { window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(()=>{})); }
+window.addEventListener('beforeinstallprompt', e => {
+  e.preventDefault();
+  deferredPrompt = e;
+  // Update install button to show it's available
+  const btn = document.getElementById('install-inline-btn');
+  if (btn) {
+    btn.querySelector('.iib-title').textContent = 'Install on this Device';
+    btn.querySelector('.iib-sub').textContent = 'Tap to add to home screen';
+    btn.disabled = false;
+  }
+});
+// iOS — always show hint option
+(function() {
+  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+  if (isIOS) {
+    const btn = document.getElementById('install-inline-btn');
+    if (btn) {
+      btn.querySelector('.iib-title').textContent = 'Install on iPhone/iPad';
+      btn.querySelector('.iib-sub').textContent = 'Tap to see instructions';
+    }
+  }
+})();
+function installApp() {
+  // iOS Safari — show manual instructions
+  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+  const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+  if (isIOS || isSafari) {
+    const hint = document.getElementById('ios-hint');
+    if (hint) { hint.style.display = hint.style.display === 'none' ? 'block' : 'none'; }
+    return;
+  }
+  // Android/Chrome — native prompt
+  if (deferredPrompt) {
+    deferredPrompt.prompt();
+    deferredPrompt.userChoice.then(choice => {
+      if (choice.outcome === 'accepted') {
+        const btn = document.getElementById('install-inline-btn');
+        if (btn) { btn.disabled = true; btn.querySelector('.iib-title').textContent = '✓ App Installed!'; }
+      }
+      deferredPrompt = null;
+    });
+  } else {
+    // Already installed or not supported
+    const btn = document.getElementById('install-inline-btn');
+    if (btn) btn.querySelector('.iib-sub').textContent = 'Already installed or not supported on this browser';
+  }
+}
+if ('serviceWorker' in navigator) {
+  // Generate SW and manifest inline so they work from ANY hosting (GitHub Pages, etc.)
+  // Create inline service worker
+  const swCode = `
+const CACHE = 'elite-auto-v2';
+const ASSETS = [location.href];
+self.addEventListener('install', e => {
+  e.waitUntil(caches.open(CACHE).then(cache => cache.addAll(ASSETS)).catch(()=>{}));
+  self.skipWaiting();
+});
+self.addEventListener('activate', e => {
+  e.waitUntil(caches.keys().then(keys => Promise.all(keys.filter(k=>k!==CACHE).map(k=>caches.delete(k)))));
+  self.clients.claim();
+});
+self.addEventListener('fetch', e => {
+  e.respondWith(caches.match(e.request).then(r => r || fetch(e.request).catch(()=>caches.match(e.request))));
+});
+  `;
+  const blob = new Blob([swCode], {type:'application/javascript'});
+  const swURL = URL.createObjectURL(blob);
+  navigator.serviceWorker.register(swURL).then(reg => {
+    console.log('SW registered (inline)');
+  }).catch(err => {
+    // Fallback to file-based
+    navigator.serviceWorker.register('sw.js').catch(()=>{});
+  });
+}
+
+// Auto-generate manifest if manifest.json is missing
+fetch('manifest.json').catch(() => {
+  const manifest = {
+    name: 'Elite Auto Manager',
+    short_name: 'AutoMgr',
+    description: 'Premium Car Showroom Management System',
+    start_url: location.href,
+    display: 'standalone',
+    background_color: '#0D0F14',
+    theme_color: '#0D0F14',
+    orientation: 'portrait-primary',
+    icons: [
+      { src: 'data:image/svg+xml,' + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192"><rect width="192" height="192" rx="40" fill="#0D0F14"/><circle cx="96" cy="96" r="70" fill="none" stroke="#8B5CF6" stroke-width="4" opacity=".4"/><path d="M56 110h80M62 110l10-25h48l10 25M72 110v8M120 110v8M65 85h62" stroke="#8B5CF6" stroke-width="6" stroke-linecap="round" fill="none"/></svg>`), sizes: '192x192', type: 'image/svg+xml' },
+      { src: 'data:image/svg+xml,' + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><rect width="512" height="512" rx="100" fill="#0D0F14"/><circle cx="256" cy="256" r="185" fill="none" stroke="#8B5CF6" stroke-width="8" opacity=".4"/><path d="M140 290h232M158 290l28-68h140l28 68M190 290v24M322 290v24M165 222h182" stroke="#8B5CF6" stroke-width="18" stroke-linecap="round" fill="none"/></svg>`), sizes: '512x512', type: 'image/svg+xml' }
+    ]
+  };
+  // Inject manifest dynamically
+  const blob = new Blob([JSON.stringify(manifest)], {type:'application/manifest+json'});
+  const url = URL.createObjectURL(blob);
+  let link = document.querySelector('link[rel="manifest"]');
+  if(!link) { link = document.createElement('link'); link.rel = 'manifest'; document.head.appendChild(link); }
+  link.href = url;
+});
 
 // ===================== INIT =====================
 document.addEventListener('DOMContentLoaded', () => {
@@ -2181,77 +2414,7 @@ document.getElementById('modal').addEventListener('click',e=>{if(e.target===docu
 document.getElementById('edit-modal').addEventListener('click',e=>{if(e.target===document.getElementById('edit-modal'))closeEditModal();});
 </script>
 
-<!-- ═══════════════════════════════════════════════════
-     THEME SWITCHER WIDGET
-════════════════════════════════════════════════════ -->
-<div class="theme-switcher" id="theme-switcher">
-  <div class="theme-panel" id="theme-panel">
-    <div class="theme-panel-title">Choose Theme</div>
 
-    <div class="theme-option active" data-theme="phantom" onclick="setTheme('phantom',this)">
-      <div class="theme-swatch" style="background:linear-gradient(135deg,#8B5CF6,#1D2230);"></div>
-      <div class="theme-option-info">
-        <div class="theme-option-name">Phantom</div>
-        <div class="theme-option-desc">Deep violet luxury</div>
-      </div>
-      <span class="theme-check">✓</span>
-    </div>
-
-    <div class="theme-option" data-theme="inferno" onclick="setTheme('inferno',this)">
-      <div class="theme-swatch" style="background:linear-gradient(135deg,#F97316,#1C1108);"></div>
-      <div class="theme-option-info">
-        <div class="theme-option-name">Inferno</div>
-        <div class="theme-option-desc">Blazing orange fire</div>
-      </div>
-      <span class="theme-check">✓</span>
-    </div>
-
-    <div class="theme-option" data-theme="arctic" onclick="setTheme('arctic',this)">
-      <div class="theme-swatch" style="background:linear-gradient(135deg,#38BDF8,#060C14);"></div>
-      <div class="theme-option-info">
-        <div class="theme-option-name">Arctic</div>
-        <div class="theme-option-desc">Ice blue precision</div>
-      </div>
-      <span class="theme-check">✓</span>
-    </div>
-
-    <div class="theme-option" data-theme="obsidian" onclick="setTheme('obsidian',this)">
-      <div class="theme-swatch" style="background:linear-gradient(135deg,#D4AF37,#000000);"></div>
-      <div class="theme-option-info">
-        <div class="theme-option-name">Obsidian</div>
-        <div class="theme-option-desc">Black gold prestige</div>
-      </div>
-      <span class="theme-check">✓</span>
-    </div>
-
-    <!-- Icon Pack Options -->
-    <div class="icon-panel-title">Icon Style</div>
-    <div class="icon-options">
-      <div class="icon-option active" onclick="setIconPack('minimal',this)">
-        <span class="icon-preview">⊕ ◎ ≡</span>
-        <span class="icon-opt-name">Minimal</span>
-        <span class="icon-check">✓</span>
-      </div>
-      <div class="icon-option" onclick="setIconPack('arrows',this)">
-        <span class="icon-preview">→ ⬆ ⬇</span>
-        <span class="icon-opt-name">Arrows</span>
-        <span class="icon-check">✓</span>
-      </div>
-      <div class="icon-option" onclick="setIconPack('emoji',this)">
-        <span class="icon-preview">🚗 💰 📊</span>
-        <span class="icon-opt-name">Emoji</span>
-        <span class="icon-check">✓</span>
-      </div>
-      <div class="icon-option" onclick="setIconPack('sharp',this)">
-        <span class="icon-preview">▲ ■ ●</span>
-        <span class="icon-opt-name">Sharp</span>
-        <span class="icon-check">✓</span>
-      </div>
-    </div>
-  </div>
-
-  <button class="theme-toggle-btn" onclick="toggleThemePanel()" title="Change Theme">🎨</button>
-</div>
 
 <script>
 // ══════════════════════════════════════
@@ -2295,9 +2458,11 @@ document.getElementById('edit-modal').addEventListener('click',e=>{if(e.target==
 
   // Close on outside click
   document.addEventListener('click', function(e) {
-    if (!document.getElementById('theme-switcher').contains(e.target)) {
+    const panel = document.getElementById('theme-panel');
+    const btn = document.getElementById('theme-hdr-btn');
+    if (panel && btn && !panel.contains(e.target) && !btn.contains(e.target)) {
       panelOpen = false;
-      document.getElementById('theme-panel').classList.remove('open');
+      panel.classList.remove('open');
     }
   });
 
@@ -2310,10 +2475,14 @@ document.getElementById('edit-modal').addEventListener('click',e=>{if(e.target==
 // ICON PACK ENGINE
 // ══════════════════════════════════════
 const ICON_PACKS = {
-  minimal: { upload:'⊕', payments:'◎', search:'⊙', all:'≡', profit:'◈', analytics:'⋯' },
-  arrows:  { upload:'↑', payments:'↔', search:'↗', all:'↕', profit:'↑↓', analytics:'∿' },
+  minimal: { upload:'⊕',  payments:'◎',  search:'⊙',  all:'≡',  profit:'◈',  analytics:'⋯'  },
+  arrows:  { upload:'↑',  payments:'↔',  search:'↗',  all:'↕',  profit:'↑↓', analytics:'∿'  },
   emoji:   { upload:'🚗', payments:'💰', search:'🔍', all:'📋', profit:'💵', analytics:'📊' },
-  sharp:   { upload:'▲', payments:'◆', search:'●', all:'■', profit:'▶', analytics:'▪▪▪' }
+  sharp:   { upload:'▲',  payments:'◆',  search:'●',  all:'■',  profit:'▶',  analytics:'▪▪' },
+  neon:    { upload:'⚡', payments:'★',  search:'◉',  all:'⊞',  profit:'◑',  analytics:'⊛'  },
+  rounded: { upload:'⬡',  payments:'⬢',  search:'⬣',  all:'⬡',  profit:'⬢',  analytics:'⬣'  },
+  dots:    { upload:'⦿',  payments:'⦾',  search:'⦿',  all:'⊡',  profit:'⊞',  analytics:'⊟'  },
+  lines:   { upload:'⌇',  payments:'⌇⌇', search:'⌇',  all:'⌇⌇', profit:'⌇',  analytics:'⌇⌇⌇'}
 };
 const TAB_IDS = ['upload','payments','search','all','profit','analytics'];
 
