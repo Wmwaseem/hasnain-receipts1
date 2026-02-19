@@ -933,6 +933,114 @@ body.urdu .close-modal { right:auto; left:0; }
   .form-row-2 .form-group { margin-bottom: 0; }
 }
 
+
+/* ═══════════════════════════════
+   PROFIT TAB — 3 VIEW STYLES
+═══════════════════════════════ */
+.profit-style-bar {
+  display:flex; gap:6px; margin-bottom:16px;
+}
+.ps-btn {
+  flex:1; padding:8px 6px; border:1px solid var(--border);
+  border-radius:8px; background:var(--surface2);
+  color:var(--text-3); font-size:11px; font-weight:600;
+  cursor:pointer; transition:all 0.2s ease; font-family:inherit;
+  letter-spacing:0.3px;
+}
+.ps-btn.active { background:var(--accent-dim); color:var(--accent); border-color:var(--border-hi); }
+.ps-btn:hover:not(.active) { background:var(--surface3); color:var(--text-2); }
+
+.profit-view { display:none; }
+.profit-view.active-view { display:block; }
+
+/* Bento Cards */
+.profit-bento {
+  display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:12px;
+}
+.profit-card {
+  background:var(--surface2); border:1px solid var(--border);
+  border-radius:14px; padding:15px 14px; position:relative; overflow:hidden;
+  transition:all 0.25s ease;
+}
+.profit-card:hover { border-color:var(--border-hi); transform:translateY(-2px); box-shadow:var(--glow-soft); }
+.pc-icon {
+  font-size:18px; font-weight:900; color:var(--accent); margin-bottom:8px;
+  line-height:1; opacity:0.7;
+}
+.profit-card--cost .pc-icon { color:var(--danger); }
+.profit-card--expenses .pc-icon { color:var(--warn); }
+.profit-card--margin .pc-icon { color:var(--accent2); font-size:13px; font-weight:800; }
+
+.pc-label { font-size:9.5px; color:var(--text-3); text-transform:uppercase; letter-spacing:0.6px; font-weight:600; margin-bottom:4px; }
+.pc-value { font-size:16px; font-weight:800; color:var(--text-1); word-break:break-all; line-height:1.1; font-variant-numeric:tabular-nums; }
+
+.pc-bar { height:3px; background:var(--border); border-radius:2px; margin-top:10px; overflow:hidden; }
+.pc-bar-fill { height:100%; border-radius:2px; transition:width 0.8s cubic-bezier(.4,0,.2,1); }
+
+.pc-ring-wrap { position:absolute; bottom:8px; right:8px; width:40px; height:40px; opacity:0.6; }
+.pc-ring { width:100%; height:100%; transform:rotate(-90deg); }
+
+/* Net Profit Hero */
+.profit-hero {
+  background:var(--surface2); border:1px solid var(--border-hi);
+  border-radius:16px; padding:20px; text-align:center;
+  position:relative; overflow:hidden; margin-bottom:14px;
+}
+.profit-hero::before {
+  content:''; position:absolute; inset:0;
+  background:linear-gradient(135deg,var(--accent-dim),transparent);
+  pointer-events:none;
+}
+.profit-hero-label { font-size:10px; color:var(--text-3); letter-spacing:1px; text-transform:uppercase; margin-bottom:6px; }
+.profit-hero-value {
+  font-size:32px; font-weight:900; color:var(--accent);
+  letter-spacing:-1px; font-variant-numeric:tabular-nums;
+  text-shadow:var(--glow-soft); line-height:1;
+}
+.profit-hero-sub { font-size:11px; color:var(--text-3); margin-top:6px; }
+
+/* Gauge Style */
+.gauge-wrap { text-align:center; padding:10px 0 0; }
+.gauge-svg { width:200px; height:120px; }
+.gauge-value { font-size:28px; font-weight:900; color:var(--accent); letter-spacing:-1px; margin-top:-10px; }
+.gauge-label { font-size:10px; color:var(--text-3); letter-spacing:1px; text-transform:uppercase; margin-bottom:16px; }
+.gauge-stats { display:flex; flex-direction:column; gap:8px; background:var(--surface2); border-radius:12px; padding:14px; border:1px solid var(--border); }
+.gs-item { display:flex; align-items:center; gap:8px; font-size:13px; color:var(--text-2); }
+.gs-dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; }
+
+/* Minimal Style */
+.minimal-profit { background:var(--surface2); border:1px solid var(--border); border-radius:16px; padding:20px; }
+.mp-row { display:flex; justify-content:space-between; align-items:center; padding:10px 0; font-size:13.5px; color:var(--text-2); }
+.mp-net { font-size:16px; font-weight:700; color:var(--text-1); }
+.mp-val { font-weight:700; color:var(--text-1); font-variant-numeric:tabular-nums; }
+.mp-val.danger { color:var(--danger); }
+.mp-val.accent { color:var(--accent); font-size:20px; text-shadow:var(--glow-soft); }
+.mp-divider { height:1px; background:var(--border); margin:4px 0; }
+.mp-divider.accent { background:var(--border-hi); }
+.mp-margin-bar { height:6px; background:var(--border); border-radius:3px; margin-top:14px; overflow:hidden; position:relative; }
+.mp-mb-fill { height:100%; background:linear-gradient(90deg,var(--danger),var(--warn),var(--accent)); border-radius:3px; width:0; transition:width 0.8s cubic-bezier(.4,0,.2,1); }
+.mp-mb-label { position:absolute; right:0; top:-16px; font-size:10px; color:var(--accent); font-weight:700; }
+
+/* ═══════════════════════════════
+   ICON PACK SWITCHER
+═══════════════════════════════ */
+.icon-panel-title {
+  font-size:10px; font-weight:700; color:var(--text-3);
+  letter-spacing:1.2px; text-transform:uppercase;
+  margin:12px 0 6px; border-top:1px solid var(--border); padding-top:12px;
+}
+.icon-options { display:grid; grid-template-columns:1fr 1fr; gap:6px; }
+.icon-option {
+  display:flex; align-items:center; gap:8px;
+  padding:8px 10px; border-radius:10px; cursor:pointer;
+  border:1px solid transparent; transition:all 0.2s ease; background:transparent;
+}
+.icon-option:hover { background:var(--surface2); border-color:var(--border-hi); }
+.icon-option.active { background:var(--accent-dim); border-color:var(--border-hi); }
+.icon-preview { font-size:16px; line-height:1; }
+.icon-opt-name { font-size:11.5px; font-weight:600; color:var(--text-1); }
+.icon-check { font-size:12px; color:var(--accent); opacity:0; margin-left:auto; }
+.icon-option.active .icon-check { opacity:1; }
 </style>
 </head>
 <body>
@@ -1094,19 +1202,98 @@ body.urdu .close-modal { right:auto; left:0; }
 
     <!-- PROFIT TAB -->
     <div id="profit-tab" class="tab-content">
-      <h3 style="color:#00D4FF;margin-bottom:20px;text-align:center;font-weight:800;">💵 <span id="lbl-profit-title">Profit &amp; Loss</span></h3>
-      <div style="background:var(--surface2);padding:20px;border-radius:14px;color:var(--text-1);margin-bottom:16px;border:1px solid var(--border-hi);">
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:15px;margin-bottom:15px;">
-          <div><div style="font-size:12px;opacity:.9" id="lbl-tot-rev">Total Revenue</div><div style="font-size:18px;font-weight:700;word-break:break-all;line-height:1.2" id="profit-revenue">₨0</div></div>
-          <div><div style="font-size:12px;opacity:.9" id="lbl-purch-cost-p">Purchase Cost</div><div style="font-size:18px;font-weight:700;word-break:break-all;line-height:1.2" id="profit-purchase">₨0</div></div>
+      <h3 style="color:var(--text-1);margin-bottom:14px;font-weight:700;font-size:15px;letter-spacing:-0.2px;">◈ <span id="lbl-profit-title">Profit &amp; Loss</span></h3>
+      <!-- Profit Style Switcher -->
+      <div class="profit-style-bar">
+        <button class="ps-btn active" onclick="setProfitStyle('cards',this)">⬛ Cards</button>
+        <button class="ps-btn" onclick="setProfitStyle('gauge',this)">◉ Gauge</button>
+        <button class="ps-btn" onclick="setProfitStyle('minimal',this)">— Minimal</button>
+      </div>
+
+      <!-- STYLE 1: Bento Cards (default) -->
+      <div id="profit-style-cards" class="profit-view active-view">
+        <div class="profit-bento">
+          <div class="profit-card profit-card--revenue">
+            <div class="pc-icon">↑</div>
+            <div class="pc-label" id="lbl-tot-rev">Total Revenue</div>
+            <div class="pc-value" id="profit-revenue">₨0</div>
+            <div class="pc-bar"><div class="pc-bar-fill" style="width:100%;background:var(--accent);"></div></div>
+          </div>
+          <div class="profit-card profit-card--cost">
+            <div class="pc-icon">↓</div>
+            <div class="pc-label" id="lbl-purch-cost-p">Purchase Cost</div>
+            <div class="pc-value" id="profit-purchase">₨0</div>
+            <div class="pc-bar"><div class="pc-bar-fill" id="purchase-bar" style="width:0%;background:var(--danger);"></div></div>
+          </div>
+          <div class="profit-card profit-card--expenses">
+            <div class="pc-icon">◎</div>
+            <div class="pc-label" id="lbl-tot-exp">Total Expenses</div>
+            <div class="pc-value" id="profit-expenses">₨0</div>
+            <div class="pc-bar"><div class="pc-bar-fill" id="expense-bar" style="width:0%;background:var(--warn);"></div></div>
+          </div>
+          <div class="profit-card profit-card--margin">
+            <div class="pc-icon">%</div>
+            <div class="pc-label" id="lbl-profit-margin">Profit Margin</div>
+            <div class="pc-value" id="profit-margin">0%</div>
+            <div class="pc-ring-wrap">
+              <svg class="pc-ring" viewBox="0 0 36 36">
+                <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="var(--border)" stroke-width="3"/>
+                <path id="ring-path" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="var(--accent)" stroke-width="3" stroke-dasharray="0, 100"/>
+              </svg>
+            </div>
+          </div>
         </div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:15px;margin-bottom:15px;">
-          <div><div style="font-size:12px;opacity:.9" id="lbl-tot-exp">Total Expenses</div><div style="font-size:18px;font-weight:700;word-break:break-all;line-height:1.2" id="profit-expenses">₨0</div></div>
-          <div><div style="font-size:12px;opacity:.9" id="lbl-profit-margin">Profit Margin</div><div style="font-size:18px;font-weight:700;line-height:1.2" id="profit-margin">0%</div></div>
+        <!-- Net Profit Hero -->
+        <div class="profit-hero">
+          <div class="profit-hero-label" id="lbl-net-profit">Net Profit</div>
+          <div class="profit-hero-value" id="profit-net">₨0</div>
+          <div class="profit-hero-sub" id="profit-hero-tag">—</div>
         </div>
-        <div style="border-top:2px solid rgba(255,255,255,.3);padding-top:15px;margin-top:15px;">
-          <div style="font-size:14px;opacity:.9" id="lbl-net-profit">Net Profit</div>
-          <div style="font-size:28px;font-weight:800;word-break:break-all;line-height:1.1;color:var(--accent);letter-spacing:-0.5px;text-shadow:0 0 16px var(--accent-glow);" id="profit-net">₨0</div>
+      </div>
+
+      <!-- STYLE 2: Gauge -->
+      <div id="profit-style-gauge" class="profit-view">
+        <div class="gauge-wrap">
+          <svg class="gauge-svg" viewBox="0 0 200 120">
+            <defs>
+              <linearGradient id="ggrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" style="stop-color:var(--danger)"/>
+                <stop offset="50%" style="stop-color:var(--warn)"/>
+                <stop offset="100%" style="stop-color:var(--accent)"/>
+              </linearGradient>
+            </defs>
+            <!-- Track -->
+            <path d="M20 100 A80 80 0 0 1 180 100" fill="none" stroke="var(--border)" stroke-width="14" stroke-linecap="round"/>
+            <!-- Fill -->
+            <path id="gauge-fill" d="M20 100 A80 80 0 0 1 180 100" fill="none" stroke="url(#ggrad)" stroke-width="14" stroke-linecap="round" stroke-dasharray="0 251.2"/>
+            <!-- Needle -->
+            <line id="gauge-needle" x1="100" y1="100" x2="100" y2="30" stroke="var(--text-1)" stroke-width="2" stroke-linecap="round" transform="rotate(0,100,100)"/>
+            <circle cx="100" cy="100" r="5" fill="var(--accent)"/>
+          </svg>
+          <div class="gauge-value" id="gauge-margin-val">0%</div>
+          <div class="gauge-label">Profit Margin</div>
+        </div>
+        <div class="gauge-stats">
+          <div class="gs-item"><span class="gs-dot" style="background:var(--accent)"></span><span id="gs-rev">Revenue ₨0</span></div>
+          <div class="gs-item"><span class="gs-dot" style="background:var(--danger)"></span><span id="gs-cost">Cost ₨0</span></div>
+          <div class="gs-item"><span class="gs-dot" style="background:var(--warn)"></span><span id="gs-exp">Expenses ₨0</span></div>
+          <div class="gs-item"><span class="gs-dot" style="background:var(--accent)"></span><strong id="gs-net" style="color:var(--accent)">Net ₨0</strong></div>
+        </div>
+      </div>
+
+      <!-- STYLE 3: Minimal -->
+      <div id="profit-style-minimal" class="profit-view">
+        <div class="minimal-profit">
+          <div class="mp-row"><span id="mp-rev-l">Revenue</span><span class="mp-val" id="mp-rev">₨0</span></div>
+          <div class="mp-divider"></div>
+          <div class="mp-row"><span id="mp-cost-l">Purchase</span><span class="mp-val danger" id="mp-cost">₨0</span></div>
+          <div class="mp-row"><span id="mp-exp-l">Expenses</span><span class="mp-val danger" id="mp-exp">₨0</span></div>
+          <div class="mp-divider accent"></div>
+          <div class="mp-row mp-net"><span id="mp-net-l">Net Profit</span><span class="mp-val accent" id="mp-net">₨0</span></div>
+          <div class="mp-margin-bar">
+            <div class="mp-mb-fill" id="mp-mb-fill"></div>
+            <span class="mp-mb-label" id="mp-mb-label">0%</span>
+          </div>
         </div>
       </div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px;">
@@ -1317,7 +1504,124 @@ const LANG = {
     'btn-save-edit':'💾 تبدیلیاں محفوظ کریں','btn-cancel-edit':'منسوخ کریں',
     'tab-upload':'اپ لوڈ','tab-payments':'ادائیگیاں','tab-search':'تلاش',
     'tab-all':'تمام','tab-profit':'منافع','tab-analytics':'اعدادوشمار'
-  }
+  ,
+  ar: {
+    'login-title':'🚗 مدير صالة عرض السيارات','login-sub':'نظام إدارة المبيعات المتميز',
+    'lbl-password':'كلمة المرور','btn-login':'🔓 تسجيل الدخول','login-error':'❌ كلمة مرور غير صحيحة',
+    'header-title':'🚗 مدير صالة العرض','lbl-overdue':'متأخر',
+    'lbl-employees':'الموظفون','lbl-logout':'تسجيل الخروج','lang-text':'EN',
+    'lbl-install':'📱 ثبّت التطبيق للوصول السريع!','btn-install':'تثبيت',
+    'lbl-car-name':'اسم السيارة / الموديل *','lbl-reg-number':'رقم التسجيل *',
+    'lbl-cust-name':'اسم العميل *','lbl-cust-phone':'هاتف العميل *',
+    'lbl-sell-date':'تاريخ البيع *','lbl-sell-price':'سعر البيع (ر.س) *',
+    'lbl-purch-cost':'تكلفة الشراء (ر.س) *','lbl-purch-hint':'💡 كم دفعت لشراء هذه السيارة؟',
+    'lbl-expenses':'مصاريف إضافية (اختياري)','lbl-exp-hint':'إصلاحات، صيانة، تعديلات...',
+    'btn-add-expense':'➕ إضافة مصروف','lbl-pay-type':'نوع الدفع *',
+    'lbl-cash':'نقداً (دفع كامل)','lbl-inst':'أقساط',
+    'lbl-down':'الدفعة الأولى (ر.س) *','lbl-inst-count':'عدد الأقساط *',
+    'lbl-sold-by':'بيع بواسطة (الموظف) *','lbl-receipt-photo':'صورة الإيصال *',
+    'btn-save-receipt':'💾 حفظ الإيصال','lbl-pay-track':'تتبع المدفوعات',
+    'lbl-overdue-title':'⚠️ مدفوعات متأخرة!','lbl-upcoming-title':'📅 مدفوعات قادمة',
+    'lbl-total-pending':'إجمالي المعلق','lbl-total-received':'إجمالي المستلم',
+    'btn-refresh-pay':'↻ تحديث','lbl-search-reg':'بحث برقم التسجيل','lbl-filter-emp':'تصفية حسب الموظف',
+    'btn-search':'🔍 بحث','lbl-total-receipts':'إجمالي الإيصالات','btn-refresh-all':'↻ تحديث',
+    'lbl-profit-title':'الأرباح والخسائر','lbl-tot-rev':'إجمالي الإيرادات',
+    'lbl-purch-cost-p':'تكلفة الشراء','lbl-tot-exp':'إجمالي المصاريف',
+    'lbl-profit-margin':'هامش الربح','lbl-net-profit':'صافي الربح',
+    'lbl-exp-sales':'المبيعات','lbl-exp-profit':'الأرباح','lbl-exp-payments':'المدفوعات','lbl-exp-expenses':'المصاريف',
+    'btn-refresh-profit':'↻ تحديث','lbl-profit-by-car':'الربح حسب السيارة',
+    'lbl-analytics':'تحليلات المبيعات','lbl-total-cars':'إجمالي السيارات المباعة',
+    'lbl-total-rev-a':'إجمالي الإيرادات','lbl-top-sales':'أفضل البائعين','lbl-best-cars':'أكثر السيارات مبيعاً',
+    'lbl-this-week':'هذا الأسبوع','lbl-this-month':'هذا الشهر',
+    'lbl-cars-sold-w':'سيارات مباعة','lbl-rev-w':'الإيرادات','lbl-cars-sold-m':'سيارات مباعة','lbl-rev-m':'الإيرادات',
+    'btn-refresh-analytics':'↻ تحديث التحليلات',
+    'btn-close-modal':'✕ إغلاق','btn-download':'💾 تنزيل','btn-edit':'✎ تعديل','btn-drive':'⬗ درايف','btn-delete':'✕ حذف',
+    'btn-close-edit':'✕ إغلاق','lbl-edit-title':'تعديل الإيصال',
+    'lbl-edit-car':'اسم السيارة','lbl-edit-reg':'رقم التسجيل','lbl-edit-cust':'اسم العميل',
+    'lbl-edit-phone':'هاتف العميل','lbl-edit-date':'تاريخ البيع','lbl-edit-price':'سعر البيع (ر.س)',
+    'lbl-edit-cost':'تكلفة الشراء (ر.س)','lbl-edit-sold':'بيع بواسطة',
+    'btn-save-edit':'💾 حفظ التغييرات','btn-cancel-edit':'إلغاء',
+    'tab-upload':'بيع جديد','tab-payments':'المدفوعات','tab-search':'بحث',
+    'tab-all':'السجلات','tab-profit':'الأرباح','tab-analytics':'إحصائيات'
+  },
+  sd: {
+    'login-title':'🚗 ڪار شوروم مئنيجر','login-sub':'پريميم سيلز مئنيجمينٽ سسٽم',
+    'lbl-password':'پاسورڊ','btn-login':'🔓 لاگ ان','login-error':'❌ غلط پاسورڊ',
+    'header-title':'🚗 ڪار شوروم مئنيجر','lbl-overdue':'دير ٿيل',
+    'lbl-employees':'ملازم','lbl-logout':'لاگ آئوٽ','lang-text':'EN',
+    'lbl-install':'📱 آسان رسائي لاءِ انسٽال ڪريو!','btn-install':'انسٽال',
+    'lbl-car-name':'گاڏيءَ جو نالو / ماڊل *','lbl-reg-number':'رجسٽريشن نمبر *',
+    'lbl-cust-name':'گراهڪ جو نالو *','lbl-cust-phone':'گراهڪ جو فون *',
+    'lbl-sell-date':'وڪري جي تاريخ *','lbl-sell-price':'وڪري جي قيمت (PKR) *',
+    'lbl-purch-cost':'خريداري جي قيمت (PKR) *','lbl-purch-hint':'💡 هيءَ گاڏي خريد ڪرڻ تي ڪيترو ڏنو؟',
+    'lbl-expenses':'اضافي خرچا (اختياري)','lbl-exp-hint':'مرمت، سار سنڀال، تبديليون...',
+    'btn-add-expense':'➕ خرچو شامل ڪريو','lbl-pay-type':'ادائيگي جو قسم *',
+    'lbl-cash':'نقد (مڪمل ادائيگي)','lbl-inst':'قسطون',
+    'lbl-down':'پهرين ادائيگي (PKR) *','lbl-inst-count':'قسطن جو تعداد *',
+    'lbl-sold-by':'فروخت ڪندڙ (ملازم) *','lbl-receipt-photo':'رسيد جي تصوير *',
+    'btn-save-receipt':'💾 رسيد محفوظ ڪريو','lbl-pay-track':'ادائيگي ٽريڪنگ',
+    'lbl-overdue-title':'⚠️ دير ٿيل ادائيگيون!','lbl-upcoming-title':'📅 ايندڙ ادائيگيون',
+    'lbl-total-pending':'ڪل باقي','lbl-total-received':'ڪل وصول ٿيل',
+    'btn-refresh-pay':'↻ تازو ڪريو','lbl-search-reg':'رجسٽريشن نمبر سان ڳوليو','lbl-filter-emp':'ملازم سان فلٽر',
+    'btn-search':'🔍 ڳوليو','lbl-total-receipts':'ڪل رسيدون','btn-refresh-all':'↻ تازو ڪريو',
+    'lbl-profit-title':'نفعو ۽ نقصان','lbl-tot-rev':'ڪل آمدني',
+    'lbl-purch-cost-p':'خريداري جي لاڳت','lbl-tot-exp':'ڪل خرچا',
+    'lbl-profit-margin':'نفعي جو مارجن','lbl-net-profit':'خالص نفعو',
+    'lbl-exp-sales':'وڪري','lbl-exp-profit':'نفعو','lbl-exp-payments':'ادائيگيون','lbl-exp-expenses':'خرچا',
+    'btn-refresh-profit':'↻ تازو ڪريو','lbl-profit-by-car':'گاڏي مطابق نفعو',
+    'lbl-analytics':'سيلز تجزيو','lbl-total-cars':'ڪل فروخت ٿيل گاڏيون',
+    'lbl-total-rev-a':'ڪل آمدني','lbl-top-sales':'بهترين سيلزمئن','lbl-best-cars':'سڀ کان وڌيڪ وڪامل گاڏيون',
+    'lbl-this-week':'هن هفتي','lbl-this-month':'هن مهيني',
+    'lbl-cars-sold-w':'فروخت ٿيل گاڏيون','lbl-rev-w':'آمدني','lbl-cars-sold-m':'فروخت ٿيل گاڏيون','lbl-rev-m':'آمدني',
+    'btn-refresh-analytics':'↻ تجزيو تازو ڪريو',
+    'btn-close-modal':'✕ بند ڪريو','btn-download':'💾 ڊائونلوڊ','btn-edit':'✎ ترميم','btn-drive':'⬗ ڊرائيو','btn-delete':'✕ ڊليٽ',
+    'btn-close-edit':'✕ بند ڪريو','lbl-edit-title':'رسيد ۾ ترميم',
+    'lbl-edit-car':'گاڏيءَ جو نالو','lbl-edit-reg':'رجسٽريشن نمبر','lbl-edit-cust':'گراهڪ جو نالو',
+    'lbl-edit-phone':'گراهڪ جو فون','lbl-edit-date':'وڪري جي تاريخ','lbl-edit-price':'وڪري جي قيمت (PKR)',
+    'lbl-edit-cost':'خريداري جي قيمت (PKR)','lbl-edit-sold':'فروخت ڪندڙ',
+    'btn-save-edit':'💾 تبديليون محفوظ ڪريو','btn-cancel-edit':'منسوخ',
+    'tab-upload':'نئون وڪرو','tab-payments':'ادائيگيون','tab-search':'ڳولا',
+    'tab-all':'رڪارڊ','tab-profit':'نفعو','tab-analytics':'اعداد شمار'
+  },
+  fa: {
+    'login-title':'🚗 مدیر نمایشگاه خودرو','login-sub':'سیستم مدیریت فروش حرفه‌ای',
+    'lbl-password':'رمز عبور','btn-login':'🔓 ورود','login-error':'❌ رمز عبور اشتباه است',
+    'header-title':'🚗 مدیر نمایشگاه خودرو','lbl-overdue':'معوقه',
+    'lbl-employees':'کارمندان','lbl-logout':'خروج','lang-text':'EN',
+    'lbl-install':'📱 برای دسترسی آسان نصب کنید!','btn-install':'نصب',
+    'lbl-car-name':'نام/مدل خودرو *','lbl-reg-number':'شماره پلاک *',
+    'lbl-cust-name':'نام مشتری *','lbl-cust-phone':'تلفن مشتری *',
+    'lbl-sell-date':'تاریخ فروش *','lbl-sell-price':'قیمت فروش (تومان) *',
+    'lbl-purch-cost':'هزینه خرید (تومان) *','lbl-purch-hint':'💡 این خودرو را به چه قیمتی خریدید؟',
+    'lbl-expenses':'هزینه‌های اضافی (اختیاری)','lbl-exp-hint':'تعمیرات، نگهداری، تغییرات...',
+    'btn-add-expense':'➕ افزودن هزینه','lbl-pay-type':'نوع پرداخت *',
+    'lbl-cash':'نقدی (پرداخت کامل)','lbl-inst':'اقساط',
+    'lbl-down':'پیش پرداخت (تومان) *','lbl-inst-count':'تعداد اقساط *',
+    'lbl-sold-by':'فروشنده (کارمند) *','lbl-receipt-photo':'عکس رسید *',
+    'btn-save-receipt':'💾 ذخیره رسید','lbl-pay-track':'پیگیری پرداخت‌ها',
+    'lbl-overdue-title':'⚠️ پرداخت‌های معوقه!','lbl-upcoming-title':'📅 پرداخت‌های پیش رو',
+    'lbl-total-pending':'کل معلق','lbl-total-received':'کل دریافتی',
+    'btn-refresh-pay':'↻ بروزرسانی','lbl-search-reg':'جستجو با شماره پلاک','lbl-filter-emp':'فیلتر بر اساس کارمند',
+    'btn-search':'🔍 جستجو','lbl-total-receipts':'کل رسیدها','btn-refresh-all':'↻ بروزرسانی',
+    'lbl-profit-title':'سود و زیان','lbl-tot-rev':'کل درآمد',
+    'lbl-purch-cost-p':'هزینه خرید','lbl-tot-exp':'کل هزینه‌ها',
+    'lbl-profit-margin':'حاشیه سود','lbl-net-profit':'سود خالص',
+    'lbl-exp-sales':'فروش','lbl-exp-profit':'سود','lbl-exp-payments':'پرداخت‌ها','lbl-exp-expenses':'هزینه‌ها',
+    'btn-refresh-profit':'↻ بروزرسانی','lbl-profit-by-car':'سود بر اساس خودرو',
+    'lbl-analytics':'تحلیل فروش','lbl-total-cars':'کل خودروهای فروخته شده',
+    'lbl-total-rev-a':'کل درآمد','lbl-top-sales':'برترین فروشندگان','lbl-best-cars':'پرفروش‌ترین خودروها',
+    'lbl-this-week':'این هفته','lbl-this-month':'این ماه',
+    'lbl-cars-sold-w':'خودرو فروخته شده','lbl-rev-w':'درآمد','lbl-cars-sold-m':'خودرو فروخته شده','lbl-rev-m':'درآمد',
+    'btn-refresh-analytics':'↻ بروزرسانی تحلیل‌ها',
+    'btn-close-modal':'✕ بستن','btn-download':'💾 دانلود','btn-edit':'✎ ویرایش','btn-drive':'⬗ درایو','btn-delete':'✕ حذف',
+    'btn-close-edit':'✕ بستن','lbl-edit-title':'ویرایش رسید',
+    'lbl-edit-car':'نام/مدل خودرو','lbl-edit-reg':'شماره پلاک','lbl-edit-cust':'نام مشتری',
+    'lbl-edit-phone':'تلفن مشتری','lbl-edit-date':'تاریخ فروش','lbl-edit-price':'قیمت فروش (تومان)',
+    'lbl-edit-cost':'هزینه خرید (تومان)','lbl-edit-sold':'فروشنده',
+    'btn-save-edit':'💾 ذخیره تغییرات','btn-cancel-edit':'لغو',
+    'tab-upload':'فروش جدید','tab-payments':'پرداخت‌ها','tab-search':'جستجو',
+    'tab-all':'سوابق','tab-profit':'سود','tab-analytics':'آمار'
+  }  }
 };
 
 let currentLang = localStorage.getItem('lang') || 'en';
@@ -1332,8 +1636,12 @@ let deferredPrompt;
 // ===================== LANGUAGE =====================
 function applyLanguage() {
   const t = LANG[currentLang];
-  const isUrdu = currentLang === 'ur';
-  document.body.classList.toggle('urdu', isUrdu);
+  const isRTL = ['ur','ar','sd','fa'].includes(currentLang);
+  document.body.classList.toggle('urdu', isRTL);
+  // Show current language name on button
+  const names = {en:'EN',ur:'اردو',ar:'عربي',sd:'سنڌي',fa:'فارسی'};
+  const lbtn = document.getElementById('lang-text');
+  if(lbtn) lbtn.textContent = names[currentLang] || 'EN';
   // update every translatable element by id
   Object.keys(t).forEach(id => {
     const el = document.getElementById(id);
@@ -1342,7 +1650,10 @@ function applyLanguage() {
 }
 
 function toggleLanguage() {
-  currentLang = currentLang === 'en' ? 'ur' : 'en';
+  // Cycle through all languages
+  const langs = ['en','ur','ar','sd','fa'];
+  const idx = langs.indexOf(currentLang);
+  currentLang = langs[(idx+1) % langs.length];
   localStorage.setItem('lang', currentLang);
   applyLanguage();
 }
@@ -1682,8 +1993,8 @@ async function downloadReceipt() {
 
 function editReceipt() {
   if(!currentViewingReceipt) return;
+  const r=currentViewingReceipt; // save BEFORE closeModal nulls it
   closeModal();
-  const r=currentViewingReceipt;
   document.getElementById('edit-car-name').value=r.carName||'';
   document.getElementById('edit-reg-number').value=r.regNumber||'';
   document.getElementById('edit-customer-name').value=r.customerName||'';
@@ -1912,6 +2223,31 @@ document.getElementById('edit-modal').addEventListener('click',e=>{if(e.target==
       </div>
       <span class="theme-check">✓</span>
     </div>
+
+    <!-- Icon Pack Options -->
+    <div class="icon-panel-title">Icon Style</div>
+    <div class="icon-options">
+      <div class="icon-option active" onclick="setIconPack('minimal',this)">
+        <span class="icon-preview">⊕ ◎ ≡</span>
+        <span class="icon-opt-name">Minimal</span>
+        <span class="icon-check">✓</span>
+      </div>
+      <div class="icon-option" onclick="setIconPack('arrows',this)">
+        <span class="icon-preview">→ ⬆ ⬇</span>
+        <span class="icon-opt-name">Arrows</span>
+        <span class="icon-check">✓</span>
+      </div>
+      <div class="icon-option" onclick="setIconPack('emoji',this)">
+        <span class="icon-preview">🚗 💰 📊</span>
+        <span class="icon-opt-name">Emoji</span>
+        <span class="icon-check">✓</span>
+      </div>
+      <div class="icon-option" onclick="setIconPack('sharp',this)">
+        <span class="icon-preview">▲ ■ ●</span>
+        <span class="icon-opt-name">Sharp</span>
+        <span class="icon-check">✓</span>
+      </div>
+    </div>
   </div>
 
   <button class="theme-toggle-btn" onclick="toggleThemePanel()" title="Change Theme">🎨</button>
@@ -1969,6 +2305,110 @@ document.getElementById('edit-modal').addEventListener('click',e=>{if(e.target==
   const saved = localStorage.getItem('elite-theme') || 'phantom';
   applyTheme(saved);
 })();
+
+// ══════════════════════════════════════
+// ICON PACK ENGINE
+// ══════════════════════════════════════
+const ICON_PACKS = {
+  minimal: { upload:'⊕', payments:'◎', search:'⊙', all:'≡', profit:'◈', analytics:'⋯' },
+  arrows:  { upload:'↑', payments:'↔', search:'↗', all:'↕', profit:'↑↓', analytics:'∿' },
+  emoji:   { upload:'🚗', payments:'💰', search:'🔍', all:'📋', profit:'💵', analytics:'📊' },
+  sharp:   { upload:'▲', payments:'◆', search:'●', all:'■', profit:'▶', analytics:'▪▪▪' }
+};
+const TAB_IDS = ['upload','payments','search','all','profit','analytics'];
+
+function setIconPack(pack, el) {
+  localStorage.setItem('elite-icons', pack);
+  document.querySelectorAll('.icon-option').forEach(o => o.classList.remove('active'));
+  if(el) el.classList.add('active');
+  const icons = ICON_PACKS[pack] || ICON_PACKS.minimal;
+  TAB_IDS.forEach(id => {
+    const btn = document.querySelector(`.tab-btn[onclick*="'${id}'"]`);
+    if(btn) {
+      const ic = btn.querySelector('.tab-icon');
+      if(ic) ic.textContent = icons[id] || ic.textContent;
+    }
+  });
+}
+
+// Apply saved icon pack
+(function(){
+  const savedPack = localStorage.getItem('elite-icons') || 'minimal';
+  const savedEl = document.querySelector(`.icon-option[onclick*="'${savedPack}'"]`);
+  setIconPack(savedPack, savedEl);
+})();
+
+// ══════════════════════════════════════
+// PROFIT VIEW ENGINE
+// ══════════════════════════════════════
+function setProfitStyle(style, btn) {
+  localStorage.setItem('profit-style', style);
+  document.querySelectorAll('.ps-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.profit-view').forEach(v => v.classList.remove('active-view'));
+  if(btn) btn.classList.add('active');
+  const el = document.getElementById('profit-style-'+style);
+  if(el) el.classList.add('active-view');
+}
+// Apply saved profit style
+(function(){
+  const ps = localStorage.getItem('profit-style') || 'cards';
+  const psBtn = document.querySelector(`.ps-btn[onclick*="'${ps}'"]`);
+  setProfitStyle(ps, psBtn);
+})();
+
+// Override calculateProfit to also update new views
+const _origCalcProfit = calculateProfit;
+calculateProfit = async function() {
+  await _origCalcProfit();
+  updateProfitViews();
+};
+
+function updateProfitViews() {
+  const rev = parseFloat(document.getElementById('profit-revenue').textContent.replace(/[^0-9.-]/g,'')) || 0;
+  const cost = parseFloat(document.getElementById('profit-purchase').textContent.replace(/[^0-9.-]/g,'')) || 0;
+  const exp = parseFloat(document.getElementById('profit-expenses').textContent.replace(/[^0-9.-]/g,'')) || 0;
+  const net = parseFloat(document.getElementById('profit-net').textContent.replace(/[^0-9.-]/g,'')) || 0;
+  const margin = parseFloat(document.getElementById('profit-margin').textContent) || 0;
+
+  // Update progress bars in cards view
+  if(rev > 0) {
+    const pb = document.getElementById('purchase-bar');
+    const eb = document.getElementById('expense-bar');
+    if(pb) pb.style.width = Math.min(100,(cost/rev*100)) + '%';
+    if(eb) eb.style.width = Math.min(100,(exp/rev*100)) + '%';
+    const rp = document.getElementById('ring-path');
+    if(rp) rp.style.strokeDasharray = Math.min(100,margin) + ', 100';
+  }
+
+  // Hero tag
+  const tag = document.getElementById('profit-hero-tag');
+  if(tag) tag.textContent = net >= 0 ? '▲ Profitable' : '▼ Loss';
+  if(tag) tag.style.color = net >= 0 ? 'var(--accent)' : 'var(--danger)';
+
+  // Gauge view
+  const gm = document.getElementById('gauge-margin-val');
+  if(gm) gm.textContent = margin.toFixed(1) + '%';
+  const gf = document.getElementById('gauge-fill');
+  if(gf) {
+    const pct = Math.min(100, Math.max(0, margin));
+    gf.style.strokeDasharray = (pct * 2.512) + ' 251.2';
+  }
+  const gn = document.getElementById('gauge-needle');
+  if(gn) { const deg = -90 + (margin/100 * 180); gn.setAttribute('transform','rotate('+deg+',100,100)'); }
+  const fmt = n => '₨'+Math.round(n).toLocaleString();
+  const gsRev = document.getElementById('gs-rev'); if(gsRev) gsRev.textContent = 'Revenue ' + fmt(rev);
+  const gsCost = document.getElementById('gs-cost'); if(gsCost) gsCost.textContent = 'Cost ' + fmt(cost);
+  const gsExp = document.getElementById('gs-exp'); if(gsExp) gsExp.textContent = 'Expenses ' + fmt(exp);
+  const gsNet = document.getElementById('gs-net'); if(gsNet) { gsNet.textContent = 'Net ' + fmt(net); gsNet.style.color = net>=0 ? 'var(--accent)' : 'var(--danger)'; }
+
+  // Minimal view
+  const mpRev = document.getElementById('mp-rev'); if(mpRev) mpRev.textContent = fmt(rev);
+  const mpCost = document.getElementById('mp-cost'); if(mpCost) mpCost.textContent = fmt(cost);
+  const mpExp = document.getElementById('mp-exp'); if(mpExp) mpExp.textContent = fmt(exp);
+  const mpNet = document.getElementById('mp-net'); if(mpNet) { mpNet.textContent = fmt(net); mpNet.style.color = net>=0?'var(--accent)':'var(--danger)'; }
+  const mbFill = document.getElementById('mp-mb-fill'); if(mbFill) mbFill.style.width = Math.min(100,Math.max(0,margin)) + '%';
+  const mbLabel = document.getElementById('mp-mb-label'); if(mbLabel) mbLabel.textContent = margin.toFixed(1) + '%';
+}
 </script>
 </body>
 </html>
