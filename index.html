@@ -728,6 +728,211 @@ body.urdu .close-modal { right:auto; left:0; }
   .bento-value { font-size:19px; }
   .theme-switcher { bottom:85px; right:10px; }
 }
+
+/* ═══════════════════════════════════════
+   DEVICE DETECTION RESPONSIVE
+═══════════════════════════════════════ */
+/* Mobile-first (default already set above) */
+
+/* Tablet: 600px+ */
+@media (min-width: 600px) {
+  body { padding: 20px; }
+  .container { max-width: 680px; }
+  .card { padding: 28px; padding-bottom: 100px; border-radius: 28px; }
+  .bento-stats { grid-template-columns: repeat(4, 1fr); gap: 12px; }
+  .bento-value { font-size: 20px; }
+  .tab-btn { font-size: 11px; padding: 10px 6px 8px; }
+  .tab-btn .tab-icon { font-size: 20px; }
+  .login-container { max-width: 440px; margin: 60px auto; }
+}
+
+/* Desktop: 1024px+ */
+@media (min-width: 1024px) {
+  body { padding: 30px; display: flex; align-items: flex-start; justify-content: center; min-height: 100vh; }
+  .container { max-width: 780px; width: 100%; }
+  .card { padding: 36px; padding-bottom: 110px; border-radius: 32px; }
+  .header { display: flex; align-items: center; justify-content: space-between; text-align: left; padding: 20px 28px; }
+  .header h1 { font-size: 22px; margin: 0; }
+  .header > p { display: none; }
+  .header-actions { display: flex; gap: 8px; margin-top: 0; }
+  .logout-btn { margin-top: 0; }
+  .bento-stats { grid-template-columns: repeat(4, 1fr); gap: 14px; }
+  .bento-card { padding: 18px 16px; }
+  .bento-value { font-size: 24px; }
+  .bento-label { font-size: 10px; }
+  .tab-buttons { max-width: 720px; bottom: 20px; }
+  .tab-btn { font-size: 11px; padding: 11px 8px 9px; }
+  .tab-btn .tab-icon { font-size: 22px; }
+  .receipt-item { padding: 16px 20px; }
+  .receipt-item:hover { transform: translateX(4px); }
+  input[type=text],input[type=password],input[type=date],input[type=number],select { padding: 14px 16px; font-size: 15px; }
+  .login-container { max-width: 480px; margin: 80px auto; }
+  .theme-switcher { right: calc(50% - 390px - 60px); }
+}
+
+/* Large Desktop: 1400px+ */
+@media (min-width: 1400px) {
+  .container { max-width: 900px; }
+  .theme-switcher { right: calc(50% - 450px - 70px); }
+}
+
+/* ═══════════════════════════════════════
+   PREMIUM LOGIN PAGE
+═══════════════════════════════════════ */
+.login-container {
+  position: relative;
+  overflow: visible !important;
+  margin-top: 40px;
+}
+
+/* Decorative spinning rings */
+.login-rings {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  z-index: 0;
+}
+.ring {
+  position: absolute;
+  border-radius: 50%;
+  border: 1px solid var(--border-hi);
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+}
+.ring-1 { width: 300px; height: 300px; opacity: 0.15; animation: spin-slow 20s linear infinite; }
+.ring-2 { width: 450px; height: 450px; opacity: 0.08; animation: spin-slow 35s linear infinite reverse; border-style: dashed; }
+.ring-3 { width: 600px; height: 600px; opacity: 0.04; animation: spin-slow 50s linear infinite; }
+@keyframes spin-slow { to { transform: translate(-50%,-50%) rotate(360deg); } }
+
+.login-logo {
+  position: relative; z-index: 1;
+  display: flex; justify-content: center; margin-bottom: 20px;
+}
+.logo-icon {
+  width: 72px; height: 72px; border-radius: 22px;
+  background: var(--surface2);
+  border: 1px solid var(--border-hi);
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: var(--glow-strong);
+  animation: float 4s ease-in-out infinite;
+  position: relative; overflow: hidden;
+}
+.logo-icon::before {
+  content: '';
+  position: absolute; inset: 0; border-radius: 22px;
+  background: linear-gradient(135deg, var(--accent-dim), transparent);
+}
+
+.login-brand { position: relative; z-index: 1; margin-bottom: 28px; }
+.login-brand-sub {
+  font-size: 9px; letter-spacing: 4px; color: var(--text-3);
+  font-weight: 700; text-transform: uppercase; display: block; margin-bottom: 6px;
+}
+.login-brand-title {
+  font-size: 32px !important; font-weight: 900; letter-spacing: -1px;
+  line-height: 1; margin-bottom: 8px !important;
+}
+.login-brand-desc {
+  color: var(--text-3) !important; font-size: 12px !important;
+  letter-spacing: 0.5px; margin-bottom: 0 !important;
+}
+
+.login-divider {
+  display: flex; align-items: center; gap: 12px;
+  margin-bottom: 24px; position: relative; z-index: 1;
+}
+.login-divider-line { flex: 1; height: 1px; background: var(--border); }
+.login-divider-text { font-size: 9px; letter-spacing: 2px; color: var(--text-3); font-weight: 700; white-space: nowrap; }
+
+.login-form { position: relative; z-index: 1; }
+
+.login-field {
+  position: relative; margin-bottom: 14px;
+}
+.login-field-icon {
+  position: absolute; left: 14px; top: 50%; transform: translateY(-50%);
+  display: flex; align-items: center; pointer-events: none;
+}
+.login-input {
+  padding-left: 42px !important;
+  padding-right: 44px !important;
+  border-radius: 12px !important;
+  font-size: 15px !important;
+  letter-spacing: 0.5px;
+}
+.pw-toggle {
+  position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
+  background: none; border: none; cursor: pointer;
+  display: flex; align-items: center; padding: 4px;
+}
+.pw-toggle:hover svg { stroke: var(--accent); }
+
+.login-btn {
+  border-radius: 12px !important;
+  font-size: 15px !important;
+  letter-spacing: 0.5px;
+  margin-top: 6px !important;
+}
+.login-btn-content {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+}
+
+.login-footer {
+  position: relative; z-index: 1;
+  margin-top: 24px; font-size: 10px; letter-spacing: 1.5px;
+  color: var(--text-3); text-transform: uppercase;
+}
+
+/* ═══════════════════════════════════════
+   MODAL BUTTONS ROW
+═══════════════════════════════════════ */
+.modal-actions {
+  display: flex; gap: 8px; justify-content: center;
+  flex-wrap: wrap; margin-top: 16px;
+}
+.modal-actions button {
+  cursor: pointer; font-family: inherit; transition: all 0.2s ease;
+}
+.modal-actions button:hover { transform: translateY(-2px); opacity: 0.85; }
+
+/* ═══════════════════════════════════════
+   TAB ICON UPGRADE — Symbol chars
+═══════════════════════════════════════ */
+.tab-btn .tab-icon {
+  font-size: 20px;
+  font-style: normal;
+  line-height: 1;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI Symbol', sans-serif;
+}
+
+/* ═══════════════════════════════════════
+   SECTION HEADER UPGRADE
+═══════════════════════════════════════ */
+.upload-section-title {
+  font-size: 11px; font-weight: 700; letter-spacing: 1.5px;
+  text-transform: uppercase; color: var(--text-3);
+  display: flex; align-items: center; gap: 8px;
+  margin-bottom: 16px; margin-top: 8px;
+}
+.upload-section-title::before {
+  content: ''; flex: 0 0 24px; height: 1px; background: var(--border-hi);
+}
+.upload-section-title::after {
+  content: ''; flex: 1; height: 1px; background: var(--border);
+}
+
+/* ═══════════════════════════════════════
+   DESKTOP LAYOUT EXTRAS
+═══════════════════════════════════════ */
+@media (min-width: 1024px) {
+  /* Two column form on desktop */
+  .form-row-2 {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 14px;
+  }
+  .form-row-2 .form-group { margin-bottom: 0; }
+}
+
 </style>
 </head>
 <body>
@@ -735,24 +940,73 @@ body.urdu .close-modal { right:auto; left:0; }
 <!-- LOGIN -->
 <div id="login-screen" class="container">
   <div class="login-container">
-    <h1 id="login-title">🚗 <span class="hi">CAR</span> SHOWROOM MANAGER</h1>
-    <p id="login-sub">Premium Sales Management System</p>
-    <p style="font-size:11px;color:#999;margin-top:8px;">Powered by Advanced Technology</p>
-    <div style="margin-top:30px;">
-      <div class="error-msg" id="login-error"></div>
-      <div class="form-group" style="text-align:left;">
-        <label id="lbl-password">Password</label>
-        <input type="password" id="login-password" placeholder="Enter password">
-      </div>
-      <button class="btn btn-primary" onclick="login()" id="btn-login">🔓 Login</button>
+
+    <!-- Decorative rings -->
+    <div class="login-rings">
+      <div class="ring ring-1"></div>
+      <div class="ring ring-2"></div>
+      <div class="ring ring-3"></div>
     </div>
+
+    <!-- Logo mark -->
+    <div class="login-logo">
+      <div class="logo-icon">
+        <svg width="38" height="38" viewBox="0 0 38 38" fill="none">
+          <circle cx="19" cy="19" r="18" stroke="var(--accent)" stroke-width="1.5" stroke-dasharray="4 2" opacity="0.4"/>
+          <circle cx="19" cy="19" r="12" fill="var(--accent-dim)" stroke="var(--accent)" stroke-width="1.5"/>
+          <path d="M10 22h18M12 22l2-5h10l2 5M14 22v2M24 22v2M13 17h12" stroke="var(--accent)" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+      </div>
+    </div>
+
+    <!-- Brand -->
+    <div class="login-brand">
+      <span class="login-brand-sub">ELITE</span>
+      <h1 id="login-title" class="login-brand-title"><span class="hi">AUTO</span> MANAGER</h1>
+      <p id="login-sub" class="login-brand-desc">Premium Showroom Intelligence</p>
+    </div>
+
+    <!-- Divider -->
+    <div class="login-divider">
+      <span class="login-divider-line"></span>
+      <span class="login-divider-text">SECURE ACCESS</span>
+      <span class="login-divider-line"></span>
+    </div>
+
+    <!-- Form -->
+    <div class="login-form">
+      <div class="error-msg" id="login-error"></div>
+      <div class="login-field">
+        <div class="login-field-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--text-3)" stroke-width="2" stroke-linecap="round">
+            <rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/>
+          </svg>
+        </div>
+        <input type="password" id="login-password" placeholder="Enter your password" class="login-input">
+        <button class="pw-toggle" onclick="togglePw()" type="button">
+          <svg id="pw-eye" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--text-3)" stroke-width="2" stroke-linecap="round">
+            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
+          </svg>
+        </button>
+      </div>
+      <button class="btn btn-primary login-btn" onclick="login()" id="btn-login">
+        <span class="login-btn-content">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+            <path d="M15 3h4a2 2 0 012 2v14a2 2 0 01-2 2h-4M10 17l5-5-5-5M15 12H3"/>
+          </svg>
+          <span id="btn-login-text">Sign In</span>
+        </span>
+      </button>
+    </div>
+
+    <p class="login-footer">Powered by Advanced Technology</p>
   </div>
 </div>
 
 <!-- MAIN APP -->
 <div id="main-app" class="container hidden">
   <div class="header">
-    <h1 id="header-title">🚗 <span class="hi">CAR</span> SHOWROOM MANAGER</h1>
+    <h1 id="header-title"><svg style="width:20px;height:20px;vertical-align:middle;margin-right:6px;margin-top:-2px;" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round"><path d="M5 17H3a2 2 0 01-2-2v-4l3.5-7h13L21 11v4a2 2 0 01-2 2h-2"/><circle cx="7.5" cy="17.5" r="2.5"/><circle cx="16.5" cy="17.5" r="2.5"/><path d="M5 11h14"/></svg><span class="hi">AUTO</span> MANAGER</h1>
     <p>Premium Sales Management System</p>
     <p style="font-size:11px;color:#999;margin-top:8px;">Powered by Advanced Technology</p>
     <div class="notification-badge hidden" id="overdue-badge" onclick="switchTabDirect('payments')">
@@ -774,22 +1028,17 @@ body.urdu .close-modal { right:auto; left:0; }
     <div id="upload-tab" class="tab-content active">
       <div class="success-msg" id="upload-success"></div>
       <div class="error-msg" id="upload-error"></div>
-      <div class="form-group"><label id="lbl-car-name">Car Name/Model *</label><input type="text" id="car-name" placeholder="e.g., Toyota Corolla 2020"></div>
-      <div class="form-group"><label id="lbl-reg-number">Car Registration Number *</label><input type="text" id="reg-number" placeholder="e.g., ABC-123" style="text-transform:uppercase"></div>
-      <div class="form-group"><label id="lbl-cust-name">Customer Name *</label><input type="text" id="customer-name" placeholder="e.g., Ahmed Khan"></div>
-      <div class="form-group"><label id="lbl-cust-phone">Customer Phone *</label><input type="text" id="customer-phone" placeholder="e.g., 03001234567"></div>
-      <div class="form-group"><label id="lbl-sell-date">Selling Date *</label><input type="date" id="selling-date"></div>
-      <div class="form-group"><label id="lbl-sell-price">Selling Price (PKR) *</label><input type="number" id="selling-price" placeholder="e.g., 2500000" min="0" step="1000"></div>
-      <div class="form-group">
-        <label id="lbl-purch-cost">Purchase Cost (PKR) *</label>
-        <input type="number" id="purchase-cost" placeholder="e.g., 2000000" min="0" step="1000">
+      <div class="form-row-2"><div class="form-group"><label id="lbl-car-name">Car Name / Model *</label><input type="text" id="car-name" placeholder="e.g., Toyota Corolla 2020"></div><div class="form-group"><label id="lbl-reg-number">Registration No. *</label><input type="text" id="reg-number" placeholder="e.g., ABC-123" style="text-transform:uppercase"></div></div>
+      <div class="form-row-2"><div class="form-group"><label id="lbl-cust-name">Customer Name *</label><input type="text" id="customer-name" placeholder="e.g., Ahmed Khan"></div><div class="form-group"><label id="lbl-cust-phone">Phone *</label><input type="text" id="customer-phone" placeholder="03001234567"></div></div>
+      <div class="form-row-2"><div class="form-group"><label id="lbl-sell-date">Sale Date *</label><input type="date" id="selling-date"></div><div class="form-group"><label id="lbl-sell-price">Selling Price (PKR) *</label><input type="number" id="selling-price" placeholder="2500000" min="0" step="1000"></div></div>
+      <div class="form-group"><label id="lbl-purch-cost">Purchase Cost (PKR) *</label><input type="number" id="purchase-cost" placeholder="e.g., 2000000" min="0" step="1000">
         <small id="lbl-purch-hint" style="color:#666;font-size:12px;display:block;margin-top:5px;">💡 How much did you pay to buy this car?</small>
       </div>
       <div class="form-group">
         <label id="lbl-expenses">Additional Expenses (Optional)</label>
         <small id="lbl-exp-hint" style="color:#666;font-size:12px;display:block;margin-bottom:10px;">Repairs, maintenance, modifications, etc.</small>
         <div id="expenses-container"></div>
-        <button type="button" class="btn btn-primary" onclick="addExpenseField()" style="width:auto;padding:10px 15px;margin-top:5px;" id="btn-add-expense">➕ Add Expense</button>
+        <button type="button" class="btn btn-primary" onclick="addExpenseField()" style="width:auto;padding:10px 15px;margin-top:5px;" id="btn-add-expense">+ Add Expense</button>
       </div>
       <div class="form-group">
         <label id="lbl-pay-type">Payment Type *</label>
@@ -812,7 +1061,7 @@ body.urdu .close-modal { right:auto; left:0; }
       <div class="form-group"><label id="lbl-sold-by">Sold By (Employee) *</label><select id="sold-by"><option value="">Select Employee</option></select></div>
       <div class="form-group"><label id="lbl-receipt-photo">Receipt Photo *</label><input type="file" id="receipt-photo" accept="image/*"></div>
       <img id="preview" class="preview-image" style="display:none">
-      <button class="btn btn-primary" onclick="uploadReceipt()" id="btn-save-receipt">💾 Save Receipt</button>
+      <button class="btn btn-primary" onclick="uploadReceipt()" id="btn-save-receipt">Save Receipt</button>
     </div>
 
     <!-- PAYMENTS TAB -->
@@ -824,7 +1073,7 @@ body.urdu .close-modal { right:auto; left:0; }
         <div class="stat-item"><div class="stat-number" id="total-pending">₨0</div><div class="stat-label" id="lbl-total-pending">Total Pending</div></div>
         <div class="stat-item"><div class="stat-number" id="total-received">₨0</div><div class="stat-label" id="lbl-total-received">Total Received</div></div>
       </div>
-      <button class="btn btn-primary" onclick="loadPayments()" style="margin-bottom:15px;" id="btn-refresh-pay">🔄 Refresh</button>
+      <button class="btn btn-primary" onclick="loadPayments()" style="margin-bottom:15px;" id="btn-refresh-pay">↻ Refresh</button>
       <div id="payments-list"></div>
     </div>
 
@@ -832,14 +1081,14 @@ body.urdu .close-modal { right:auto; left:0; }
     <div id="search-tab" class="tab-content">
       <div class="form-group"><label id="lbl-search-reg">Search by Registration Number</label><input type="text" id="search-input" placeholder="e.g., ABC-123" style="text-transform:uppercase"></div>
       <div class="form-group"><label id="lbl-filter-emp">Filter by Employee</label><select id="search-employee"><option value="">All Employees</option></select></div>
-      <button class="btn btn-primary" onclick="performSearch()" id="btn-search">🔍 Search</button>
+      <button class="btn btn-primary" onclick="performSearch()" id="btn-search">Search Records</button>
       <div id="search-results"></div>
     </div>
 
     <!-- ALL TAB -->
     <div id="all-tab" class="tab-content">
       <div class="stats"><div class="stat-item"><div class="stat-number" id="total-receipts">0</div><div class="stat-label" id="lbl-total-receipts">Total Receipts</div></div></div>
-      <button class="btn btn-primary" onclick="loadAllReceipts()" style="margin-bottom:15px;" id="btn-refresh-all">🔄 Refresh</button>
+      <button class="btn btn-primary" onclick="loadAllReceipts()" style="margin-bottom:15px;" id="btn-refresh-all">↻ Refresh</button>
       <div id="all-receipts"></div>
     </div>
 
@@ -866,7 +1115,7 @@ body.urdu .close-modal { right:auto; left:0; }
         <button class="btn btn-primary" onclick="exportPaymentReport()" style="font-size:14px;">💰 <span id="lbl-exp-payments">Payments</span></button>
         <button class="btn btn-primary" onclick="exportExpenseReport()" style="font-size:14px;">💸 <span id="lbl-exp-expenses">Expenses</span></button>
       </div>
-      <button class="btn btn-primary" onclick="calculateProfit()" style="margin-bottom:15px;" id="btn-refresh-profit">🔄 Refresh</button>
+      <button class="btn btn-primary" onclick="calculateProfit()" style="margin-bottom:15px;" id="btn-refresh-profit">↻ Refresh</button>
       <h4 style="color:var(--text-3);margin:16px 0 11px 0;font-weight:600;font-size:11px;letter-spacing:0.8px;text-transform:uppercase;" id="lbl-profit-by-car">Profit by Car</h4>
       <div id="profit-breakdown"></div>
     </div>
@@ -906,19 +1155,19 @@ body.urdu .close-modal { right:auto; left:0; }
           <div><div style="font-size:12px;color:#666" id="lbl-rev-m">Revenue</div><div style="font-size:22px;font-weight:700;color:var(--amber);word-break:break-all;letter-spacing:-0.3px;" id="month-revenue">₨0</div></div>
         </div>
       </div>
-      <button class="btn btn-primary" onclick="calculateAnalytics()" style="margin-bottom:15px;" id="btn-refresh-analytics">🔄 Refresh Analytics</button>
+      <button class="btn btn-primary" onclick="calculateAnalytics()" style="margin-bottom:15px;" id="btn-refresh-analytics">↻ Refresh Analytics</button>
     </div>
 
     <div style="text-align:center;padding:20px 0 100px 0;color:var(--text-3);font-size:10px;font-weight:500;letter-spacing:2px;text-transform:uppercase;">Crafted by WM ❤️</div>
 
     <!-- BOTTOM NAV -->
     <div class="tab-buttons">
-      <button class="tab-btn active" onclick="switchTab('upload',event)"><span class="tab-icon">📤</span><span id="tab-upload">Upload</span></button>
-      <button class="tab-btn" onclick="switchTab('payments',event)"><span class="tab-icon">💰</span><span id="tab-payments">Payments</span><span class="badge hidden" id="payment-badge">0</span></button>
-      <button class="tab-btn" onclick="switchTab('search',event)"><span class="tab-icon">🔍</span><span id="tab-search">Search</span></button>
-      <button class="tab-btn" onclick="switchTab('all',event)"><span class="tab-icon">📋</span><span id="tab-all">All</span></button>
-      <button class="tab-btn" onclick="switchTab('profit',event)"><span class="tab-icon">💵</span><span id="tab-profit">Profit</span></button>
-      <button class="tab-btn" onclick="switchTab('analytics',event)"><span class="tab-icon">📊</span><span id="tab-analytics">Stats</span></button>
+      <button class="tab-btn active" onclick="switchTab('upload',event)"><span class="tab-icon">⊕</span><span id="tab-upload">New Sale</span></button>
+      <button class="tab-btn" onclick="switchTab('payments',event)"><span class="tab-icon">◎</span><span id="tab-payments">Payments</span><span class="badge hidden" id="payment-badge">0</span></button>
+      <button class="tab-btn" onclick="switchTab('search',event)"><span class="tab-icon">⊙</span><span id="tab-search">Search</span></button>
+      <button class="tab-btn" onclick="switchTab('all',event)"><span class="tab-icon">≡</span><span id="tab-all">Records</span></button>
+      <button class="tab-btn" onclick="switchTab('profit',event)"><span class="tab-icon">◈</span><span id="tab-profit">Profit</span></button>
+      <button class="tab-btn" onclick="switchTab('analytics',event)"><span class="tab-icon">⋯</span><span id="tab-analytics">Analytics</span></button>
     </div>
   </div>
 </div>
@@ -932,11 +1181,11 @@ body.urdu .close-modal { right:auto; left:0; }
       <div style="color:white;font-size:20px;font-weight:700" id="modal-reg"></div>
       <div style="color:white;font-size:14px;margin-top:5px" id="modal-details"></div>
       <div id="modal-installments" style="margin-top:15px;"></div>
-      <div style="margin-top:15px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
-        <button class="btn btn-primary" onclick="downloadReceipt()" id="btn-download" style="width:auto;padding:10px 20px;background:linear-gradient(135deg,#11998e 0%,#38ef7d 100%);">💾 Download</button>
-        <button class="btn btn-primary" onclick="editReceipt()" id="btn-edit" style="width:auto;padding:10px 20px;background:linear-gradient(135deg,#D4AF37 0%,#FFD700 100%);color:#333;">✏️ Edit</button>
-        <button class="btn btn-primary" onclick="openDriveLink()" id="btn-drive" style="width:auto;padding:10px 20px;">📁 Drive</button>
-        <button class="delete-btn" onclick="deleteReceipt()" id="btn-delete">🗑️ Delete</button>
+      <div class="modal-actions">
+        <button onclick="downloadReceipt()" id="btn-download" style="padding:9px 18px;background:rgba(16,185,129,0.12);color:#10B981;border:1px solid rgba(16,185,129,0.25);border-radius:9px;font-size:13px;font-weight:600;">⬇ Download</button>
+        <button onclick="editReceipt()" id="btn-edit" style="padding:9px 18px;background:var(--accent-dim);color:var(--accent);border:1px solid var(--border-hi);border-radius:9px;font-size:13px;font-weight:600;">✎ Edit</button>
+        <button onclick="openDriveLink()" id="btn-drive" style="padding:9px 18px;background:var(--accent2-dim);color:var(--accent2);border:1px solid var(--accent2-hi);border-radius:9px;font-size:13px;font-weight:600;">⬗ Drive</button>
+        <button onclick="deleteReceipt()" id="btn-delete" class="delete-btn">✕ Delete</button>
       </div>
     </div>
   </div>
@@ -947,7 +1196,7 @@ body.urdu .close-modal { right:auto; left:0; }
   <div class="modal-content" style="max-width:600px;">
     <button class="close-modal" onclick="closeEditModal()" id="btn-close-edit">✕ Close</button>
     <div style="background:var(--surface);padding:26px;border-radius:18px;margin-top:50px;border:1px solid var(--border-hi);">
-      <h3 style="color:#E8C870;margin-bottom:20px;font-weight:700;text-align:center;font-family:Georgia,'Times New Roman',serif;font-size:22px;">✏️ <span id="lbl-edit-title">Edit Receipt</span></h3>
+      <h3 style="color:var(--text-1);margin-bottom:16px;font-weight:700;text-align:center;font-size:16px;letter-spacing:-0.2px;">✏️ <span id="lbl-edit-title">Edit Receipt</span></h3>
       <div class="success-msg" id="edit-success"></div>
       <div class="error-msg" id="edit-error"></div>
       <div class="form-group"><label id="lbl-edit-car">Car Name/Model</label><input type="text" id="edit-car-name"></div>
@@ -1589,6 +1838,33 @@ function calculateBestSellingCars(){
   const medals=['🥇','🥈','🥉','🏅'];
   document.getElementById('best-selling-list').innerHTML=s.length?s.map(([n,d],i)=>`<div style="background:white;padding:12px;border-radius:8px;margin-bottom:10px;display:flex;align-items:center;gap:10px;"><span style="font-size:24px;">${medals[Math.min(i,3)]}</span><div><div style="font-weight:700;color:var(--accent);">${n}</div><div style="font-size:12px;color:#666;">${d.count} sold · ₨${d.revenue.toLocaleString()}</div></div></div>`).join(''):'<div class="no-results">No data</div>';
 }
+
+
+// Password visibility toggle
+function togglePw() {
+  const inp = document.getElementById('login-password');
+  const eye = document.getElementById('pw-eye');
+  if (inp.type === 'password') {
+    inp.type = 'text';
+    eye.innerHTML = '<path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23" stroke="var(--accent)" stroke-width="2"/>';
+  } else {
+    inp.type = 'password';
+    eye.innerHTML = '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>';
+  }
+}
+
+// Device detection banner
+(function detectDevice() {
+  const w = window.innerWidth;
+  const isMobile = w < 600;
+  const isTablet = w >= 600 && w < 1024;
+  const isDesktop = w >= 1024;
+  document.documentElement.setAttribute('data-device', isMobile ? 'mobile' : isTablet ? 'tablet' : 'desktop');
+  window.addEventListener('resize', () => {
+    const ww = window.innerWidth;
+    document.documentElement.setAttribute('data-device', ww < 600 ? 'mobile' : ww < 1024 ? 'tablet' : 'desktop');
+  });
+})();
 
 document.getElementById('modal').addEventListener('click',e=>{if(e.target===document.getElementById('modal'))closeModal();});
 document.getElementById('edit-modal').addEventListener('click',e=>{if(e.target===document.getElementById('edit-modal'))closeEditModal();});
