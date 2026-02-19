@@ -1,80 +1,731 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <meta name="theme-color" content="#0A1628">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="Showroom Manager">
-  <link rel="manifest" href="manifest.json">
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-  <script src="https://cdn.sheetjs.com/xlsx-0.20.0/package/dist/xlsx.full.min.js"></script>
-  <title>Car Showroom Manager</title>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
-    *{margin:0;padding:0;box-sizing:border-box}
-    body{font-family:Roboto, sans-serif;background:linear-gradient(135deg,#0A1628 0%,#1E3A5F 50%,#2C5F8D 100%);min-height:100vh;padding:20px;position:relative;overflow-x:hidden}
-    body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;background-image:radial-gradient(circle at 20% 50%,rgba(0,212,255,.1) 0%,transparent 50%),radial-gradient(circle at 80% 80%,rgba(107,70,193,.1) 0%,transparent 50%);pointer-events:none;z-index:0}
-    .container{max-width:600px;margin:0 auto;position:relative;z-index:1}
-    .login-container{background:rgba(255,255,255,.95);backdrop-filter:blur(20px);padding:40px;border-radius:24px;box-shadow:0 20px 60px rgba(0,0,0,.3);text-align:center;border:1px solid rgba(255,255,255,.2)}
-    .login-container h1{background:linear-gradient(135deg,#0A1628 0%,#00D4FF 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;font-size:28px;font-weight:800;margin-bottom:10px}
-    .login-container p{color:#555;margin-bottom:10px;font-weight:500}
-    .header{background:rgba(255,255,255,.98);backdrop-filter:blur(20px);padding:24px;border-radius:20px;box-shadow:0 10px 40px rgba(0,0,0,.15);margin-bottom:20px;text-align:center;position:relative;border:1px solid rgba(255,255,255,.2)}
-    .header h1{background:linear-gradient(135deg,#0A1628 0%,#00D4FF 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;font-size:26px;font-weight:800;margin-bottom:8px}
-    .header p{color:#666;font-size:14px;font-weight:500}
-    .btn-primary{background:linear-gradient(135deg,#00D4FF 0%,#6B46C1 100%);color:white;border:none;padding:16px;border-radius:14px;font-size:16px;font-weight:700;cursor:pointer;box-shadow:0 8px 25px rgba(0,212,255,.3);transition:all .4s cubic-bezier(.4,0,.2,1)}
-    .btn-primary:hover{transform:translateY(-3px)}
-    .btn-primary:disabled{opacity:.6;cursor:not-allowed;transform:none}
-    .tab-buttons{display:flex;gap:6px;background:rgba(255,255,255,.98);backdrop-filter:blur(20px);position:fixed;bottom:20px;left:50%;transform:translateX(-50%);padding:12px;box-shadow:0 10px 40px rgba(0,0,0,.2);z-index:100;max-width:560px;width:calc(100% - 40px);border-radius:20px;border:1px solid rgba(255,255,255,.2)}
-    .tab-btn{flex:1;padding:10px 4px;border:none;background:transparent;color:#666;border-radius:14px;font-size:10px;font-weight:700;cursor:pointer;transition:all .4s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;align-items:center;gap:4px;position:relative}
-    .tab-btn .tab-icon{font-size:20px}
-    .tab-btn.active{background:linear-gradient(135deg,#00D4FF 0%,#6B46C1 100%);color:white;transform:translateY(-2px);box-shadow:0 8px 20px rgba(0,212,255,.4)}
-    .tab-content{display:none}
-    .tab-content.active{display:block}
-    .stats{display:flex;justify-content:space-around;padding:20px;background:linear-gradient(135deg,rgba(0,212,255,.1) 0%,rgba(107,70,193,.1) 100%);border-radius:16px;margin-bottom:20px;border:1px solid rgba(0,212,255,.2)}
-    .stat-item{text-align:center}
-    .stat-number{font-size:26px;font-weight:800;background:linear-gradient(135deg,#00D4FF 0%,#6B46C1 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;word-break:break-all;line-height:1.2}
-    @media(max-width:480px){.stat-number{font-size:18px}}
-    .stat-label{font-size:12px;color:#7C8B9A;margin-top:6px;font-weight:600}
-    .delete-btn{background:linear-gradient(135deg,#dc3545 0%,#c82333 100%);color:white;border:none;padding:10px 18px;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;box-shadow:0 4px 15px rgba(220,53,69,.3)}
-    .hidden{display:none !important}
-    ::-webkit-scrollbar{width:8px}
-    ::-webkit-scrollbar-track{background:rgba(255,255,255,.1)}
-    ::-webkit-scrollbar-thumb{background:linear-gradient(135deg,#00D4FF 0%,#6B46C1 100%);border-radius:10px}
-  </style>
-</head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#06090F">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Showroom Manager">
+<link rel="manifest" href="manifest.json">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script src="https://cdn.sheetjs.com/xlsx-0.20.0/package/dist/xlsx.full.min.js"></script>
+<title>Car Showroom Manager</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=DM+Sans:wght@300;400;500;600;700&family=Noto+Nastaliq+Urdu:wght@400;700&display=swap');
 
+:root {
+  --gold: #C9A84C;
+  --gold-light: #E8C870;
+  --gold-dark: #8B6914;
+  --obsidian: #06090F;
+  --navy: #0C1829;
+  --navy-mid: #111F35;
+  --navy-light: #182A48;
+  --steel: #1E3355;
+  --slate: #8FA3BF;
+  --silver: #C8D6E8;
+  --white: #F5F8FF;
+  --danger: #E04A5A;
+  --success: #2ECC71;
+  --warn: #F0A500;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  font-family:'DM Sans', sans-serif;
+  background: var(--obsidian);
+  min-height: 100vh;
+  padding: 20px;
+  position: relative;
+  overflow-x: hidden;
+  color: var(--white);
+}
+
+body::before {
+  content:'';
+  position:fixed; top:0; left:0; width:100%; height:100%;
+  background:
+    radial-gradient(ellipse 80% 60% at 10% 20%, rgba(201,168,76,0.07) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 80% at 90% 80%, rgba(14,40,80,0.8) 0%, transparent 70%),
+    linear-gradient(160deg, #06090F 0%, #0C1829 40%, #111F35 100%);
+  pointer-events:none; z-index:0;
+}
+
+/* Subtle grid texture */
+body::after {
+  content:'';
+  position:fixed; top:0; left:0; width:100%; height:100%;
+  background-image: 
+    linear-gradient(rgba(201,168,76,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(201,168,76,0.03) 1px, transparent 1px);
+  background-size: 40px 40px;
+  pointer-events:none; z-index:0;
+}
+
+body.urdu { font-family:'Noto Nastaliq Urdu',serif; direction:rtl; text-align:right; }
+body.urdu .tab-buttons { flex-direction:row-reverse; }
+body.urdu input, body.urdu select { text-align:right; direction:rtl; }
+
+.container { max-width:620px; margin:0 auto; position:relative; z-index:1; }
+
+/* ======= LOGIN ======= */
+.login-container {
+  background: linear-gradient(145deg, rgba(18,30,52,0.95) 0%, rgba(12,20,38,0.98) 100%);
+  backdrop-filter: blur(40px);
+  padding: 56px 44px;
+  border-radius: 28px;
+  border: 1px solid rgba(201,168,76,0.2);
+  box-shadow: 0 40px 80px rgba(0,0,0,0.6), inset 0 1px 0 rgba(201,168,76,0.15);
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.login-container::before {
+  content:'';
+  position:absolute; top:0; left:50%; transform:translateX(-50%);
+  width:200px; height:2px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+}
+
+.login-container h1 {
+  font-family:'Cormorant Garamond', serif;
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--gold-light);
+  letter-spacing: 1px;
+  margin-bottom: 8px;
+  text-shadow: 0 0 40px rgba(201,168,76,0.3);
+}
+
+.login-container p { color: var(--slate); font-size: 13px; font-weight: 400; letter-spacing: 0.5px; }
+
+/* ======= HEADER ======= */
+.header {
+  background: linear-gradient(145deg, rgba(18,30,52,0.95), rgba(12,20,38,0.98));
+  backdrop-filter: blur(40px);
+  padding: 28px 28px 24px;
+  border-radius: 24px;
+  border: 1px solid rgba(201,168,76,0.18);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.4), inset 0 1px 0 rgba(201,168,76,0.12);
+  margin-bottom: 18px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.header::before {
+  content:'';
+  position:absolute; top:0; left:50%; transform:translateX(-50%);
+  width:300px; height:1px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+}
+
+.header h1 {
+  font-family:'Cormorant Garamond', serif;
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--gold-light);
+  letter-spacing: 1px;
+  margin-bottom: 4px;
+  text-shadow: 0 0 30px rgba(201,168,76,0.25);
+}
+
+.header p { color: var(--slate); font-size: 12px; letter-spacing: 0.5px; }
+
+/* Header Buttons */
+.logout-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: rgba(255,255,255,0.05);
+  color: var(--silver);
+  border: 1px solid rgba(255,255,255,0.1);
+  padding: 9px 16px;
+  border-radius: 10px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 14px;
+  margin-left: 6px;
+  transition: all 0.3s ease;
+  letter-spacing: 0.3px;
+}
+.logout-btn:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.2); transform: translateY(-1px); }
+
+.manage-btn {
+  background: rgba(201,168,76,0.12) !important;
+  border-color: rgba(201,168,76,0.3) !important;
+  color: var(--gold-light) !important;
+}
+.manage-btn:hover { background: rgba(201,168,76,0.2) !important; }
+
+.lang-btn {
+  background: rgba(201,168,76,0.08) !important;
+  border-color: rgba(201,168,76,0.2) !important;
+  color: var(--gold) !important;
+}
+
+/* ======= NOTIFICATION BADGE ======= */
+.notification-badge {
+  position:absolute; top:16px; right:16px;
+  background: linear-gradient(135deg, var(--danger), #C0392B);
+  color: white;
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  animation: pulse 2s infinite;
+  box-shadow: 0 4px 15px rgba(224,74,90,0.4);
+  letter-spacing: 0.3px;
+}
+@keyframes pulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.05)} }
+
+/* ======= INSTALL PROMPT ======= */
+.install-prompt {
+  background: linear-gradient(135deg, rgba(201,168,76,0.12), rgba(201,168,76,0.06));
+  border: 1px solid rgba(201,168,76,0.25);
+  color: var(--gold-light);
+  padding: 14px 18px;
+  border-radius: 14px;
+  margin-bottom: 18px;
+  display: none;
+  align-items: center;
+  gap: 12px;
+  font-size: 13px;
+}
+.install-prompt button {
+  background: var(--gold);
+  color: var(--obsidian);
+  border: none;
+  padding: 8px 18px;
+  border-radius: 8px;
+  font-weight: 700;
+  cursor: pointer;
+  margin-left: auto;
+  font-size: 12px;
+}
+
+/* ======= ALERT BOXES ======= */
+.alert-box {
+  background: rgba(240,165,0,0.08);
+  border-left: 3px solid var(--warn);
+  border: 1px solid rgba(240,165,0,0.2);
+  border-left: 3px solid var(--warn);
+  padding: 14px 16px;
+  border-radius: 12px;
+  margin-bottom: 14px;
+  display: none;
+  color: var(--silver);
+}
+.alert-box.danger {
+  background: rgba(224,74,90,0.08);
+  border-left-color: var(--danger);
+  border-color: rgba(224,74,90,0.2);
+  border-left: 3px solid var(--danger);
+}
+.alert-box strong { font-size: 15px; color: var(--white); display:block; margin-bottom:4px; }
+.alert-box div { font-size: 13px; line-height: 1.7; color: var(--slate); }
+
+/* ======= MAIN CARD ======= */
+.card {
+  background: linear-gradient(145deg, rgba(18,30,52,0.92), rgba(12,20,38,0.96));
+  backdrop-filter: blur(40px);
+  padding: 28px;
+  padding-bottom: 100px;
+  border-radius: 24px;
+  border: 1px solid rgba(201,168,76,0.12);
+  box-shadow: 0 30px 80px rgba(0,0,0,0.5), inset 0 1px 0 rgba(201,168,76,0.08);
+  margin-bottom: 18px;
+  min-height: calc(100vh - 200px);
+  position: relative;
+  overflow: hidden;
+}
+
+.card::before {
+  content:'';
+  position:absolute; top:0; left:50%; transform:translateX(-50%);
+  width:120px; height:1px;
+  background: linear-gradient(90deg, transparent, rgba(201,168,76,0.4), transparent);
+}
+
+/* ======= TAB NAVIGATION ======= */
+.tab-buttons {
+  display: flex;
+  gap: 4px;
+  background: rgba(6,9,15,0.95);
+  backdrop-filter: blur(40px);
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 10px;
+  box-shadow: 0 -4px 40px rgba(0,0,0,0.6), 0 0 0 1px rgba(201,168,76,0.15);
+  z-index: 100;
+  max-width: 580px;
+  width: calc(100% - 40px);
+  border-radius: 20px;
+  border: 1px solid rgba(201,168,76,0.12);
+}
+
+.tab-btn {
+  flex: 1;
+  padding: 10px 4px 8px;
+  border: none;
+  background: transparent;
+  color: var(--slate);
+  border-radius: 12px;
+  font-size: 9.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.35s cubic-bezier(.4,0,.2,1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  position: relative;
+  letter-spacing: 0.3px;
+}
+.tab-btn .tab-icon { font-size: 18px; }
+.tab-btn.active {
+  background: linear-gradient(135deg, rgba(201,168,76,0.2), rgba(201,168,76,0.08));
+  color: var(--gold-light);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(201,168,76,0.15), inset 0 1px 0 rgba(201,168,76,0.2);
+  border: 1px solid rgba(201,168,76,0.2);
+}
+.tab-btn .badge {
+  position: absolute;
+  top: 5px; right: 6px;
+  background: var(--danger);
+  color: white;
+  font-size: 8px;
+  padding: 2px 5px;
+  border-radius: 10px;
+  font-weight: 700;
+}
+
+.tab-content { display: none; }
+.tab-content.active { display: block; animation: fadeSlideIn 0.3s ease; }
+@keyframes fadeSlideIn { from { opacity:0; transform:translateY(6px); } to { opacity:1; transform:translateY(0); } }
+
+/* ======= FORM ELEMENTS ======= */
+.form-group { margin-bottom: 18px; }
+
+label {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--slate);
+  font-weight: 500;
+  font-size: 12px;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+}
+
+input[type=text], input[type=password], input[type=date], input[type=number], select {
+  width: 100%;
+  padding: 14px 16px;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 12px;
+  font-size: 15px;
+  transition: all 0.3s ease;
+  background: rgba(255,255,255,0.04);
+  color: var(--white);
+  font-weight: 400;
+  font-family: 'DM Sans', sans-serif;
+  -webkit-appearance: none;
+}
+
+input:focus, select:focus {
+  outline: none;
+  border-color: rgba(201,168,76,0.4);
+  background: rgba(255,255,255,0.07);
+  box-shadow: 0 0 0 3px rgba(201,168,76,0.08);
+}
+
+input::placeholder { color: rgba(143,163,191,0.5); font-size: 14px; }
+
+select option { background: var(--navy-mid); color: var(--white); }
+
+input[type=file] {
+  width: 100%;
+  padding: 18px 16px;
+  border: 1.5px dashed rgba(201,168,76,0.25);
+  border-radius: 12px;
+  cursor: pointer;
+  font-size: 13px;
+  background: rgba(201,168,76,0.03);
+  color: var(--slate);
+  transition: all 0.3s ease;
+}
+input[type=file]:hover { border-color: rgba(201,168,76,0.5); background: rgba(201,168,76,0.06); }
+
+/* ======= RADIO BUTTONS ======= */
+.radio-group { display: flex; gap: 16px; margin: 10px 0; flex-wrap: wrap; }
+.radio-group label {
+  display: flex;
+  align-items: center;
+  font-weight: 400;
+  cursor: pointer;
+  font-size: 14px;
+  text-transform: none;
+  letter-spacing: 0;
+  color: var(--silver);
+  background: rgba(255,255,255,0.04);
+  padding: 10px 16px;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.08);
+  transition: all 0.2s ease;
+}
+.radio-group label:hover { background: rgba(201,168,76,0.06); border-color: rgba(201,168,76,0.2); }
+input[type=radio] { margin-right: 8px; accent-color: var(--gold); }
+
+/* ======= INSTALLMENT SECTION ======= */
+.installment-section {
+  background: rgba(201,168,76,0.04);
+  padding: 18px;
+  border-radius: 14px;
+  margin-top: 16px;
+  display: none;
+  border: 1px solid rgba(201,168,76,0.15);
+}
+
+.installment-item {
+  background: rgba(255,255,255,0.03);
+  padding: 14px 16px;
+  border-radius: 10px;
+  margin-bottom: 10px;
+  border-left: 3px solid var(--gold-dark);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-left: 3px solid var(--gold-dark);
+}
+
+/* ======= BUTTONS ======= */
+.btn {
+  width: 100%;
+  padding: 16px;
+  border: none;
+  border-radius: 13px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.35s cubic-bezier(.4,0,.2,1);
+  margin-top: 10px;
+  font-family: 'DM Sans', sans-serif;
+  letter-spacing: 0.3px;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dark) 100%);
+  color: var(--obsidian);
+  box-shadow: 0 8px 24px rgba(201,168,76,0.25), inset 0 1px 0 rgba(255,255,255,0.2);
+  position: relative;
+  overflow: hidden;
+}
+.btn-primary::before {
+  content:'';
+  position:absolute; top:0; left:-100%; width:100%; height:100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+  transition: left 0.5s ease;
+}
+.btn-primary:hover::before { left:100%; }
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 14px 32px rgba(201,168,76,0.35); }
+.btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+.btn-success {
+  background: linear-gradient(135deg, #1E8B4F, #27AE60);
+  color: white;
+  box-shadow: 0 6px 18px rgba(39,174,96,0.25);
+}
+
+.btn-small { padding: 9px 15px; font-size: 12px; width: auto; }
+
+/* ======= IMAGES ======= */
+.preview-image {
+  width: 100%;
+  max-height: 280px;
+  object-fit: contain;
+  border-radius: 14px;
+  margin-top: 12px;
+  border: 1px solid rgba(201,168,76,0.2);
+}
+
+/* ======= RECEIPT CARDS ======= */
+.receipt-item {
+  padding: 18px 20px;
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 16px;
+  margin-bottom: 10px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(.4,0,.2,1);
+  background: rgba(255,255,255,0.03);
+  position: relative;
+  overflow: hidden;
+}
+.receipt-item::before {
+  content:'';
+  position:absolute; top:0; left:0; width:3px; height:100%;
+  background: linear-gradient(180deg, var(--gold), var(--gold-dark));
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.receipt-item:hover { 
+  border-color: rgba(201,168,76,0.25);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 30px rgba(0,0,0,0.3);
+  background: rgba(255,255,255,0.05);
+}
+.receipt-item:hover::before { opacity:1; }
+
+.receipt-item.pending-payment {
+  border-left: 3px solid var(--warn);
+  background: rgba(240,165,0,0.04);
+}
+.receipt-item.overdue-payment {
+  border-left: 3px solid var(--danger);
+  background: rgba(224,74,90,0.04);
+}
+
+.receipt-reg {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--gold-light);
+  margin-bottom: 6px;
+  font-family: 'Cormorant Garamond', serif;
+  letter-spacing: 0.3px;
+}
+
+.receipt-date { font-size: 12.5px; color: var(--slate); font-weight: 400; margin-bottom: 3px; }
+
+/* ======= PAYMENT BADGES ======= */
+.payment-badge {
+  display: inline-block;
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+  margin-top: 8px;
+  letter-spacing: 0.3px;
+}
+.payment-badge.cash {
+  background: rgba(46,204,113,0.12);
+  color: #2ECC71;
+  border: 1px solid rgba(46,204,113,0.2);
+}
+.payment-badge.installment {
+  background: rgba(240,165,0,0.12);
+  color: var(--warn);
+  border: 1px solid rgba(240,165,0,0.2);
+}
+.payment-badge.pending {
+  background: rgba(224,74,90,0.12);
+  color: var(--danger);
+  border: 1px solid rgba(224,74,90,0.2);
+}
+
+/* ======= MODAL ======= */
+.modal {
+  display: none;
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(6,9,15,0.97);
+  backdrop-filter: blur(30px);
+  z-index: 1000;
+  padding: 20px;
+  overflow-y: auto;
+}
+.modal.active { display: flex; align-items: center; justify-content: center; }
+.modal-content { position: relative; max-width: 900px; width: 100%; }
+.modal-image {
+  width: 100%;
+  max-height: 85vh;
+  object-fit: contain;
+  border-radius: 18px;
+  box-shadow: 0 30px 80px rgba(0,0,0,0.7);
+  border: 1px solid rgba(201,168,76,0.15);
+}
+.close-modal {
+  position: absolute;
+  top: -50px; right: 0;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.12);
+  padding: 10px 22px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  color: var(--silver);
+  transition: all 0.2s ease;
+}
+.close-modal:hover { background: rgba(255,255,255,0.15); }
+body.urdu .close-modal { right:auto; left:0; }
+
+/* ======= MESSAGES ======= */
+.success-msg, .error-msg {
+  padding: 13px 16px;
+  border-radius: 11px;
+  margin-bottom: 14px;
+  display: none;
+  font-weight: 500;
+  font-size: 13.5px;
+}
+.success-msg {
+  background: rgba(46,204,113,0.1);
+  color: var(--success);
+  border: 1px solid rgba(46,204,113,0.2);
+  border-left: 3px solid var(--success);
+}
+.error-msg {
+  background: rgba(224,74,90,0.1);
+  color: #F07080;
+  border: 1px solid rgba(224,74,90,0.2);
+  border-left: 3px solid var(--danger);
+}
+
+/* ======= LOADING / EMPTY ======= */
+.loading {
+  text-align: center;
+  padding: 40px;
+  color: var(--gold);
+  font-weight: 500;
+  font-size: 14px;
+  letter-spacing: 1px;
+}
+.no-results {
+  text-align: center;
+  padding: 50px;
+  color: rgba(143,163,191,0.4);
+  font-weight: 400;
+  font-size: 14px;
+}
+
+/* ======= STATS ======= */
+.stats {
+  display: flex;
+  justify-content: space-around;
+  padding: 20px;
+  background: rgba(201,168,76,0.05);
+  border-radius: 16px;
+  margin-bottom: 20px;
+  border: 1px solid rgba(201,168,76,0.12);
+}
+.stat-item { text-align: center; }
+.stat-number {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--gold-light);
+  font-family: 'Cormorant Garamond', serif;
+  word-break: break-all;
+  line-height: 1.2;
+}
+@media(max-width:480px) { .stat-number { font-size: 17px; } }
+.stat-label { font-size: 11px; color: var(--slate); margin-top: 5px; font-weight: 500; letter-spacing: 0.5px; text-transform: uppercase; }
+
+/* ======= DELETE BUTTON ======= */
+.delete-btn {
+  background: rgba(224,74,90,0.12);
+  color: var(--danger);
+  border: 1px solid rgba(224,74,90,0.25);
+  padding: 10px 18px;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.delete-btn:hover { background: rgba(224,74,90,0.2); }
+
+.hidden { display: none !important; }
+
+/* ======= SECTION HEADINGS ======= */
+.tab-content h3 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--gold-light) !important;
+  margin-bottom: 20px;
+  letter-spacing: 0.5px;
+  text-shadow: 0 0 20px rgba(201,168,76,0.2);
+}
+.tab-content h4 {
+  color: var(--gold) !important;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+/* Override inline analytics styles */
+#analytics-tab > div { color: var(--silver) !important; }
+
+/* ======= SCROLLBAR ======= */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: rgba(255,255,255,0.02); }
+::-webkit-scrollbar-thumb { background: rgba(201,168,76,0.3); border-radius: 10px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(201,168,76,0.5); }
+
+/* ======= RESPONSIVE ======= */
+@media(max-width:480px) {
+  body { padding: 12px; }
+  .header h1 { font-size: 20px; }
+  .card { padding: 18px; padding-bottom: 100px; }
+  .tab-btn { font-size: 9px; padding: 8px 3px 7px; }
+  .tab-btn .tab-icon { font-size: 17px; }
+  .login-container { padding: 36px 28px; }
+}
+
+/* Subtle gold shimmer animation on active elements */
+@keyframes goldShimmer {
+  0% { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+</style>
+</head>
 <body>
-  <!-- LOGIN SCREEN -->
-  <div id="login-screen" class="container">
-    <div class="login-container">
-      <h1 id="login-title">🚗 CAR SHOWROOM MANAGER</h1>
-      <p id="login-sub">Premium Sales Management System</p>
-      <p style="font-size:11px;color:#999;margin-top:8px;">Powered by Advanced Technology</p>
-      <div style="margin-top:30px;">
-        <div class="error-msg" id="login-error"></div>
-        <div class="form-group" style="text-align:left;">
-          <label id="lbl-password">Password</label>
-          <input type="password" id="login-password" placeholder="Enter password">
-        </div>
-        <button class="btn btn-primary" onclick="login()" id="btn-login">🔓 Login</button>
+
+<!-- LOGIN -->
+<div id="login-screen" class="container">
+  <div class="login-container">
+    <h1 id="login-title">🚗 CAR SHOWROOM MANAGER</h1>
+    <p id="login-sub">Premium Sales Management System</p>
+    <p style="font-size:11px;color:#999;margin-top:8px;">Powered by Advanced Technology</p>
+    <div style="margin-top:30px;">
+      <div class="error-msg" id="login-error"></div>
+      <div class="form-group" style="text-align:left;">
+        <label id="lbl-password">Password</label>
+        <input type="password" id="login-password" placeholder="Enter password">
       </div>
+      <button class="btn btn-primary" onclick="login()" id="btn-login">🔓 Login</button>
     </div>
   </div>
+</div>
 
-  <!-- MAIN APP -->
-  <div id="main-app" class="container hidden">
-    <div class="header">
-      <h1 id="header-title">🚗 CAR SHOWROOM MANAGER</h1>
-      <p>Premium Sales Management System</p>
-      <p style="font-size:11px;color:#999;margin-top:8px;">Powered by Advanced Technology</p>
-      <button class="btn btn-primary" onclick="logout()">🚪 <span id="lbl-logout">Logout</span></button>
+<!-- MAIN APP -->
+<div id="main-app" class="container hidden">
+  <div class="header">
+    <h1 id="header-title">🚗 CAR SHOWROOM MANAGER</h1>
+    <p>Premium Sales Management System</p>
+    <p style="font-size:11px;color:#999;margin-top:8px;">Powered by Advanced Technology</p>
+    <div class="notification-badge hidden" id="overdue-badge" onclick="switchTabDirect('payments')">
+      <span id="overdue-count">0</span> <span id="lbl-overdue">Overdue</span>
     </div>
+    <button class="logout-btn lang-btn" onclick="toggleLanguage()">🌐 <span id="lang-text">اردو</span></button>
+    <button class="logout-btn manage-btn" onclick="manageEmployees()">👥 <span id="lbl-employees">Employees</span></button>
+    <button class="logout-btn" onclick="logout()">🚪 <span id="lbl-logout">Logout</span></button>
+  </div>
+
+  <div class="install-prompt" id="install-prompt">
+    <span id="lbl-install">📱 Install this app for easier access!</span>
+    <button onclick="installApp()" id="btn-install">Install</button>
+  </div>
+
+  <div class="card">
 
     <!-- UPLOAD TAB -->
     <div id="upload-tab" class="tab-content active">
+      <div class="success-msg" id="upload-success"></div>
+      <div class="error-msg" id="upload-error"></div>
       <div class="form-group"><label id="lbl-car-name">Car Name/Model *</label><input type="text" id="car-name" placeholder="e.g., Toyota Corolla 2020"></div>
       <div class="form-group"><label id="lbl-reg-number">Car Registration Number *</label><input type="text" id="reg-number" placeholder="e.g., ABC-123" style="text-transform:uppercase"></div>
       <div class="form-group"><label id="lbl-cust-name">Customer Name *</label><input type="text" id="customer-name" placeholder="e.g., Ahmed Khan"></div>
@@ -116,32 +767,783 @@
       <button class="btn btn-primary" onclick="uploadReceipt()" id="btn-save-receipt">💾 Save Receipt</button>
     </div>
 
-    <!-- SCRIPT FOR DATA INTEGRATION WITH GOOGLE SHEETS & DRIVE -->
-    <script>
-      const GOOGLE_SHEET_URL = "YOUR_GOOGLE_SHEET_URL"; // Replace with actual Google Sheet URL
-      const GOOGLE_DRIVE_URL = "YOUR_GOOGLE_DRIVE_URL"; // Replace with actual Google Drive folder URL for receipts
+    <!-- PAYMENTS TAB -->
+    <div id="payments-tab" class="tab-content">
+      <h3 style="color:#E8C870;margin-bottom:20px;font-weight:700;font-family:Cormorant Garamond,serif;font-size:22px;">💰 <span id="lbl-pay-track">Payment Tracking</span></h3>
+      <div class="alert-box danger" id="overdue-alert"><strong id="lbl-overdue-title">⚠️ Overdue Payments!</strong><div id="overdue-list" style="margin-top:10px;"></div></div>
+      <div class="alert-box" id="upcoming-alert"><strong id="lbl-upcoming-title">📅 Upcoming Payments</strong><div id="upcoming-list" style="margin-top:10px;"></div></div>
+      <div class="stats" style="display:grid;grid-template-columns:1fr 1fr;gap:15px;padding:18px;background:rgba(201,168,76,0.05);border-radius:16px;border:1px solid rgba(201,168,76,0.12);margin-bottom:18px;">
+        <div class="stat-item"><div class="stat-number" id="total-pending">₨0</div><div class="stat-label" id="lbl-total-pending">Total Pending</div></div>
+        <div class="stat-item"><div class="stat-number" id="total-received">₨0</div><div class="stat-label" id="lbl-total-received">Total Received</div></div>
+      </div>
+      <button class="btn btn-primary" onclick="loadPayments()" style="margin-bottom:15px;" id="btn-refresh-pay">🔄 Refresh</button>
+      <div id="payments-list"></div>
+    </div>
 
-      // Function to handle login logic (e.g., authenticate via Google)
-      function login() {
-        // Implement your login logic
+    <!-- SEARCH TAB -->
+    <div id="search-tab" class="tab-content">
+      <div class="form-group"><label id="lbl-search-reg">Search by Registration Number</label><input type="text" id="search-input" placeholder="e.g., ABC-123" style="text-transform:uppercase"></div>
+      <div class="form-group"><label id="lbl-filter-emp">Filter by Employee</label><select id="search-employee"><option value="">All Employees</option></select></div>
+      <button class="btn btn-primary" onclick="performSearch()" id="btn-search">🔍 Search</button>
+      <div id="search-results"></div>
+    </div>
+
+    <!-- ALL TAB -->
+    <div id="all-tab" class="tab-content">
+      <div class="stats"><div class="stat-item"><div class="stat-number" id="total-receipts">0</div><div class="stat-label" id="lbl-total-receipts">Total Receipts</div></div></div>
+      <button class="btn btn-primary" onclick="loadAllReceipts()" style="margin-bottom:15px;" id="btn-refresh-all">🔄 Refresh</button>
+      <div id="all-receipts"></div>
+    </div>
+
+    <!-- PROFIT TAB -->
+    <div id="profit-tab" class="tab-content">
+      <h3 style="color:#00D4FF;margin-bottom:20px;text-align:center;font-weight:800;">💵 <span id="lbl-profit-title">Profit &amp; Loss</span></h3>
+      <div style="background:linear-gradient(135deg,rgba(201,168,76,0.15) 0%,rgba(201,168,76,0.05) 100%);padding:22px;border-radius:16px;color:white;margin-bottom:20px;border:1px solid rgba(201,168,76,0.2);">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:15px;margin-bottom:15px;">
+          <div><div style="font-size:12px;opacity:.9" id="lbl-tot-rev">Total Revenue</div><div style="font-size:18px;font-weight:700;word-break:break-all;line-height:1.2" id="profit-revenue">₨0</div></div>
+          <div><div style="font-size:12px;opacity:.9" id="lbl-purch-cost-p">Purchase Cost</div><div style="font-size:18px;font-weight:700;word-break:break-all;line-height:1.2" id="profit-purchase">₨0</div></div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:15px;margin-bottom:15px;">
+          <div><div style="font-size:12px;opacity:.9" id="lbl-tot-exp">Total Expenses</div><div style="font-size:18px;font-weight:700;word-break:break-all;line-height:1.2" id="profit-expenses">₨0</div></div>
+          <div><div style="font-size:12px;opacity:.9" id="lbl-profit-margin">Profit Margin</div><div style="font-size:18px;font-weight:700;line-height:1.2" id="profit-margin">0%</div></div>
+        </div>
+        <div style="border-top:2px solid rgba(255,255,255,.3);padding-top:15px;margin-top:15px;">
+          <div style="font-size:14px;opacity:.9" id="lbl-net-profit">Net Profit</div>
+          <div style="font-size:26px;font-weight:700;word-break:break-all;line-height:1.2" id="profit-net">₨0</div>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px;">
+        <button class="btn btn-primary" onclick="exportSalesReport()" style="font-size:14px;">📊 <span id="lbl-exp-sales">Sales</span></button>
+        <button class="btn btn-primary" onclick="exportProfitReport()" style="font-size:14px;">💵 <span id="lbl-exp-profit">Profit</span></button>
+        <button class="btn btn-primary" onclick="exportPaymentReport()" style="font-size:14px;">💰 <span id="lbl-exp-payments">Payments</span></button>
+        <button class="btn btn-primary" onclick="exportExpenseReport()" style="font-size:14px;">💸 <span id="lbl-exp-expenses">Expenses</span></button>
+      </div>
+      <button class="btn btn-primary" onclick="calculateProfit()" style="margin-bottom:15px;" id="btn-refresh-profit">🔄 Refresh</button>
+      <h4 style="color:#00D4FF;margin:20px 0 15px 0;font-weight:700;" id="lbl-profit-by-car">Profit by Car</h4>
+      <div id="profit-breakdown"></div>
+    </div>
+
+    <!-- ANALYTICS TAB -->
+    <div id="analytics-tab" class="tab-content">
+      <h3 style="color:#00D4FF;margin-bottom:20px;text-align:center;font-weight:800;">📊 <span id="lbl-analytics">Sales Analytics</span></h3>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:15px;margin-bottom:25px;">
+        <div style="background:rgba(201,168,76,0.12);padding:20px;border-radius:12px;color:white;text-align:center;border:1px solid rgba(201,168,76,0.2);">
+          <div style="font-size:28px;font-weight:700" id="total-cars">0</div>
+          <div style="font-size:12px;margin-top:5px" id="lbl-total-cars">Total Cars Sold</div>
+        </div>
+        <div style="background:rgba(46,204,113,0.1);padding:20px;border-radius:12px;color:white;text-align:center;border:1px solid rgba(46,204,113,0.2);">
+          <div style="font-size:22px;font-weight:700;word-break:break-all" id="total-revenue">₨0</div>
+          <div style="font-size:12px;margin-top:5px" id="lbl-total-rev-a">Total Revenue</div>
+        </div>
+      </div>
+      <div style="background:rgba(201,168,76,0.05);padding:18px;border-radius:14px;margin-bottom:18px;border:1px solid rgba(201,168,76,0.12);">
+        <h4 style="color:#C9A84C;margin-bottom:15px;font-weight:700;">🏆 <span id="lbl-top-sales">Top Salespeople</span></h4>
+        <div id="top-salespeople-list"></div>
+      </div>
+      <div style="background:rgba(201,168,76,0.05);padding:18px;border-radius:14px;margin-bottom:18px;border:1px solid rgba(201,168,76,0.12);">
+        <h4 style="color:#C9A84C;margin-bottom:15px;font-weight:700;">🚗 <span id="lbl-best-cars">Best Selling Cars</span></h4>
+        <div id="best-selling-list"></div>
+      </div>
+      <div style="background:rgba(201,168,76,0.05);padding:18px;border-radius:14px;margin-bottom:18px;border:1px solid rgba(201,168,76,0.12);">
+        <h4 style="color:#C9A84C;margin-bottom:15px;font-weight:700;">📅 <span id="lbl-this-week">This Week</span></h4>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:15px;padding:18px;background:rgba(201,168,76,0.05);border-radius:16px;border:1px solid rgba(201,168,76,0.12);margin-bottom:18px;">
+          <div><div style="font-size:12px;color:#666" id="lbl-cars-sold-w">Cars Sold</div><div style="font-size:24px;font-weight:700;color:#C9A84C;font-family:Cormorant Garamond,serif;" id="week-cars">0</div></div>
+          <div><div style="font-size:12px;color:#666" id="lbl-rev-w">Revenue</div><div style="font-size:22px;font-weight:700;color:#2ECC71;word-break:break-all" id="week-revenue">₨0</div></div>
+        </div>
+      </div>
+      <div style="background:rgba(201,168,76,0.05);padding:18px;border-radius:14px;margin-bottom:18px;border:1px solid rgba(201,168,76,0.12);">
+        <h4 style="color:#C9A84C;margin-bottom:15px;font-weight:700;">📆 <span id="lbl-this-month">This Month</span></h4>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:15px;padding:18px;background:rgba(201,168,76,0.05);border-radius:16px;border:1px solid rgba(201,168,76,0.12);margin-bottom:18px;">
+          <div><div style="font-size:12px;color:#666" id="lbl-cars-sold-m">Cars Sold</div><div style="font-size:24px;font-weight:700;color:#C9A84C;font-family:Cormorant Garamond,serif;" id="month-cars">0</div></div>
+          <div><div style="font-size:12px;color:#666" id="lbl-rev-m">Revenue</div><div style="font-size:22px;font-weight:700;color:#2ECC71;word-break:break-all" id="month-revenue">₨0</div></div>
+        </div>
+      </div>
+      <button class="btn btn-primary" onclick="calculateAnalytics()" style="margin-bottom:15px;" id="btn-refresh-analytics">🔄 Refresh Analytics</button>
+    </div>
+
+    <div style="text-align:center;padding:20px 0 100px 0;color:rgba(201,168,76,0.5);font-size:12px;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;">Crafted by WM ❤️</div>
+
+    <!-- BOTTOM NAV -->
+    <div class="tab-buttons">
+      <button class="tab-btn active" onclick="switchTab('upload',event)"><span class="tab-icon">📤</span><span id="tab-upload">Upload</span></button>
+      <button class="tab-btn" onclick="switchTab('payments',event)"><span class="tab-icon">💰</span><span id="tab-payments">Payments</span><span class="badge hidden" id="payment-badge">0</span></button>
+      <button class="tab-btn" onclick="switchTab('search',event)"><span class="tab-icon">🔍</span><span id="tab-search">Search</span></button>
+      <button class="tab-btn" onclick="switchTab('all',event)"><span class="tab-icon">📋</span><span id="tab-all">All</span></button>
+      <button class="tab-btn" onclick="switchTab('profit',event)"><span class="tab-icon">💵</span><span id="tab-profit">Profit</span></button>
+      <button class="tab-btn" onclick="switchTab('analytics',event)"><span class="tab-icon">📊</span><span id="tab-analytics">Stats</span></button>
+    </div>
+  </div>
+</div>
+
+<!-- RECEIPT MODAL -->
+<div id="modal" class="modal">
+  <div class="modal-content">
+    <button class="close-modal" onclick="closeModal()" id="btn-close-modal">✕ Close</button>
+    <img id="modal-image" class="modal-image">
+    <div style="text-align:center;margin-top:15px;">
+      <div style="color:white;font-size:20px;font-weight:700" id="modal-reg"></div>
+      <div style="color:white;font-size:14px;margin-top:5px" id="modal-details"></div>
+      <div id="modal-installments" style="margin-top:15px;"></div>
+      <div style="margin-top:15px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
+        <button class="btn btn-primary" onclick="downloadReceipt()" id="btn-download" style="width:auto;padding:10px 20px;background:linear-gradient(135deg,#11998e 0%,#38ef7d 100%);">💾 Download</button>
+        <button class="btn btn-primary" onclick="editReceipt()" id="btn-edit" style="width:auto;padding:10px 20px;background:linear-gradient(135deg,#D4AF37 0%,#FFD700 100%);color:#333;">✏️ Edit</button>
+        <button class="btn btn-primary" onclick="openDriveLink()" id="btn-drive" style="width:auto;padding:10px 20px;">📁 Drive</button>
+        <button class="delete-btn" onclick="deleteReceipt()" id="btn-delete">🗑️ Delete</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- EDIT MODAL -->
+<div id="edit-modal" class="modal">
+  <div class="modal-content" style="max-width:600px;">
+    <button class="close-modal" onclick="closeEditModal()" id="btn-close-edit">✕ Close</button>
+    <div style="background:linear-gradient(145deg,#111F35,#0C1829);padding:30px;border-radius:18px;margin-top:50px;border:1px solid rgba(201,168,76,0.15);">
+      <h3 style="color:#E8C870;margin-bottom:20px;font-weight:700;text-align:center;font-family:Cormorant Garamond,serif;font-size:22px;">✏️ <span id="lbl-edit-title">Edit Receipt</span></h3>
+      <div class="success-msg" id="edit-success"></div>
+      <div class="error-msg" id="edit-error"></div>
+      <div class="form-group"><label id="lbl-edit-car">Car Name/Model</label><input type="text" id="edit-car-name"></div>
+      <div class="form-group"><label id="lbl-edit-reg">Registration Number</label><input type="text" id="edit-reg-number" style="text-transform:uppercase"></div>
+      <div class="form-group"><label id="lbl-edit-cust">Customer Name</label><input type="text" id="edit-customer-name"></div>
+      <div class="form-group"><label id="lbl-edit-phone">Customer Phone</label><input type="text" id="edit-customer-phone"></div>
+      <div class="form-group"><label id="lbl-edit-date">Selling Date</label><input type="date" id="edit-selling-date"></div>
+      <div class="form-group"><label id="lbl-edit-price">Selling Price (PKR)</label><input type="number" id="edit-selling-price" min="0" step="1000"></div>
+      <div class="form-group"><label id="lbl-edit-cost">Purchase Cost (PKR)</label><input type="number" id="edit-purchase-cost" min="0" step="1000"></div>
+      <div class="form-group"><label id="lbl-edit-sold">Sold By</label><select id="edit-sold-by"><option value="">Select Employee</option></select></div>
+      <button class="btn btn-primary" onclick="saveEditedReceipt()" id="btn-save-edit">💾 Save Changes</button>
+      <button class="btn" onclick="closeEditModal()" id="btn-cancel-edit" style="background:#6c757d;color:white;margin-top:10px;">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const CONFIG = {
+  PASSWORD: 'hasnain123',
+  SCRIPT_URL: 'https://script.google.com/macros/s/AKfycbzAaxqPHhGV9sLotNqpSLQXNliyZJyqywB31WGOUOmxRYHgF2zA8_ZDQYKqSSDk_PjDEA/exec'
+};
+
+// ===================== FULL TRANSLATIONS =====================
+const LANG = {
+  en: {
+    'login-title':'🚗 CAR SHOWROOM MANAGER','login-sub':'Premium Sales Management System',
+    'lbl-password':'Password','btn-login':'🔓 Login','login-error':'❌ Incorrect password',
+    'header-title':'🚗 CAR SHOWROOM MANAGER','lbl-overdue':'Overdue',
+    'lbl-employees':'Employees','lbl-logout':'Logout','lang-text':'اردو',
+    'lbl-install':'📱 Install this app for easier access!','btn-install':'Install',
+    'lbl-car-name':'Car Name/Model *','lbl-reg-number':'Car Registration Number *',
+    'lbl-cust-name':'Customer Name *','lbl-cust-phone':'Customer Phone *',
+    'lbl-sell-date':'Selling Date *','lbl-sell-price':'Selling Price (PKR) *',
+    'lbl-purch-cost':'Purchase Cost (PKR) *',
+    'lbl-purch-hint':'💡 How much did you pay to buy this car?',
+    'lbl-expenses':'Additional Expenses (Optional)',
+    'lbl-exp-hint':'Repairs, maintenance, modifications, etc.',
+    'btn-add-expense':'➕ Add Expense','lbl-pay-type':'Payment Type *',
+    'lbl-cash':'Cash (Full Payment)','lbl-inst':'Installment',
+    'lbl-down':'Down Payment (PKR) *','lbl-inst-count':'Number of Installments *',
+    'lbl-sold-by':'Sold By (Employee) *','lbl-receipt-photo':'Receipt Photo *',
+    'btn-save-receipt':'💾 Save Receipt',
+    'lbl-pay-track':'Payment Tracking','lbl-overdue-title':'⚠️ Overdue Payments!',
+    'lbl-upcoming-title':'📅 Upcoming Payments',
+    'lbl-total-pending':'Total Pending','lbl-total-received':'Total Received',
+    'btn-refresh-pay':'🔄 Refresh',
+    'lbl-search-reg':'Search by Registration Number','lbl-filter-emp':'Filter by Employee',
+    'btn-search':'🔍 Search',
+    'lbl-total-receipts':'Total Receipts','btn-refresh-all':'🔄 Refresh',
+    'lbl-profit-title':'Profit & Loss','lbl-tot-rev':'Total Revenue',
+    'lbl-purch-cost-p':'Purchase Cost','lbl-tot-exp':'Total Expenses',
+    'lbl-profit-margin':'Profit Margin','lbl-net-profit':'Net Profit',
+    'lbl-exp-sales':'Sales','lbl-exp-profit':'Profit',
+    'lbl-exp-payments':'Payments','lbl-exp-expenses':'Expenses',
+    'btn-refresh-profit':'🔄 Refresh','lbl-profit-by-car':'Profit by Car',
+    'lbl-analytics':'Sales Analytics','lbl-total-cars':'Total Cars Sold',
+    'lbl-total-rev-a':'Total Revenue','lbl-top-sales':'Top Salespeople',
+    'lbl-best-cars':'Best Selling Cars','lbl-this-week':'This Week',
+    'lbl-this-month':'This Month','lbl-cars-sold-w':'Cars Sold','lbl-rev-w':'Revenue',
+    'lbl-cars-sold-m':'Cars Sold','lbl-rev-m':'Revenue',
+    'btn-refresh-analytics':'🔄 Refresh Analytics',
+    'btn-close-modal':'✕ Close','btn-download':'💾 Download',
+    'btn-edit':'✏️ Edit','btn-drive':'📁 Drive','btn-delete':'🗑️ Delete',
+    'btn-close-edit':'✕ Close','lbl-edit-title':'Edit Receipt',
+    'lbl-edit-car':'Car Name/Model','lbl-edit-reg':'Registration Number',
+    'lbl-edit-cust':'Customer Name','lbl-edit-phone':'Customer Phone',
+    'lbl-edit-date':'Selling Date','lbl-edit-price':'Selling Price (PKR)',
+    'lbl-edit-cost':'Purchase Cost (PKR)','lbl-edit-sold':'Sold By',
+    'btn-save-edit':'💾 Save Changes','btn-cancel-edit':'Cancel',
+    'tab-upload':'Upload','tab-payments':'Payments','tab-search':'Search',
+    'tab-all':'All','tab-profit':'Profit','tab-analytics':'Stats'
+  },
+  ur: {
+    'login-title':'🚗 کار شو روم مینیجر','login-sub':'پریمیم سیلز مینجمنٹ سسٹم',
+    'lbl-password':'پاس ورڈ','btn-login':'🔓 لاگ ان','login-error':'❌ غلط پاس ورڈ',
+    'header-title':'🚗 کار شو روم مینیجر','lbl-overdue':'ادائیگی باقی',
+    'lbl-employees':'ملازمین','lbl-logout':'لاگ آؤٹ','lang-text':'English',
+    'lbl-install':'📱 آسان رسائی کے لیے انسٹال کریں!','btn-install':'انسٹال',
+    'lbl-car-name':'گاڑی کا نام/ماڈل *','lbl-reg-number':'رجسٹریشن نمبر *',
+    'lbl-cust-name':'گاہک کا نام *','lbl-cust-phone':'گاہک کا فون *',
+    'lbl-sell-date':'فروخت کی تاریخ *','lbl-sell-price':'فروخت کی قیمت (PKR) *',
+    'lbl-purch-cost':'خریداری کی قیمت (PKR) *',
+    'lbl-purch-hint':'💡 آپ نے یہ گاڑی کتنے میں خریدی؟',
+    'lbl-expenses':'اضافی اخراجات (اختیاری)',
+    'lbl-exp-hint':'مرمت، دیکھ بھال، تبدیلیاں وغیرہ',
+    'btn-add-expense':'➕ اخراجات شامل کریں','lbl-pay-type':'ادائیگی کی قسم *',
+    'lbl-cash':'نقد (مکمل ادائیگی)','lbl-inst':'قسطیں',
+    'lbl-down':'پیشگی ادائیگی (PKR) *','lbl-inst-count':'قسطوں کی تعداد *',
+    'lbl-sold-by':'فروخت کنندہ (ملازم) *','lbl-receipt-photo':'رسید کی تصویر *',
+    'btn-save-receipt':'💾 رسید محفوظ کریں',
+    'lbl-pay-track':'ادائیگی ٹریکنگ','lbl-overdue-title':'⚠️ ادائیگی میں تاخیر!',
+    'lbl-upcoming-title':'📅 آنے والی ادائیگیاں',
+    'lbl-total-pending':'کل باقی','lbl-total-received':'کل وصول شدہ',
+    'btn-refresh-pay':'🔄 تازہ کریں',
+    'lbl-search-reg':'رجسٹریشن نمبر سے تلاش','lbl-filter-emp':'ملازم سے فلٹر کریں',
+    'btn-search':'🔍 تلاش',
+    'lbl-total-receipts':'کل رسیدیں','btn-refresh-all':'🔄 تازہ کریں',
+    'lbl-profit-title':'منافع اور نقصان','lbl-tot-rev':'کل آمدنی',
+    'lbl-purch-cost-p':'خریداری کی لاگت','lbl-tot-exp':'کل اخراجات',
+    'lbl-profit-margin':'منافع کا مارجن','lbl-net-profit':'خالص منافع',
+    'lbl-exp-sales':'فروخت','lbl-exp-profit':'منافع',
+    'lbl-exp-payments':'ادائیگیاں','lbl-exp-expenses':'اخراجات',
+    'btn-refresh-profit':'🔄 تازہ کریں','lbl-profit-by-car':'گاڑی کے لحاظ سے منافع',
+    'lbl-analytics':'سیلز تجزیہ','lbl-total-cars':'کل فروخت شدہ گاڑیاں',
+    'lbl-total-rev-a':'کل آمدنی','lbl-top-sales':'اعلیٰ فروخت کنندگان',
+    'lbl-best-cars':'سب سے زیادہ فروخت ہونے والی گاڑیاں',
+    'lbl-this-week':'اس ہفتے','lbl-this-month':'اس مہینے',
+    'lbl-cars-sold-w':'فروخت شدہ گاڑیاں','lbl-rev-w':'آمدنی',
+    'lbl-cars-sold-m':'فروخت شدہ گاڑیاں','lbl-rev-m':'آمدنی',
+    'btn-refresh-analytics':'🔄 تجزیہ تازہ کریں',
+    'btn-close-modal':'✕ بند کریں','btn-download':'💾 ڈاؤن لوڈ',
+    'btn-edit':'✏️ ترمیم','btn-drive':'📁 ڈرائیو','btn-delete':'🗑️ حذف کریں',
+    'btn-close-edit':'✕ بند کریں','lbl-edit-title':'رسید میں ترمیم',
+    'lbl-edit-car':'گاڑی کا نام/ماڈل','lbl-edit-reg':'رجسٹریشن نمبر',
+    'lbl-edit-cust':'گاہک کا نام','lbl-edit-phone':'گاہک کا فون',
+    'lbl-edit-date':'فروخت کی تاریخ','lbl-edit-price':'فروخت کی قیمت (PKR)',
+    'lbl-edit-cost':'خریداری کی قیمت (PKR)','lbl-edit-sold':'فروخت کنندہ',
+    'btn-save-edit':'💾 تبدیلیاں محفوظ کریں','btn-cancel-edit':'منسوخ کریں',
+    'tab-upload':'اپ لوڈ','tab-payments':'ادائیگیاں','tab-search':'تلاش',
+    'tab-all':'تمام','tab-profit':'منافع','tab-analytics':'اعدادوشمار'
+  }
+};
+
+let currentLang = localStorage.getItem('lang') || 'en';
+let employeesList = JSON.parse(localStorage.getItem('employees')) || [];
+let currentViewingReceipt = null;
+let allReceiptsCache = [];
+let allInstallmentsCache = [];
+let allExpensesCache = [];
+let expenseFieldCount = 0;
+let deferredPrompt;
+
+// ===================== LANGUAGE =====================
+function applyLanguage() {
+  const t = LANG[currentLang];
+  const isUrdu = currentLang === 'ur';
+  document.body.classList.toggle('urdu', isUrdu);
+  // update every translatable element by id
+  Object.keys(t).forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.innerHTML = t[id];
+  });
+}
+
+function toggleLanguage() {
+  currentLang = currentLang === 'en' ? 'ur' : 'en';
+  localStorage.setItem('lang', currentLang);
+  applyLanguage();
+}
+
+// ===================== EMPLOYEES =====================
+function loadEmployeesIntoDropdowns() {
+  ['sold-by','search-employee'].forEach(id => {
+    const sel = document.getElementById(id);
+    if (!sel) return;
+    const first = sel.options[0].textContent;
+    sel.innerHTML = `<option value="">${first}</option>`;
+    employeesList.forEach(e => { const o = document.createElement('option'); o.value = o.textContent = e; sel.appendChild(o); });
+  });
+}
+
+function manageEmployees() {
+  const a = prompt('👥 Manage Employees\n\n1 - View All\n2 - Add New\n3 - Remove\n\nEnter choice (1/2/3):');
+  if (a === '1') { alert(employeesList.length ? 'Employees:\n' + employeesList.join('\n') : 'No employees yet.'); }
+  else if (a === '2') {
+    const n = prompt('Enter employee name:');
+    if (n && n.trim() && !employeesList.includes(n.trim())) {
+      employeesList.push(n.trim()); employeesList.sort();
+      localStorage.setItem('employees', JSON.stringify(employeesList));
+      loadEmployeesIntoDropdowns(); alert('✅ Added: ' + n.trim());
+    }
+  } else if (a === '3') {
+    const r = prompt('Remove:\n' + employeesList.join('\n') + '\n\nEnter name:');
+    const i = employeesList.indexOf(r && r.trim());
+    if (i > -1) { employeesList.splice(i,1); localStorage.setItem('employees', JSON.stringify(employeesList)); loadEmployeesIntoDropdowns(); alert('✅ Removed'); }
+  }
+}
+
+// ===================== EXPENSES =====================
+function addExpenseField() {
+  expenseFieldCount++;
+  const c = document.getElementById('expenses-container');
+  const d = document.createElement('div');
+  d.className = 'installment-item'; d.id = 'expense-' + expenseFieldCount; d.style.marginBottom = '10px';
+  d.innerHTML = `<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+    <select id="expense-type-${expenseFieldCount}" style="flex:1;min-width:90px;">
+      <option value="Repair">Repair</option><option value="Maintenance">Maintenance</option>
+      <option value="Modification">Modification</option><option value="Other">Other</option>
+    </select>
+    <input type="text" id="expense-desc-${expenseFieldCount}" placeholder="Description" style="flex:2;min-width:100px;">
+    <input type="number" id="expense-amount-${expenseFieldCount}" placeholder="Amount" min="0" step="1000" style="flex:1;min-width:80px;">
+    <button type="button" onclick="removeExpenseField(${expenseFieldCount})" class="delete-btn" style="padding:8px 12px;">✕</button>
+  </div>`;
+  c.appendChild(d);
+}
+function removeExpenseField(id) { const el = document.getElementById('expense-'+id); if(el) el.remove(); }
+
+// ===================== PWA =====================
+window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); deferredPrompt = e; document.getElementById('install-prompt').style.display = 'flex'; });
+function installApp() { if(deferredPrompt){ deferredPrompt.prompt(); deferredPrompt.userChoice.then(()=>{ deferredPrompt=null; document.getElementById('install-prompt').style.display='none'; }); } }
+if ('serviceWorker' in navigator) { window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(()=>{})); }
+
+// ===================== INIT =====================
+document.addEventListener('DOMContentLoaded', () => {
+  checkLogin(); applyLanguage(); loadEmployeesIntoDropdowns();
+  document.getElementById('receipt-photo').addEventListener('change', e => {
+    const f = e.target.files[0];
+    if (f) { const r = new FileReader(); r.onload = ev => { const p = document.getElementById('preview'); p.src = ev.target.result; p.style.display = 'block'; }; r.readAsDataURL(f); }
+  });
+  document.getElementById('login-password').addEventListener('keyup', e => { if(e.key==='Enter') login(); });
+  document.getElementById('selling-date').value = new Date().toISOString().split('T')[0];
+});
+
+function checkLogin() { if(sessionStorage.getItem('loggedIn')==='true') showMainApp(); else showLoginScreen(); }
+function login() {
+  const pw = document.getElementById('login-password').value;
+  const err = document.getElementById('login-error');
+  if (pw === CONFIG.PASSWORD) { sessionStorage.setItem('loggedIn','true'); showMainApp(); }
+  else { err.textContent = LANG[currentLang]['login-error'] || '❌ Incorrect password'; err.style.display = 'block'; }
+}
+function logout() { sessionStorage.removeItem('loggedIn'); showLoginScreen(); }
+function showLoginScreen() { document.getElementById('login-screen').classList.remove('hidden'); document.getElementById('main-app').classList.add('hidden'); }
+function showMainApp() { document.getElementById('login-screen').classList.add('hidden'); document.getElementById('main-app').classList.remove('hidden'); loadAllReceipts(); loadPayments(); }
+
+function switchTab(tab, ev) {
+  if (ev) { document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active')); ev.target.closest('.tab-btn').classList.add('active'); }
+  document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+  document.getElementById(tab+'-tab').classList.add('active');
+  if (tab==='all') loadAllReceipts();
+  else if (tab==='analytics') calculateAnalytics();
+  else if (tab==='payments') loadPayments();
+  else if (tab==='profit') calculateProfit();
+}
+function switchTabDirect(tab) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+  document.getElementById(tab+'-tab').classList.add('active');
+  if (tab==='payments') loadPayments();
+}
+
+function toggleInstallmentSection() {
+  const pt = document.querySelector('input[name="payment-type"]:checked').value;
+  document.getElementById('installment-section').style.display = pt==='INSTALLMENT' ? 'block' : 'none';
+  if (pt==='INSTALLMENT') generateInstallmentFields();
+}
+function generateInstallmentFields() {
+  const cnt = parseInt(document.getElementById('installment-count').value);
+  let h = '<h4 style="color:#00D4FF;margin:15px 0 10px 0;font-weight:700;">Installment Details:</h4>';
+  for (let i=1; i<=cnt; i++) {
+    h += `<div class="installment-item"><strong>Installment ${i}</strong>
+      <div class="form-group"><label>Due Date</label><input type="date" id="inst-date-${i}"></div>
+      <div class="form-group"><label>Amount (PKR)</label><input type="number" id="inst-amount-${i}" placeholder="Amount" min="0" step="1000"></div></div>`;
+  }
+  document.getElementById('installment-fields').innerHTML = h;
+}
+
+// ===================== UPLOAD =====================
+async function uploadReceipt() {
+  const v = {
+    carName: document.getElementById('car-name').value.trim(),
+    regNumber: document.getElementById('reg-number').value.trim().toUpperCase(),
+    customerName: document.getElementById('customer-name').value.trim(),
+    customerPhone: document.getElementById('customer-phone').value.trim(),
+    sellingDate: document.getElementById('selling-date').value,
+    sellingPrice: document.getElementById('selling-price').value.trim(),
+    purchaseCost: document.getElementById('purchase-cost').value.trim(),
+    soldBy: document.getElementById('sold-by').value
+  };
+  const expenses = [];
+  for (let i=1; i<=expenseFieldCount; i++) {
+    const tEl=document.getElementById(`expense-type-${i}`), dEl=document.getElementById(`expense-desc-${i}`), aEl=document.getElementById(`expense-amount-${i}`);
+    if (tEl&&dEl&&aEl) { const amt=parseFloat(aEl.value)||0; if(amt>0) expenses.push({type:tEl.value, description:dEl.value.trim()||'No description', amount:amt}); }
+  }
+  const paymentType = document.querySelector('input[name="payment-type"]:checked').value;
+  const photoFile = document.getElementById('receipt-photo').files[0];
+  const sMsg = document.getElementById('upload-success'), eMsg = document.getElementById('upload-error');
+  sMsg.style.display='none'; eMsg.style.display='none';
+  if (!v.carName||!v.regNumber||!v.customerName||!v.customerPhone||!v.sellingDate||!v.sellingPrice||parseFloat(v.sellingPrice)<=0||!v.purchaseCost||parseFloat(v.purchaseCost)<=0||!v.soldBy||!photoFile) {
+    eMsg.textContent='Please fill all required fields'; eMsg.style.display='block'; return;
+  }
+  let downPayment=0, installments=[];
+  if (paymentType==='INSTALLMENT') {
+    downPayment = parseFloat(document.getElementById('down-payment').value)||0;
+    if (downPayment<=0) { eMsg.textContent='Please enter down payment'; eMsg.style.display='block'; return; }
+    const cnt = parseInt(document.getElementById('installment-count').value);
+    for (let i=1; i<=cnt; i++) {
+      const dt=document.getElementById(`inst-date-${i}`).value, am=parseFloat(document.getElementById(`inst-amount-${i}`).value)||0;
+      if (!dt||am<=0) { eMsg.textContent=`Fill installment ${i} details`; eMsg.style.display='block'; return; }
+      installments.push({dueDate:dt, amount:am});
+    }
+    const ti = installments.reduce((s,x)=>s+x.amount,0), te = parseFloat(v.sellingPrice)-downPayment;
+    if (Math.abs(ti-te)>100) { eMsg.textContent=`Installments ₨${ti.toLocaleString()} does not match remaining ₨${te.toLocaleString()}`; eMsg.style.display='block'; return; }
+  }
+  if (photoFile.size>10*1024*1024) { eMsg.textContent='Image too large (max 10MB)'; eMsg.style.display='block'; return; }
+  const btn=event.target, origTxt=btn.innerHTML; btn.innerHTML='⏳ Uploading...'; btn.disabled=true;
+  try {
+    const imageData = await new Promise((res,rej)=>{const r=new FileReader();r.onload=e=>res(e.target.result);r.onerror=()=>rej(new Error('Failed to read image'));r.readAsDataURL(photoFile);});
+    const receiptId = v.regNumber+'_'+v.sellingDate+'_'+Date.now();
+    const result = await post({action:'upload', receiptId, ...v, sellingPrice:parseFloat(v.sellingPrice), purchaseCost:parseFloat(v.purchaseCost), expenses, paymentType, downPayment, installments, imageData, fileName:receiptId+'.'+photoFile.name.split('.').pop(), mimeType:photoFile.type, timestamp:new Date().toISOString()});
+    if (result.success) {
+      sMsg.textContent=`✅ Receipt saved for ${v.carName} (${v.regNumber})`; sMsg.style.display='block';
+      ['car-name','reg-number','customer-name','customer-phone','selling-price','purchase-cost','sold-by'].forEach(id=>document.getElementById(id).value='');
+      document.getElementById('expenses-container').innerHTML=''; expenseFieldCount=0;
+      document.getElementById('receipt-photo').value=''; document.getElementById('preview').style.display='none';
+      document.querySelector('input[name="payment-type"][value="CASH"]').checked=true; toggleInstallmentSection();
+      window.scrollTo(0,0);
+    } else throw new Error(result.error||'Upload failed');
+  } catch(err) { eMsg.textContent='❌ '+err.message; eMsg.style.display='block'; }
+  finally { btn.innerHTML=origTxt; btn.disabled=false; }
+}
+
+// ===================== API HELPER =====================
+async function post(data) {
+  const res = await fetch(CONFIG.SCRIPT_URL, {method:'POST', body:JSON.stringify(data)});
+  return res.json();
+}
+
+// ===================== LOAD DATA - FIXED EXPENSE MERGE =====================
+async function loadAllData() {
+  const result = await post({action:'getAll'});
+  if (result.success) {
+    allReceiptsCache = result.receipts || [];
+    allInstallmentsCache = result.installments || [];
+    allExpensesCache = result.expenses || [];
+    // KEY FIX: merge expenses from sheet into each receipt object
+    allReceiptsCache.forEach(r => {
+      const sheetExps = allExpensesCache.filter(e => e.receiptId === r.receiptId);
+      if (sheetExps.length > 0) {
+        // Always use sheet expenses (they are the source of truth)
+        r.expenses = sheetExps.map(e => ({
+          type: e.expenseType || e.type || 'Other',
+          description: e.description || '',
+          amount: parseFloat(e.amount) || 0
+        }));
+      } else if (!r.expenses) {
+        r.expenses = [];
       }
+    });
+  }
+  return result;
+}
 
-      // Function to handle uploading receipt and storing in Google Drive
-      function uploadReceipt() {
-        const file = document.getElementById("receipt-photo").files[0];
-        if (file) {
-          // Call your backend API to upload file to Google Drive
-          alert("File uploaded successfully!");
-        }
-      }
+async function loadAllReceipts() {
+  const div = document.getElementById('all-receipts');
+  div.innerHTML='<div class="loading">Loading...</div>';
+  try {
+    await loadAllData();
+    document.getElementById('total-receipts').textContent = allReceiptsCache.length;
+    if (allReceiptsCache.length > 0) {
+      allReceiptsCache.sort((a,b)=>new Date(b.sellingDate)-new Date(a.sellingDate));
+      div.innerHTML = allReceiptsCache.map(r => receiptCardHTML(r)).join('');
+    } else {
+      div.innerHTML='<div class="no-results">No receipts yet</div>';
+    }
+  } catch(err) { div.innerHTML='<div class="no-results">Error loading receipts</div>'; console.error(err); }
+}
 
-      // Function to fetch data from Google Sheets (example function)
-      function loadPayments() {
-        // Fetch data from Google Sheets or backend API
-        console.log("Loading payments data...");
-      }
+async function loadPayments() {
+  try {
+    await loadAllData();
+    displayPaymentSummary(); checkOverduePayments();
+  } catch(err) { console.error(err); }
+}
 
-      // Other interactive functions...
-    </script>
-  </body>
+function receiptCardHTML(r) {
+  const dt = new Date(r.sellingDate).toLocaleDateString();
+  const pr = '₨'+parseFloat(r.sellingPrice).toLocaleString();
+  let sc='', sb='';
+  if (r.paymentType==='CASH') { sb='<span class="payment-badge cash">💵 Paid in Full</span>'; }
+  else {
+    const ri=allInstallmentsCache.filter(i=>i.receiptId===r.receiptId);
+    const pend=ri.filter(i=>i.status==='PENDING'), over=pend.filter(i=>new Date(i.dueDate)<new Date());
+    if(over.length>0){sc='overdue-payment';sb=`<span class="payment-badge pending">⚠️ ${over.length} Overdue</span>`;}
+    else if(pend.length>0){sc='pending-payment';sb=`<span class="payment-badge installment">📅 ${pend.length} Pending</span>`;}
+    else sb='<span class="payment-badge cash">✅ Completed</span>';
+  }
+  return `<div class="receipt-item ${sc}" onclick='viewReceiptByData(${JSON.stringify(r).replace(/'/g,"&#39;")})'>
+    <div class="receipt-reg">${r.carName||'N/A'}</div>
+    <div class="receipt-date">Reg: ${r.regNumber}</div>
+    <div class="receipt-date">Customer: ${r.customerName||'N/A'}</div>
+    <div class="receipt-date">Date: ${dt} · Price: ${pr}</div>
+    <div class="receipt-date">Sold by: ${r.soldBy||'N/A'}</div>
+    ${sb}</div>`;
+}
+
+function displayPaymentSummary() {
+  const ir = allReceiptsCache.filter(r=>r.paymentType==='INSTALLMENT');
+  let tp=0, tr=0, pl='';
+  ir.forEach(r=>{
+    const ri=allInstallmentsCache.filter(i=>i.receiptId===r.receiptId);
+    const pend=ri.filter(i=>i.status==='PENDING'), paid=ri.filter(i=>i.status==='PAID');
+    tp+=pend.reduce((s,i)=>s+parseFloat(i.amount),0);
+    tr+=parseFloat(r.downPayment||0)+paid.reduce((s,i)=>s+parseFloat(i.amount),0);
+    if(pend.length>0){const ov=pend.filter(i=>new Date(i.dueDate)<new Date()); pl+=`<div class="receipt-item ${ov.length>0?'overdue-payment':'pending-payment'}" onclick='viewReceiptByData(${JSON.stringify(r).replace(/'/g,"&#39;")})'><div class="receipt-reg">${r.carName} (${r.regNumber})</div><div class="receipt-date">Customer: ${r.customerName}</div><div class="receipt-date">Pending: ₨${pend.reduce((s,i)=>s+parseFloat(i.amount),0).toLocaleString()}</div>${ov.length>0?`<span class="payment-badge pending">⚠️ ${ov.length} Overdue</span>`:`<span class="payment-badge installment">📅 ${pend.length} Pending</span>`}</div>`;}
+  });
+  document.getElementById('total-pending').textContent='₨'+tp.toLocaleString();
+  document.getElementById('total-received').textContent='₨'+tr.toLocaleString();
+  document.getElementById('payments-list').innerHTML=pl||'<div class="no-results">No pending payments</div>';
+}
+
+function checkOverduePayments() {
+  const today=new Date();
+  const ov=allInstallmentsCache.filter(i=>i.status==='PENDING'&&new Date(i.dueDate)<today);
+  const up=allInstallmentsCache.filter(i=>{const d=new Date(i.dueDate),df=Math.ceil((d-today)/86400000);return i.status==='PENDING'&&df>=0&&df<=7;});
+  if(ov.length>0){document.getElementById('overdue-badge').classList.remove('hidden');document.getElementById('overdue-count').textContent=ov.length;document.getElementById('payment-badge').classList.remove('hidden');document.getElementById('payment-badge').textContent=ov.length;}
+  else{document.getElementById('overdue-badge').classList.add('hidden');document.getElementById('payment-badge').classList.add('hidden');}
+  if(ov.length>0){document.getElementById('overdue-list').innerHTML=ov.map(i=>{const r=allReceiptsCache.find(x=>x.receiptId===i.receiptId);return r?`<div>• ${r.carName} (${r.regNumber}) - ₨${parseFloat(i.amount).toLocaleString()} - ${Math.ceil((today-new Date(i.dueDate))/86400000)} days overdue</div>`:''}).join('');document.getElementById('overdue-alert').style.display='block';}
+  else document.getElementById('overdue-alert').style.display='none';
+  if(up.length>0){document.getElementById('upcoming-list').innerHTML=up.map(i=>{const r=allReceiptsCache.find(x=>x.receiptId===i.receiptId);return r?`<div>• ${r.carName} (${r.regNumber}) - ₨${parseFloat(i.amount).toLocaleString()} - Due in ${Math.ceil((new Date(i.dueDate)-today)/86400000)} days</div>`:''}).join('');document.getElementById('upcoming-alert').style.display='block';}
+  else document.getElementById('upcoming-alert').style.display='none';
+}
+
+async function performSearch() {
+  const si=document.getElementById('search-input').value.trim().toUpperCase();
+  const se=document.getElementById('search-employee').value;
+  const rd=document.getElementById('search-results');
+  rd.innerHTML='<div class="loading">Searching...</div>';
+  if(allReceiptsCache.length===0) await loadAllData();
+  let f=allReceiptsCache;
+  if(si) f=f.filter(r=>r.regNumber.includes(si)||(r.carName||'').toUpperCase().includes(si)||(r.customerName||'').toUpperCase().includes(si));
+  if(se) f=f.filter(r=>r.soldBy===se);
+  rd.innerHTML = f.length ? f.map(r=>receiptCardHTML(r)).join('') : '<div class="no-results">❌ Not found</div>';
+}
+
+async function viewReceiptByData(receipt) {
+  const mi=document.getElementById('modal-image');
+  mi.src=`https://drive.google.com/thumbnail?id=${receipt.driveFileId}&sz=w1000`;
+  mi.onerror=function(){this.src=`https://drive.google.com/uc?export=view&id=${receipt.driveFileId}`;};
+  document.getElementById('modal-reg').textContent=`${receipt.carName} (${receipt.regNumber})`;
+  const dt=new Date(receipt.sellingDate).toLocaleDateString();
+  document.getElementById('modal-details').innerHTML=`Customer: ${receipt.customerName}<br>Phone: ${receipt.customerPhone}<br>Date: ${dt}<br>Price: ₨${parseFloat(receipt.sellingPrice).toLocaleString()}<br>Sold by: ${receipt.soldBy}<br>Payment: ${receipt.paymentType}`;
+  const mi2=document.getElementById('modal-installments');
+  if(receipt.paymentType==='INSTALLMENT'){
+    const ri=allInstallmentsCache.filter(i=>i.receiptId===receipt.receiptId);
+    let h='<div style="background:rgba(255,255,255,.1);padding:15px;border-radius:10px;margin-top:15px;">';
+    h+=`<div style="color:white;font-weight:700;margin-bottom:10px;">Down Payment: ₨${parseFloat(receipt.downPayment).toLocaleString()}</div>`;
+    ri.forEach(i=>{
+      const ip=i.status==='PAID',io=!ip&&new Date(i.dueDate)<new Date();
+      const sc=ip?'#28a745':io?'#dc3545':'#D4AF37', st=ip?'✅ Paid':io?'⚠️ Overdue':'📅 Pending';
+      h+=`<div style="background:rgba(255,255,255,.2);padding:10px;border-radius:8px;margin-bottom:8px;border-left:4px solid ${sc};">
+        <div style="color:white;">Installment ${i.installmentNumber}: ₨${parseFloat(i.amount).toLocaleString()}</div>
+        <div style="color:white;font-size:12px;">Due: ${new Date(i.dueDate).toLocaleDateString()}</div>
+        <div style="color:${sc};font-weight:700;font-size:12px;">${st}</div>
+        ${!ip?`<button class="btn btn-success btn-small" style="margin-top:8px;" onclick="markInstallmentPaid('${i.installmentId}',event)">Mark as Paid</button>`:''}
+      </div>`;
+    });
+    h+='</div>'; mi2.innerHTML=h;
+  } else mi2.innerHTML='';
+  document.getElementById('modal').classList.add('active');
+  currentViewingReceipt=receipt;
+}
+
+async function markInstallmentPaid(iid,ev) {
+  ev.stopPropagation();
+  if(!confirm('Mark as paid?')) return;
+  try {
+    const r=await post({action:'markInstallmentPaid', installmentId:iid});
+    if(r.success){alert('✅ Marked as paid');await loadAllReceipts();await loadPayments();closeModal();}
+    else throw new Error(r.error);
+  } catch(e){alert('❌ Error: '+e.message);}
+}
+
+function closeModal(){document.getElementById('modal').classList.remove('active');currentViewingReceipt=null;}
+function openDriveLink(){if(currentViewingReceipt&&currentViewingReceipt.driveLink)window.open(currentViewingReceipt.driveLink,'_blank');}
+
+async function deleteReceipt() {
+  if(!currentViewingReceipt||!confirm('Delete this receipt?')) return;
+  try {
+    const r=await post({action:'delete', receiptId:currentViewingReceipt.receiptId, driveFileId:currentViewingReceipt.driveFileId});
+    if(r.success){closeModal();loadAllReceipts();alert('✅ Deleted');}
+    else throw new Error(r.error);
+  } catch(e){alert('❌ Error: '+e.message);}
+}
+
+async function downloadReceipt() {
+  if(!currentViewingReceipt) return;
+  const link=document.createElement('a');
+  link.href=`https://drive.google.com/uc?export=download&id=${currentViewingReceipt.driveFileId}`;
+  link.download=`${currentViewingReceipt.regNumber}_${currentViewingReceipt.carName}.jpg`;
+  link.target='_blank'; document.body.appendChild(link); link.click(); document.body.removeChild(link);
+  alert('✅ Download started!');
+}
+
+function editReceipt() {
+  if(!currentViewingReceipt) return;
+  closeModal();
+  const r=currentViewingReceipt;
+  document.getElementById('edit-car-name').value=r.carName||'';
+  document.getElementById('edit-reg-number').value=r.regNumber||'';
+  document.getElementById('edit-customer-name').value=r.customerName||'';
+  document.getElementById('edit-customer-phone').value=r.customerPhone||'';
+  document.getElementById('edit-selling-date').value=r.sellingDate||'';
+  document.getElementById('edit-selling-price').value=r.sellingPrice||'';
+  document.getElementById('edit-purchase-cost').value=r.purchaseCost||'';
+  const sel=document.getElementById('edit-sold-by');
+  sel.innerHTML='<option value="">Select Employee</option>';
+  employeesList.forEach(e=>{const o=document.createElement('option');o.value=o.textContent=e;if(e===r.soldBy)o.selected=true;sel.appendChild(o);});
+  document.getElementById('edit-modal').classList.add('active');
+  ['edit-success','edit-error'].forEach(id=>document.getElementById(id).style.display='none');
+}
+function closeEditModal(){document.getElementById('edit-modal').classList.remove('active');}
+
+async function saveEditedReceipt() {
+  const vals={
+    carName:document.getElementById('edit-car-name').value.trim(),
+    regNumber:document.getElementById('edit-reg-number').value.trim().toUpperCase(),
+    customerName:document.getElementById('edit-customer-name').value.trim(),
+    customerPhone:document.getElementById('edit-customer-phone').value.trim(),
+    sellingDate:document.getElementById('edit-selling-date').value,
+    sellingPrice:document.getElementById('edit-selling-price').value.trim(),
+    purchaseCost:document.getElementById('edit-purchase-cost').value.trim(),
+    soldBy:document.getElementById('edit-sold-by').value,
+    paymentType:currentViewingReceipt.paymentType,
+    downPayment:currentViewingReceipt.downPayment||0
+  };
+  const err=document.getElementById('edit-error'), suc=document.getElementById('edit-success');
+  err.style.display='none'; suc.style.display='none';
+  if(!vals.carName||!vals.regNumber||!vals.customerName||!vals.customerPhone||!vals.sellingDate||!vals.sellingPrice||!vals.purchaseCost||!vals.soldBy){
+    err.textContent='Please fill all fields';err.style.display='block';return;
+  }
+  const btn=event.target, ot=btn.innerHTML; btn.innerHTML='⏳ Saving...'; btn.disabled=true;
+  try {
+    const r=await post({
+      action:'updateReceipt',
+      receiptId:currentViewingReceipt.receiptId,
+      carName:vals.carName,
+      regNumber:vals.regNumber,
+      customerName:vals.customerName,
+      customerPhone:vals.customerPhone,
+      sellingDate:vals.sellingDate,
+      sellingPrice:parseFloat(vals.sellingPrice),
+      purchaseCost:parseFloat(vals.purchaseCost),
+      soldBy:vals.soldBy,
+      paymentType:vals.paymentType,
+      downPayment:vals.downPayment
+    });
+    if(r.success){suc.textContent='✅ Updated!';suc.style.display='block';await loadAllReceipts();await loadPayments();setTimeout(closeEditModal,1500);}
+    else throw new Error(r.error||'Update failed');
+  } catch(e){err.textContent='❌ '+e.message;err.style.display='block';}
+  finally{btn.innerHTML=ot;btn.disabled=false;}
+}
+
+// ===================== PROFIT - FIXED: reads expenses from sheet =====================
+function getExpensesForReceipt(r) {
+  // Priority: merged expenses on receipt object (from sheet), fallback to inline
+  if (r.expenses && r.expenses.length > 0) return r.expenses;
+  return allExpensesCache
+    .filter(e => e.receiptId === r.receiptId)
+    .map(e => ({ type: e.expenseType||e.type||'Other', description: e.description||'', amount: parseFloat(e.amount)||0 }));
+}
+
+async function calculateProfit() {
+  if(allReceiptsCache.length===0) await loadAllData();
+  let tr=0, tp=0, te=0;
+  allReceiptsCache.forEach(r=>{
+    tr+=parseFloat(r.sellingPrice)||0;
+    tp+=parseFloat(r.purchaseCost)||0;
+    te+=getExpensesForReceipt(r).reduce((s,e)=>s+(parseFloat(e.amount)||0),0);
+  });
+  const np=tr-tp-te, pm=tr>0?((np/tr)*100):0;
+  document.getElementById('profit-revenue').textContent='₨'+tr.toLocaleString();
+  document.getElementById('profit-purchase').textContent='₨'+tp.toLocaleString();
+  document.getElementById('profit-expenses').textContent='₨'+te.toLocaleString();
+  document.getElementById('profit-net').textContent='₨'+np.toLocaleString();
+  document.getElementById('profit-margin').textContent=pm.toFixed(1)+'%';
+  showProfitBreakdown();
+}
+
+function showProfitBreakdown() {
+  const c=document.getElementById('profit-breakdown');
+  if(!allReceiptsCache.length){c.innerHTML='<div class="no-results">No data</div>';return;}
+  c.innerHTML=allReceiptsCache.map(r=>{
+    const s=parseFloat(r.sellingPrice)||0, p=parseFloat(r.purchaseCost)||0;
+    const e=getExpensesForReceipt(r).reduce((sum,x)=>sum+(parseFloat(x.amount)||0),0);
+    const pf=s-p-e, mg=s>0?((pf/s)*100):0, col=pf>=0?'#28a745':'#dc3545';
+    return `<div class="receipt-item" style="border-left:4px solid ${col};">
+      <div class="receipt-reg">${r.carName||'N/A'} (${r.regNumber})</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px;font-size:12px;">
+        <div>Selling: ₨${s.toLocaleString()}</div><div>Purchase: ₨${p.toLocaleString()}</div>
+        <div>Expenses: ₨${e.toLocaleString()}</div>
+        <div style="font-weight:700;color:${col};">Profit: ₨${pf.toLocaleString()} (${mg.toFixed(1)}%)</div>
+      </div>
+      <div class="receipt-date" style="margin-top:8px;">Sold by: ${r.soldBy||'N/A'}</div></div>`;
+  }).join('');
+}
+
+// ===================== EXPORT =====================
+function exportSalesReport(){
+  const d=allReceiptsCache.map(r=>{const e=getExpensesForReceipt(r).reduce((s,x)=>s+(parseFloat(x.amount)||0),0);const pf=(parseFloat(r.sellingPrice)||0)-(parseFloat(r.purchaseCost)||0)-e;return{'Receipt ID':r.receiptId,'Car':r.carName,'Reg':r.regNumber,'Customer':r.customerName,'Phone':r.customerPhone,'Date':r.sellingDate,'Selling':r.sellingPrice,'Purchase':r.purchaseCost||0,'Expenses':e,'Profit':pf,'Payment':r.paymentType,'Sold By':r.soldBy};});
+  exportToExcel(d,'Sales_Report_'+new Date().toISOString().split('T')[0]);
+}
+function exportProfitReport(){
+  const d=allReceiptsCache.map(r=>{const s=parseFloat(r.sellingPrice)||0,p=parseFloat(r.purchaseCost)||0,e=getExpensesForReceipt(r).reduce((s2,x)=>s2+(parseFloat(x.amount)||0),0),pf=s-p-e;return{'Car':r.carName,'Reg':r.regNumber,'Date':r.sellingDate,'Selling':s,'Purchase':p,'Expenses':e,'Gross':s-p,'Net Profit':pf,'Margin %':(s>0?((pf/s)*100).toFixed(2):0),'Sold By':r.soldBy};});
+  exportToExcel(d,'Profit_Report_'+new Date().toISOString().split('T')[0]);
+}
+function exportPaymentReport(){
+  const d=[];allReceiptsCache.forEach(r=>{if(r.paymentType==='INSTALLMENT'){allInstallmentsCache.filter(i=>i.receiptId===r.receiptId).forEach(i=>{d.push({'Car':r.carName,'Reg':r.regNumber,'Customer':r.customerName,'Phone':r.customerPhone,'Inst #':i.installmentNumber,'Due':i.dueDate,'Amount':i.amount,'Status':i.status,'Paid':i.paidDate||'N/A'});});}});
+  exportToExcel(d,'Payment_Report_'+new Date().toISOString().split('T')[0]);
+}
+function exportExpenseReport(){
+  const d=allExpensesCache.map(e=>{const r=allReceiptsCache.find(x=>x.receiptId===e.receiptId);return{'Car':r?r.carName:'N/A','Reg':e.receiptId,'Type':e.expenseType||e.type,'Description':e.description,'Amount':e.amount,'Date':e.date};});
+  exportToExcel(d,'Expense_Report_'+new Date().toISOString().split('T')[0]);
+}
+function exportToExcel(data,name){
+  if(!data||!data.length){alert('❌ No data to export');return;}
+  const ws=XLSX.utils.json_to_sheet(data),wb=XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb,ws,'Report');XLSX.writeFile(wb,name+'.xlsx');
+}
+
+// ===================== ANALYTICS =====================
+async function calculateAnalytics() {
+  if(allReceiptsCache.length===0) await loadAllData();
+  const now=new Date();
+  const total=allReceiptsCache.length;
+  const rev=allReceiptsCache.reduce((s,r)=>s+(parseFloat(r.sellingPrice)||0),0);
+  const today=new Date(now.getFullYear(),now.getMonth(),now.getDate());
+  const dw=today.getDay(), mo=dw===0?-6:1-dw;
+  const ws=new Date(today); ws.setDate(today.getDate()+mo);
+  const wr=allReceiptsCache.filter(r=>new Date(r.sellingDate)>=ws);
+  const mr=allReceiptsCache.filter(r=>new Date(r.sellingDate)>=new Date(now.getFullYear(),now.getMonth(),1));
+  document.getElementById('total-cars').textContent=total;
+  document.getElementById('total-revenue').textContent='₨'+rev.toLocaleString();
+  document.getElementById('week-cars').textContent=wr.length;
+  document.getElementById('week-revenue').textContent='₨'+wr.reduce((s,r)=>s+(parseFloat(r.sellingPrice)||0),0).toLocaleString();
+  document.getElementById('month-cars').textContent=mr.length;
+  document.getElementById('month-revenue').textContent='₨'+mr.reduce((s,r)=>s+(parseFloat(r.sellingPrice)||0),0).toLocaleString();
+  calculateTopSalespeople(); calculateBestSellingCars();
+}
+
+function calculateTopSalespeople(){
+  const es={};allReceiptsCache.forEach(r=>{const e=r.soldBy||'Unknown';if(!es[e])es[e]={count:0,revenue:0};es[e].count++;es[e].revenue+=parseFloat(r.sellingPrice)||0;});
+  const s=Object.entries(es).sort((a,b)=>b[1].count-a[1].count).slice(0,5);
+  const medals=['🥇','🥈','🥉','🏅'];
+  document.getElementById('top-salespeople-list').innerHTML=s.length?s.map(([n,d],i)=>`<div style="background:white;padding:12px;border-radius:8px;margin-bottom:10px;display:flex;align-items:center;gap:10px;"><span style="font-size:24px;">${medals[Math.min(i,3)]}</span><div><div style="font-weight:700;color:#E8C870;">${n}</div><div style="font-size:12px;color:#666;">${d.count} cars · ₨${d.revenue.toLocaleString()}</div></div></div>`).join(''):'<div class="no-results">No data</div>';
+}
+function calculateBestSellingCars(){
+  const cc={};allReceiptsCache.forEach(r=>{const c=r.carName||'Unknown';if(!cc[c])cc[c]={count:0,revenue:0};cc[c].count++;cc[c].revenue+=parseFloat(r.sellingPrice)||0;});
+  const s=Object.entries(cc).sort((a,b)=>b[1].count-a[1].count).slice(0,5);
+  const medals=['🥇','🥈','🥉','🏅'];
+  document.getElementById('best-selling-list').innerHTML=s.length?s.map(([n,d],i)=>`<div style="background:white;padding:12px;border-radius:8px;margin-bottom:10px;display:flex;align-items:center;gap:10px;"><span style="font-size:24px;">${medals[Math.min(i,3)]}</span><div><div style="font-weight:700;color:#E8C870;">${n}</div><div style="font-size:12px;color:#666;">${d.count} sold · ₨${d.revenue.toLocaleString()}</div></div></div>`).join(''):'<div class="no-results">No data</div>';
+}
+
+document.getElementById('modal').addEventListener('click',e=>{if(e.target===document.getElementById('modal'))closeModal();});
+document.getElementById('edit-modal').addEventListener('click',e=>{if(e.target===document.getElementById('edit-modal'))closeEditModal();});
+</script>
+</body>
 </html>
