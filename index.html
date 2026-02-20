@@ -13,16 +13,9 @@
 <title>Car Showroom Manager</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400;700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@400;700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;700&display=swap');
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Roboto',sans-serif;background:linear-gradient(135deg,#0A1628 0%,#1E3A5F 50%,#2C5F8D 100%);min-height:100vh;padding:20px;position:relative;overflow-x:hidden}
 body.urdu{font-family:'Noto Nastaliq Urdu',serif;direction:rtl;text-align:right}
-body.arabic{font-family:'Noto Sans Arabic',sans-serif;direction:rtl;text-align:right}
-body.hindi{font-family:'Noto Sans Devanagari',sans-serif}
-body.chinese{font-family:'Noto Sans SC',sans-serif}
-body.spanish,body.french,body.german,body.turkish,body.russian{font-family:Roboto,sans-serif}
 body.urdu .tab-buttons{flex-direction:row-reverse}
 body.urdu input,body.urdu select{text-align:right;direction:rtl}
 body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;background-image:radial-gradient(circle at 20% 50%,rgba(0,212,255,.1) 0%,transparent 50%),radial-gradient(circle at 80% 80%,rgba(107,70,193,.1) 0%,transparent 50%);pointer-events:none;z-index:0}
@@ -102,23 +95,6 @@ body.urdu .close-modal{right:auto;left:0}
 ::-webkit-scrollbar{width:8px}
 ::-webkit-scrollbar-track{background:rgba(255,255,255,.1)}
 ::-webkit-scrollbar-thumb{background:linear-gradient(135deg,#00D4FF 0%,#6B46C1 100%);border-radius:10px}
-
-.export-modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(10,22,40,.95);backdrop-filter:blur(10px);z-index:1000;padding:20px;overflow-y:auto}
-.export-modal.active{display:flex;align-items:center;justify-content:center}
-.export-modal-content{background:white;border-radius:20px;padding:30px;max-width:500px;width:100%;max-height:90vh;overflow-y:auto}
-.export-modal h3{color:#00D4FF;margin-bottom:20px;text-align:center;font-weight:800}
-.export-option{background:linear-gradient(135deg,#f8f9fa 0%,#fff 100%);border:2px solid #E8ECF0;border-radius:12px;padding:16px;margin-bottom:12px;cursor:pointer;transition:all .3s ease;display:flex;align-items:center;gap:12px}
-.export-option:hover{border-color:#00D4FF;transform:translateY(-2px);box-shadow:0 4px 15px rgba(0,212,255,.2)}
-.export-option .icon{font-size:24px;width:40px;text-align:center}
-.export-option .text{flex:1}
-.export-option .title{font-weight:700;font-size:15px;color:#333;margin-bottom:4px}
-.export-option .desc{font-size:12px;color:#7C8B9A}
-.status-badge{display:inline-block;padding:4px 10px;border-radius:6px;font-size:11px;font-weight:700;margin-left:8px}
-.status-badge.available{background:#d4edda;color:#155724}
-.status-badge.sold{background:#f8d7da;color:#721c24}
-.status-badge.reserved{background:#fff3cd;color:#856404}
-.status-badge.in-service{background:#d1ecf1;color:#0c5460}
-.chart-container{background:white;padding:20px;border-radius:12px;margin-bottom:15px;box-shadow:0 2px 8px rgba(0,0,0,.05)}
 </style>
 </head>
 <body>
@@ -251,26 +227,13 @@ body.urdu .close-modal{right:auto;left:0}
           <div style="font-size:26px;font-weight:700;word-break:break-all;line-height:1.2" id="profit-net">₨0</div>
         </div>
       </div>
-      <button class="btn btn-primary" onclick="openExportModal()" style="margin-bottom:15px;">
-        📊 Export Reports
-      </button>
-      <button class="btn btn-primary" onclick="calculateProfit()" style="margin-bottom:15px;" id="btn-refresh-profit">🔄 Refresh</button>
-      <!-- Profit Charts -->
-      <div style="margin-bottom:30px;">
-        <h4 style="color:#00D4FF;margin-bottom:15px;font-weight:700;">📈 Profit Visualization</h4>
-        <div class="chart-container">
-          <canvas id="profitChart" height="200"></canvas>
-        </div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:15px;margin-bottom:20px;">
-          <div class="chart-container">
-            <canvas id="expenseChart" height="150"></canvas>
-          </div>
-          <div class="chart-container">
-            <canvas id="marginChart" height="150"></canvas>
-          </div>
-        </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px;">
+        <button class="btn btn-primary" onclick="exportSalesReport()" style="font-size:14px;">📊 <span id="lbl-exp-sales">Sales</span></button>
+        <button class="btn btn-primary" onclick="exportProfitReport()" style="font-size:14px;">💵 <span id="lbl-exp-profit">Profit</span></button>
+        <button class="btn btn-primary" onclick="exportPaymentReport()" style="font-size:14px;">💰 <span id="lbl-exp-payments">Payments</span></button>
+        <button class="btn btn-primary" onclick="exportExpenseReport()" style="font-size:14px;">💸 <span id="lbl-exp-expenses">Expenses</span></button>
       </div>
-      
+      <button class="btn btn-primary" onclick="calculateProfit()" style="margin-bottom:15px;" id="btn-refresh-profit">🔄 Refresh</button>
       <h4 style="color:#00D4FF;margin:20px 0 15px 0;font-weight:700;" id="lbl-profit-by-car">Profit by Car</h4>
       <div id="profit-breakdown"></div>
     </div>
@@ -472,70 +435,6 @@ const LANG = {
     'btn-save-edit':'💾 تبدیلیاں محفوظ کریں','btn-cancel-edit':'منسوخ کریں',
     'tab-upload':'اپ لوڈ','tab-payments':'ادائیگیاں','tab-search':'تلاش',
     'tab-all':'تمام','tab-profit':'منافع','tab-analytics':'اعدادوشمار'
-  },
-  ar: {
-    'login-title':'🚗 مدير صالة السيارات','login-sub':'نظام إدارة المبيعات المتميز',
-    'lbl-password':'كلمة المرور','btn-login':'🔓 تسجيل الدخول','login-error':'❌ كلمة مرور غير صحيحة',
-    'header-title':'🚗 مدير صالة السيارات','lbl-overdue':'متأخر',
-    'lbl-employees':'الموظفون','lbl-logout':'تسجيل خروج','lang-text':'English',
-    'tab-upload':'تحميل','tab-payments':'المدفوعات','tab-search':'بحث',
-    'tab-all':'الكل','tab-profit':'الربح','tab-analytics':'إحصائيات'
-  },
-  hi: {
-    'login-title':'🚗 कार शोरूम प्रबंधक','login-sub':'प्रीमियम बिक्री प्रबंधन प्रणाली',
-    'lbl-password':'पासवर्ड','btn-login':'🔓 लॉगिन','login-error':'❌ गलत पासवर्ड',
-    'header-title':'🚗 कार शोरूम प्रबंधक','lbl-overdue':'बकाया',
-    'lbl-employees':'कर्मचारी','lbl-logout':'लॉग आउट','lang-text':'English',
-    'tab-upload':'अपलोड','tab-payments':'भुगतान','tab-search':'खोज',
-    'tab-all':'सभी','tab-profit':'लाभ','tab-analytics':'आंकड़े'
-  },
-  zh: {
-    'login-title':'🚗 汽车展厅经理','login-sub':'高级销售管理系统',
-    'lbl-password':'密码','btn-login':'🔓 登录','login-error':'❌ 密码错误',
-    'header-title':'🚗 汽车展厅经理','lbl-overdue':'逾期',
-    'lbl-employees':'员工','lbl-logout':'登出','lang-text':'English',
-    'tab-upload':'上传','tab-payments':'付款','tab-search':'搜索',
-    'tab-all':'全部','tab-profit':'利润','tab-analytics':'统计'
-  },
-  es: {
-    'login-title':'🚗 Gestor de Concesionario','login-sub':'Sistema Premium de Gestión de Ventas',
-    'lbl-password':'Contraseña','btn-login':'🔓 Iniciar Sesión','login-error':'❌ Contraseña incorrecta',
-    'header-title':'🚗 Gestor de Concesionario','lbl-overdue':'Vencido',
-    'lbl-employees':'Empleados','lbl-logout':'Cerrar Sesión','lang-text':'English',
-    'tab-upload':'Subir','tab-payments':'Pagos','tab-search':'Buscar',
-    'tab-all':'Todo','tab-profit':'Beneficio','tab-analytics':'Estadísticas'
-  },
-  fr: {
-    'login-title':'🚗 Gestionnaire de Concession','login-sub':'Système Premium de Gestion des Ventes',
-    'lbl-password':'Mot de passe','btn-login':'🔓 Connexion','login-error':'❌ Mot de passe incorrect',
-    'header-title':'🚗 Gestionnaire de Concession','lbl-overdue':'En retard',
-    'lbl-employees':'Employés','lbl-logout':'Déconnexion','lang-text':'English',
-    'tab-upload':'Télécharger','tab-payments':'Paiements','tab-search':'Rechercher',
-    'tab-all':'Tout','tab-profit':'Profit','tab-analytics':'Statistiques'
-  },
-  de: {
-    'login-title':'🚗 Autohaus Manager','login-sub':'Premium Verkaufs-Management-System',
-    'lbl-password':'Passwort','btn-login':'🔓 Anmelden','login-error':'❌ Falsches Passwort',
-    'header-title':'🚗 Autohaus Manager','lbl-overdue':'Überfällig',
-    'lbl-employees':'Mitarbeiter','lbl-logout':'Abmelden','lang-text':'English',
-    'tab-upload':'Hochladen','tab-payments':'Zahlungen','tab-search':'Suchen',
-    'tab-all':'Alle','tab-profit':'Gewinn','tab-analytics':'Statistiken'
-  },
-  tr: {
-    'login-title':'🚗 Oto Galerisi Yöneticisi','login-sub':'Premium Satış Yönetim Sistemi',
-    'lbl-password':'Şifre','btn-login':'🔓 Giriş','login-error':'❌ Yanlış şifre',
-    'header-title':'🚗 Oto Galerisi Yöneticisi','lbl-overdue':'Gecikmiş',
-    'lbl-employees':'Çalışanlar','lbl-logout':'Çıkış','lang-text':'English',
-    'tab-upload':'Yükle','tab-payments':'Ödemeler','tab-search':'Ara',
-    'tab-all':'Tümü','tab-profit':'Kâr','tab-analytics':'İstatistikler'
-  },
-  ru: {
-    'login-title':'🚗 Менеджер Автосалона','login-sub':'Премиум Система Управления Продажами',
-    'lbl-password':'Пароль','btn-login':'🔓 Войти','login-error':'❌ Неверный пароль',
-    'header-title':'🚗 Менеджер Автосалона','lbl-overdue':'Просрочено',
-    'lbl-employees':'Сотрудники','lbl-logout':'Выйти','lang-text':'English',
-    'tab-upload':'Загрузить','tab-payments':'Платежи','tab-search':'Поиск',
-    'tab-all':'Все','tab-profit':'Прибыль','tab-analytics':'Статистика'
   }
 };
 
@@ -550,22 +449,10 @@ let deferredPrompt;
 
 // ===================== LANGUAGE =====================
 function applyLanguage() {
-  const t = LANG[currentLang] || LANG['en'];
-  // Remove all language classes
-  document.body.classList.remove('urdu','arabic','hindi','chinese','spanish','french','german','turkish','russian');
-  // Add current language class
-  if (currentLang !== 'en') {
-    document.body.classList.add(currentLang === 'ur' ? 'urdu' : 
-                                 currentLang === 'ar' ? 'arabic' :
-                                 currentLang === 'hi' ? 'hindi' :
-                                 currentLang === 'zh' ? 'chinese' :
-                                 currentLang === 'es' ? 'spanish' :
-                                 currentLang === 'fr' ? 'french' :
-                                 currentLang === 'de' ? 'german' :
-                                 currentLang === 'tr' ? 'turkish' :
-                                 currentLang === 'ru' ? 'russian' : '');
-  }
-  // Update every translatable element by id
+  const t = LANG[currentLang];
+  const isUrdu = currentLang === 'ur';
+  document.body.classList.toggle('urdu', isUrdu);
+  // update every translatable element by id
   Object.keys(t).forEach(id => {
     const el = document.getElementById(id);
     if (el) el.innerHTML = t[id];
@@ -573,9 +460,7 @@ function applyLanguage() {
 }
 
 function toggleLanguage() {
-  const langs = ['en','ur','ar','hi','zh','es','fr','de','tr','ru'];
-  const currentIndex = langs.indexOf(currentLang);
-  currentLang = langs[(currentIndex + 1) % langs.length];
+  currentLang = currentLang === 'en' ? 'ur' : 'en';
   localStorage.setItem('lang', currentLang);
   applyLanguage();
 }
@@ -806,15 +691,8 @@ function receiptCardHTML(r) {
     else if(pend.length>0){sc='pending-payment';sb=`<span class="payment-badge installment">📅 ${pend.length} Pending</span>`;}
     else sb='<span class="payment-badge cash">✅ Completed</span>';
   }
-  const statusBadge = r.status ? `<span class="status-badge ${(r.status||'AVAILABLE').toLowerCase().replace('_','-')}">${
-    r.status === 'AVAILABLE' ? '🟢 Available' :
-    r.status === 'SOLD' ? '🔴 Sold' :
-    r.status === 'RESERVED' ? '🟡 Reserved' :
-    r.status === 'IN_SERVICE' ? '🔵 In Service' : '🟢 Available'
-  }</span>` : '';
-  
   return `<div class="receipt-item ${sc}" onclick='viewReceiptByData(${JSON.stringify(r).replace(/'/g,"&#39;")})'>
-    <div class="receipt-reg">${r.carName||'N/A'} ${statusBadge}</div>
+    <div class="receipt-reg">${r.carName||'N/A'}</div>
     <div class="receipt-date">Reg: ${r.regNumber}</div>
     <div class="receipt-date">Customer: ${r.customerName||'N/A'}</div>
     <div class="receipt-date">Date: ${dt} · Price: ${pr}</div>
@@ -1005,140 +883,6 @@ async function calculateProfit() {
   showProfitBreakdown();
 }
 
-function drawProfitCharts() {
-  if (allReceiptsCache.length === 0) return;
-  
-  try {
-    // Prepare data
-    const carNames = allReceiptsCache.map(r => (r.carName || 'N/A').substring(0,20));
-    const revenues = allReceiptsCache.map(r => parseFloat(r.sellingPrice) || 0);
-    const profits = allReceiptsCache.map(r => {
-      const s = parseFloat(r.sellingPrice) || 0;
-      const p = parseFloat(r.purchaseCost) || 0;
-      const e = getExpensesForReceipt(r).reduce((sum,x)=>sum+(parseFloat(x.amount)||0),0);
-      return s - p - e;
-    });
-    
-    // Chart 1: Revenue vs Profit Bar Chart (last 10 cars)
-    const ctx1 = document.getElementById('profitChart');
-    if (ctx1) {
-      if (window.profitChartInstance) {
-        window.profitChartInstance.destroy();
-      }
-      window.profitChartInstance = new Chart(ctx1.getContext('2d'), {
-        type: 'bar',
-        data: {
-          labels: carNames.slice(-10),
-          datasets: [{
-            label: 'Revenue',
-            data: revenues.slice(-10),
-            backgroundColor: 'rgba(0,212,255,0.7)',
-            borderColor: '#00D4FF',
-            borderWidth: 2
-          }, {
-            label: 'Profit',
-            data: profits.slice(-10),
-            backgroundColor: 'rgba(40,167,69,0.7)',
-            borderColor: '#28a745',
-            borderWidth: 2
-          }]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: {
-            legend: { display: true, position: 'top' },
-            title: { display: true, text: 'Revenue vs Profit (Last 10 Cars)' }
-          },
-          scales: {
-            y: { beginAtZero: true, ticks: { callback: val => '₨' + val.toLocaleString() } }
-          }
-        }
-      });
-    }
-    
-    // Chart 2: Expense Breakdown Pie Chart
-    const expenseTypes = {};
-    allReceiptsCache.forEach(r => {
-      getExpensesForReceipt(r).forEach(e => {
-        const type = e.type || 'Other';
-        expenseTypes[type] = (expenseTypes[type] || 0) + (parseFloat(e.amount) || 0);
-      });
-    });
-    
-    const ctx2 = document.getElementById('expenseChart');
-    if (ctx2 && Object.keys(expenseTypes).length > 0) {
-      if (window.expenseChartInstance) {
-        window.expenseChartInstance.destroy();
-      }
-      window.expenseChartInstance = new Chart(ctx2.getContext('2d'), {
-        type: 'pie',
-        data: {
-          labels: Object.keys(expenseTypes),
-          datasets: [{
-            data: Object.values(expenseTypes),
-            backgroundColor: [
-              'rgba(255,99,132,0.7)',
-              'rgba(54,162,235,0.7)',
-              'rgba(255,206,86,0.7)',
-              'rgba(75,192,192,0.7)',
-              'rgba(153,102,255,0.7)',
-              'rgba(255,159,64,0.7)'
-            ]
-          }]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: {
-            legend: { display: true, position: 'bottom', labels: { font: { size: 10 } } },
-            title: { display: true, text: 'Expense Breakdown' }
-          }
-        }
-      });
-    }
-    
-    // Chart 3: Profit Margin Doughnut
-    const margins = allReceiptsCache.map(r => {
-      const s = parseFloat(r.sellingPrice) || 0;
-      const p = parseFloat(r.purchaseCost) || 0;
-      const e = getExpensesForReceipt(r).reduce((sum,x)=>sum+(parseFloat(x.amount)||0),0);
-      return s > 0 ? ((s-p-e)/s)*100 : 0;
-    });
-    const avgMargin = margins.length > 0 ? margins.reduce((a,b)=>a+b,0) / margins.length : 0;
-    
-    const ctx3 = document.getElementById('marginChart');
-    if (ctx3) {
-      if (window.marginChartInstance) {
-        window.marginChartInstance.destroy();
-      }
-      window.marginChartInstance = new Chart(ctx3.getContext('2d'), {
-        type: 'doughnut',
-        data: {
-          labels: ['Profit Margin', 'Costs'],
-          datasets: [{
-            data: [Math.max(0,avgMargin), Math.max(0,100-avgMargin)],
-            backgroundColor: [
-              'rgba(40,167,69,0.7)',
-              'rgba(220,53,69,0.7)'
-            ]
-          }]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: {
-            legend: { display: true, position: 'bottom' },
-            title: { display: true, text: 'Avg Profit Margin: ' + avgMargin.toFixed(1) + '%' }
-          }
-        }
-      });
-    }
-  } catch(error) {
-    console.error('Chart error:', error);
-  }
-}
-
 function showProfitBreakdown() {
   const c=document.getElementById('profit-breakdown');
   if(!allReceiptsCache.length){c.innerHTML='<div class="no-results">No data</div>';return;}
@@ -1155,101 +899,6 @@ function showProfitBreakdown() {
       </div>
       <div class="receipt-date" style="margin-top:8px;">Sold by: ${r.soldBy||'N/A'}</div></div>`;
   }).join('');
-}
-
-// ===================== EXPORT MODAL =====================
-function openExportModal() {
-  document.getElementById('export-modal').classList.add('active');
-  document.body.style.overflow = 'hidden';
-}
-
-function closeExportModal() {
-  document.getElementById('export-modal').classList.remove('active');
-  document.body.style.overflow = 'auto';
-}
-
-// Close modal when clicking outside
-document.addEventListener('DOMContentLoaded', function() {
-  const modal = document.getElementById('export-modal');
-  if (modal) {
-    modal.addEventListener('click', function(e) {
-      if (e.target === modal) {
-        closeExportModal();
-      }
-    });
-  }
-});
-
-function exportAnalyticsReport() {
-  if (allReceiptsCache.length === 0) {
-    alert('No data to export');
-    return;
-  }
-  
-  const wb = XLSX.utils.book_new();
-  
-  // Sales by employee
-  const employeeSales = {};
-  allReceiptsCache.forEach(r => {
-    const emp = r.soldBy || 'Unknown';
-    if (!employeeSales[emp]) {
-      employeeSales[emp] = { count: 0, revenue: 0, profit: 0 };
-    }
-    employeeSales[emp].count++;
-    employeeSales[emp].revenue += parseFloat(r.sellingPrice) || 0;
-    const expenses = getExpensesForReceipt(r).reduce((s,e)=>s+(parseFloat(e.amount)||0),0);
-    employeeSales[emp].profit += (parseFloat(r.sellingPrice)||0) - (parseFloat(r.purchaseCost)||0) - expenses;
-  });
-  
-  const employeeData = Object.keys(employeeSales).map(emp => ({
-    'Employee': emp,
-    'Cars Sold': employeeSales[emp].count,
-    'Revenue': employeeSales[emp].revenue,
-    'Profit': employeeSales[emp].profit,
-    'Avg per Car': employeeSales[emp].count > 0 ? Math.round(employeeSales[emp].profit / employeeSales[emp].count) : 0
-  }));
-  
-  const ws1 = XLSX.utils.json_to_sheet(employeeData);
-  XLSX.utils.book_append_sheet(wb, ws1, 'By Employee');
-  
-  // Best selling cars
-  const carSales = {};
-  allReceiptsCache.forEach(r => {
-    const car = r.carName || 'Unknown';
-    carSales[car] = (carSales[car] || 0) + 1;
-  });
-  
-  const carData = Object.keys(carSales)
-    .map(car => ({ 'Car Model': car, 'Units Sold': carSales[car] }))
-    .sort((a,b) => b['Units Sold'] - a['Units Sold']);
-  
-  const ws2 = XLSX.utils.json_to_sheet(carData);
-  XLSX.utils.book_append_sheet(wb, ws2, 'By Car Model');
-  
-  XLSX.writeFile(wb, `Analytics_Report_${new Date().toISOString().split('T')[0]}.xlsx`);
-}
-
-function exportInventoryReport() {
-  if (allReceiptsCache.length === 0) {
-    alert('No data to export');
-    return;
-  }
-  
-  const inventoryData = allReceiptsCache.map(r => ({
-    'Car Name': r.carName || 'N/A',
-    'Registration': r.regNumber || 'N/A',
-    'Status': r.status || 'AVAILABLE',
-    'Selling Price': parseFloat(r.sellingPrice) || 0,
-    'Purchase Cost': parseFloat(r.purchaseCost) || 0,
-    'Customer': r.customerName || 'N/A',
-    'Date': r.sellingDate || 'N/A',
-    'Sold By': r.soldBy || 'N/A'
-  }));
-  
-  const wb = XLSX.utils.book_new();
-  const ws = XLSX.utils.json_to_sheet(inventoryData);
-  XLSX.utils.book_append_sheet(wb, ws, 'Inventory');
-  XLSX.writeFile(wb, `Inventory_Report_${new Date().toISOString().split('T')[0]}.xlsx`);
 }
 
 // ===================== EXPORT =====================
@@ -1311,64 +960,5 @@ function calculateBestSellingCars(){
 document.getElementById('modal').addEventListener('click',e=>{if(e.target===document.getElementById('modal'))closeModal();});
 document.getElementById('edit-modal').addEventListener('click',e=>{if(e.target===document.getElementById('edit-modal'))closeEditModal();});
 </script>
-
-<!-- EXPORT MODAL -->
-<div id="export-modal" class="export-modal">
-  <div class="export-modal-content">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
-      <h3 style="margin:0;">📊 Export Reports</h3>
-      <button onclick="closeExportModal()" style="background:#dc3545;color:white;border:none;padding:8px 16px;border-radius:8px;cursor:pointer;font-weight:700;">✕</button>
-    </div>
-    
-    <div class="export-option" onclick="exportSalesReport();closeExportModal();">
-      <div class="icon">📊</div>
-      <div class="text">
-        <div class="title">Sales Report</div>
-        <div class="desc">Complete list of all receipts with details</div>
-      </div>
-    </div>
-    
-    <div class="export-option" onclick="exportProfitReport();closeExportModal();">
-      <div class="icon">💵</div>
-      <div class="text">
-        <div class="title">Profit Report</div>
-        <div class="desc">Profit breakdown per car sold</div>
-      </div>
-    </div>
-    
-    <div class="export-option" onclick="exportPaymentReport();closeExportModal();">
-      <div class="icon">💰</div>
-      <div class="text">
-        <div class="title">Payment Report</div>
-        <div class="desc">Installment status and tracking</div>
-      </div>
-    </div>
-    
-    <div class="export-option" onclick="exportExpenseReport();closeExportModal();">
-      <div class="icon">💸</div>
-      <div class="text">
-        <div class="title">Expense Report</div>
-        <div class="desc">All additional expenses incurred</div>
-      </div>
-    </div>
-    
-    <div class="export-option" onclick="exportAnalyticsReport();closeExportModal();">
-      <div class="icon">📈</div>
-      <div class="text">
-        <div class="title">Analytics Report</div>
-        <div class="desc">Performance metrics and statistics</div>
-      </div>
-    </div>
-    
-    <div class="export-option" onclick="exportInventoryReport();closeExportModal();">
-      <div class="icon">🚗</div>
-      <div class="text">
-        <div class="title">Inventory Report</div>
-        <div class="desc">Current stock status overview</div>
-      </div>
-    </div>
-  </div>
-</div>
-
 </body>
 </html>
