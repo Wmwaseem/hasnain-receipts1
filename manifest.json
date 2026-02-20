@@ -1,42 +1,50 @@
 {
   "name": "Car Showroom Manager",
   "short_name": "Showroom",
-  "description": "Premium Car Showroom Management System",
-  "start_url": "/hasnain-receipts/",
+  "description": "Complete car showroom management system with inventory, payments, and profit tracking",
+  "start_url": "/",
   "display": "standalone",
   "background_color": "#0A1628",
-  "theme_color": "#0A1628",
-  "orientation": "portrait",
+  "theme_color": "#00D4FF",
+  "orientation": "portrait-primary",
   "icons": [
     {
-      "src": "icon-192.png",
+      "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTkyIiBoZWlnaHQ9IjE5MiIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTkyIiBoZWlnaHQ9IjE5MiIgZmlsbD0iIzBBMTYyOCIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LXNpemU9IjkwIiBkb21pbmFudC1iYXNlbGluZT0ibWlkZGxlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj7wn5q3PC90ZXh0Pjwvc3ZnPg==",
       "sizes": "192x192",
-      "type": "image/png",
+      "type": "image/svg+xml",
       "purpose": "any maskable"
     },
     {
-      "src": "icon-512.png",
+      "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgZmlsbD0iIzBBMTYyOCIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LXNpemU9IjI0MCIgZG9taW5hbnQtYmFzZWxpbmU9Im1pZGRsZSIgdGV4dC1hbmNob3I9Im1pZGRsZSI+8J+atzwvdGV4dD48L3N2Zz4=",
       "sizes": "512x512",
-      "type": "image/png",
+      "type": "image/svg+xml",
       "purpose": "any maskable"
     }
   ],
-  "categories": ["business", "productivity"],
+  "categories": ["business", "finance", "productivity"],
   "screenshots": [],
   "shortcuts": [
     {
       "name": "Upload Receipt",
       "short_name": "Upload",
-      "description": "Upload a new receipt",
-      "url": "/hasnain-receipts/?tab=upload",
-      "icons": [{ "src": "icon-192.png", "sizes": "192x192" }]
+      "description": "Add new car sale receipt",
+      "url": "/?tab=upload",
+      "icons": []
     },
     {
       "name": "View Payments",
       "short_name": "Payments",
       "description": "Check payment status",
-      "url": "/hasnain-receipts/?tab=payments",
-      "icons": [{ "src": "icon-192.png", "sizes": "192x192" }]
+      "url": "/?tab=payments",
+      "icons": []
+    },
+    {
+      "name": "Profit Report",
+      "short_name": "Profit",
+      "description": "View profit & loss",
+      "url": "/?tab=profit",
+      "icons": []
     }
-  ]
+  ],
+  "prefer_related_applications": false
 }
