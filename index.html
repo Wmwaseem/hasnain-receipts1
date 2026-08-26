@@ -1281,9 +1281,16 @@ body.urdu .close-modal { right:auto; left:0; }
     <div id="upload-tab" class="tab-content active">
       <div class="success-msg" id="upload-success"></div>
       <div class="error-msg" id="upload-error"></div>
-      <div class="form-row-2"><div class="form-group"><label id="lbl-car-name">Car Name / Model *</label><input type="text" id="car-name" placeholder="e.g., Toyota Corolla 2020"></div><div class="form-group"><label id="lbl-reg-number">Registration No. *</label><input type="text" id="reg-number" placeholder="e.g., ABC-123" style="text-transform:uppercase"></div></div>
+      <div class="form-group">
+        <label id="lbl-vehicle-type">Vehicle Type *</label>
+        <div class="radio-group">
+          <label><input type="radio" name="vehicle-type" value="CAR" checked onchange="onVehicleTypeChange()"> 🚗 <span id="lbl-veh-car">Car</span></label>
+          <label><input type="radio" name="vehicle-type" value="BIKE" onchange="onVehicleTypeChange()"> 🏍️ <span id="lbl-veh-bike">Bike</span></label>
+        </div>
+      </div>
+      <div class="form-row-2"><div class="form-group"><label id="lbl-car-name">Vehicle Name / Model *</label><input type="text" id="car-name" placeholder="e.g., Toyota Corolla 2020"></div><div class="form-group"><label id="lbl-reg-number">Registration No. *</label><input type="text" id="reg-number" placeholder="e.g., ABC-123" style="text-transform:uppercase"></div></div>
       <div class="form-row-2"><div class="form-group"><label id="lbl-cust-name">Customer Name *</label><input type="text" id="customer-name" placeholder="e.g., Ahmed Khan"></div><div class="form-group"><label id="lbl-cust-phone">Phone *</label><input type="text" id="customer-phone" placeholder="03001234567"></div></div>
-      <div class="form-row-2"><div class="form-group"><label id="lbl-sell-date">Sale Date *</label><input type="date" id="selling-date"></div><div class="form-group"><label id="lbl-sell-price">Selling Price (PKR) *</label><input type="number" id="selling-price" placeholder="2500000" min="0" step="1000"></div></div>
+      <div class="form-row-2"><div class="form-group"><label id="lbl-sell-date">Sale Date *</label><input type="date" id="selling-date"></div><div class="form-group"><label id="lbl-sell-price">Selling Price (PKR) *</label><input type="number" id="selling-price" placeholder="2500000" min="0" step="1000" oninput="updateInstallmentBalance()"></div></div>
       <div class="form-group"><label id="lbl-purch-cost">Purchase Cost (PKR) *</label><input type="number" id="purchase-cost" placeholder="e.g., 2000000" min="0" step="1000">
         <small id="lbl-purch-hint" style="color:#666;font-size:12px;display:block;margin-top:5px;">💡 How much did you pay to buy this car?</small>
       </div>
@@ -1301,13 +1308,26 @@ body.urdu .close-modal { right:auto; left:0; }
         </div>
       </div>
       <div class="installment-section" id="installment-section">
-        <div class="form-group"><label id="lbl-down">Down Payment (PKR) *</label><input type="number" id="down-payment" placeholder="e.g., 500000" min="0" step="1000"></div>
         <div class="form-group">
-          <label id="lbl-inst-count">Number of Installments *</label>
-          <select id="installment-count" onchange="generateInstallmentFields()">
-            <option value="1">1</option><option value="2">2</option><option value="3">3</option>
-            <option value="4">4</option><option value="5">5</option><option value="6">6</option>
-          </select>
+          <label id="lbl-down">Advance / Down Payment *</label>
+          <small style="color:var(--text-3);font-size:11.5px;display:block;margin-top:-2px;margin-bottom:10px;line-height:1.5;" id="lbl-adv-hint">💡 Split into parts if collecting in stages — e.g. one part on the spot, another after some time.</small>
+        </div>
+        <div class="form-group">
+          <label id="lbl-adv-count">Number of Advance Payments * <span style="text-transform:none;font-weight:400;color:var(--text-3);">(1–30)</span></label>
+          <input type="number" id="advance-count" min="1" max="30" value="1" step="1" onchange="generateAdvanceFields()">
+        </div>
+        <div id="advance-fields"></div>
+        <div id="advance-total-box" style="background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:11px 14px;margin-bottom:14px;display:flex;justify-content:space-between;align-items:center;">
+          <span style="font-size:11px;color:var(--text-3);text-transform:uppercase;letter-spacing:0.6px;font-weight:600;" id="lbl-adv-total">Total Advance</span>
+          <span id="advance-total-amount" style="font-size:15px;font-weight:800;color:var(--text-1);">₨0</span>
+        </div>
+        <div class="form-group">
+          <label id="lbl-inst-count">Number of Installments * <span style="text-transform:none;font-weight:400;color:var(--text-3);">(1–30)</span></label>
+          <input type="number" id="installment-count" min="1" max="30" value="6" step="1" onchange="generateInstallmentFields()">
+        </div>
+        <div id="installment-balance-box" style="background:var(--surface3);border:1px solid var(--border-hi);border-radius:10px;padding:12px 14px;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center;">
+          <span style="font-size:11px;color:var(--text-3);text-transform:uppercase;letter-spacing:0.6px;font-weight:600;" id="lbl-remaining-balance">Remaining Balance</span>
+          <span id="installment-remaining" style="font-size:16px;font-weight:800;color:var(--accent);">₨0</span>
         </div>
         <div id="installment-fields"></div>
       </div>
@@ -1334,13 +1354,22 @@ body.urdu .close-modal { right:auto; left:0; }
     <div id="search-tab" class="tab-content">
       <div class="form-group"><label id="lbl-search-reg">Search by Registration Number</label><input type="text" id="search-input" placeholder="e.g., ABC-123" style="text-transform:uppercase"></div>
       <div class="form-group"><label id="lbl-filter-emp">Filter by Employee</label><select id="search-employee"><option value="">All Employees</option></select></div>
+      <div class="form-group"><label id="lbl-filter-vehicle">Filter by Vehicle Type</label><select id="search-vehicle-type"><option value="">🚗🏍️ All Vehicles</option><option value="CAR">🚗 Cars Only</option><option value="BIKE">🏍️ Bikes Only</option></select></div>
       <button class="btn btn-primary" onclick="performSearch()" id="btn-search">Search Records</button>
       <div id="search-results"></div>
     </div>
 
     <!-- ALL TAB -->
     <div id="all-tab" class="tab-content">
-      <div class="stats"><div class="stat-item"><div class="stat-number" id="total-receipts">0</div><div class="stat-label" id="lbl-total-receipts">Total Receipts</div></div></div>
+      <div class="stats" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+        <div class="stat-item"><div class="stat-number" id="total-receipts">0</div><div class="stat-label" id="lbl-total-receipts">Total Receipts</div></div>
+        <div class="stat-item"><div class="stat-number" id="total-receipts-split" style="font-size:14px;">🚗0 · 🏍️0</div><div class="stat-label">Cars · Bikes</div></div>
+      </div>
+      <div class="profit-style-bar" style="margin-bottom:12px;">
+        <button class="ps-btn active" onclick="setAllFilter('ALL',this)">All</button>
+        <button class="ps-btn" onclick="setAllFilter('CAR',this)">🚗 Cars</button>
+        <button class="ps-btn" onclick="setAllFilter('BIKE',this)">🏍️ Bikes</button>
+      </div>
       <button class="btn btn-primary" onclick="loadAllReceipts()" style="margin-bottom:15px;" id="btn-refresh-all">↻ Refresh</button>
       <div id="all-receipts"></div>
     </div>
@@ -1464,6 +1493,14 @@ body.urdu .close-modal { right:auto; left:0; }
           <div style="font-size:22px;font-weight:700;word-break:break-all" id="total-revenue">₨0</div>
           <div style="font-size:12px;margin-top:5px" id="lbl-total-rev-a">Total Revenue</div>
         </div>
+        <div style="background:var(--surface2);padding:16px;border-radius:12px;color:var(--text-1);text-align:center;border:1px solid var(--border);">
+          <div style="font-size:22px;font-weight:700" id="total-cars-only">0</div>
+          <div style="font-size:12px;margin-top:5px">🚗 Cars Sold</div>
+        </div>
+        <div style="background:var(--surface2);padding:16px;border-radius:12px;color:var(--text-1);text-align:center;border:1px solid var(--border);">
+          <div style="font-size:22px;font-weight:700" id="total-bikes-only">0</div>
+          <div style="font-size:12px;margin-top:5px">🏍️ Bikes Sold</div>
+        </div>
       </div>
       <div style="background:var(--surface2);padding:15px;border-radius:12px;margin-bottom:11px;border:1px solid var(--border);">
         <h4 style="color:#C9A84C;margin-bottom:15px;font-weight:700;">🏆 <span id="lbl-top-sales">Top Salespeople</span></h4>
@@ -1531,7 +1568,14 @@ body.urdu .close-modal { right:auto; left:0; }
       <h3 style="color:var(--text-1);margin-bottom:16px;font-weight:700;text-align:center;font-size:16px;letter-spacing:-0.2px;">✏️ <span id="lbl-edit-title">Edit Receipt</span></h3>
       <div class="success-msg" id="edit-success"></div>
       <div class="error-msg" id="edit-error"></div>
-      <div class="form-group"><label id="lbl-edit-car">Car Name/Model</label><input type="text" id="edit-car-name"></div>
+      <div class="form-group">
+        <label>Vehicle Type</label>
+        <div class="radio-group">
+          <label><input type="radio" name="edit-vehicle-type" value="CAR"> 🚗 Car</label>
+          <label><input type="radio" name="edit-vehicle-type" value="BIKE"> 🏍️ Bike</label>
+        </div>
+      </div>
+      <div class="form-group"><label id="lbl-edit-car">Vehicle Name/Model</label><input type="text" id="edit-car-name"></div>
       <div class="form-group"><label id="lbl-edit-reg">Registration Number</label><input type="text" id="edit-reg-number" style="text-transform:uppercase"></div>
       <div class="form-group"><label id="lbl-edit-cust">Customer Name</label><input type="text" id="edit-customer-name"></div>
       <div class="form-group"><label id="lbl-edit-phone">Customer Phone</label><input type="text" id="edit-customer-phone"></div>
@@ -1559,16 +1603,18 @@ const LANG = {
     'header-title':'🚗 CAR SHOWROOM MANAGER','lbl-overdue':'Overdue',
     'lbl-employees':'Employees','lbl-logout':'Logout','lang-text':'اردو',
     'lbl-install':'📱 Install this app for easier access!','btn-install':'Install',
-    'lbl-car-name':'Car Name/Model *','lbl-reg-number':'Car Registration Number *',
+    'lbl-vehicle-type':'Vehicle Type *','lbl-veh-car':'Car','lbl-veh-bike':'Bike','lbl-filter-vehicle':'Filter by Vehicle Type',
+    'lbl-car-name':'Vehicle Name/Model *','lbl-reg-number':'Registration Number *',
     'lbl-cust-name':'Customer Name *','lbl-cust-phone':'Customer Phone *',
     'lbl-sell-date':'Selling Date *','lbl-sell-price':'Selling Price (PKR) *',
     'lbl-purch-cost':'Purchase Cost (PKR) *',
-    'lbl-purch-hint':'💡 How much did you pay to buy this car?',
+    'lbl-purch-hint':'💡 How much did you pay to buy this vehicle?',
+    'lbl-remaining-balance':'Remaining Balance',
     'lbl-expenses':'Additional Expenses (Optional)',
     'lbl-exp-hint':'Repairs, maintenance, modifications, etc.',
     'btn-add-expense':'➕ Add Expense','lbl-pay-type':'Payment Type *',
     'lbl-cash':'Cash (Full Payment)','lbl-inst':'Installment',
-    'lbl-down':'Down Payment (PKR) *','lbl-inst-count':'Number of Installments *',
+    'lbl-down':'Advance / Down Payment *','lbl-inst-count':'Number of Installments *',
     'lbl-sold-by':'Sold By (Employee) *','lbl-receipt-photo':'Receipt Photo *',
     'btn-save-receipt':'💾 Save Receipt',
     'lbl-pay-track':'Payment Tracking','lbl-overdue-title':'⚠️ Overdue Payments!',
@@ -1607,16 +1653,18 @@ const LANG = {
     'header-title':'🚗 کار شو روم مینیجر','lbl-overdue':'ادائیگی باقی',
     'lbl-employees':'ملازمین','lbl-logout':'لاگ آؤٹ','lang-text':'English',
     'lbl-install':'📱 آسان رسائی کے لیے انسٹال کریں!','btn-install':'انسٹال',
+    'lbl-vehicle-type':'گاڑی کی قسم *','lbl-veh-car':'کار','lbl-veh-bike':'بائیک','lbl-filter-vehicle':'گاڑی کی قسم سے فلٹر',
     'lbl-car-name':'گاڑی کا نام/ماڈل *','lbl-reg-number':'رجسٹریشن نمبر *',
     'lbl-cust-name':'گاہک کا نام *','lbl-cust-phone':'گاہک کا فون *',
     'lbl-sell-date':'فروخت کی تاریخ *','lbl-sell-price':'فروخت کی قیمت (PKR) *',
     'lbl-purch-cost':'خریداری کی قیمت (PKR) *',
     'lbl-purch-hint':'💡 آپ نے یہ گاڑی کتنے میں خریدی؟',
+    'lbl-remaining-balance':'باقی رقم',
     'lbl-expenses':'اضافی اخراجات (اختیاری)',
     'lbl-exp-hint':'مرمت، دیکھ بھال، تبدیلیاں وغیرہ',
     'btn-add-expense':'➕ اخراجات شامل کریں','lbl-pay-type':'ادائیگی کی قسم *',
     'lbl-cash':'نقد (مکمل ادائیگی)','lbl-inst':'قسطیں',
-    'lbl-down':'پیشگی ادائیگی (PKR) *','lbl-inst-count':'قسطوں کی تعداد *',
+    'lbl-down':'ایڈوانس / پیشگی ادائیگی *','lbl-inst-count':'قسطوں کی تعداد *',
     'lbl-sold-by':'فروخت کنندہ (ملازم) *','lbl-receipt-photo':'رسید کی تصویر *',
     'btn-save-receipt':'💾 رسید محفوظ کریں',
     'lbl-pay-track':'ادائیگی ٹریکنگ','lbl-overdue-title':'⚠️ ادائیگی میں تاخیر!',
@@ -1656,14 +1704,16 @@ const LANG = {
     'header-title':'🚗 مدير صالة العرض','lbl-overdue':'متأخر',
     'lbl-employees':'الموظفون','lbl-logout':'تسجيل الخروج','lang-text':'EN',
     'lbl-install':'📱 ثبّت التطبيق للوصول السريع!','btn-install':'تثبيت',
-    'lbl-car-name':'اسم السيارة / الموديل *','lbl-reg-number':'رقم التسجيل *',
+    'lbl-vehicle-type':'نوع المركبة *','lbl-veh-car':'سيارة','lbl-veh-bike':'دراجة نارية','lbl-filter-vehicle':'تصفية حسب نوع المركبة',
+    'lbl-car-name':'اسم المركبة / الموديل *','lbl-reg-number':'رقم التسجيل *',
     'lbl-cust-name':'اسم العميل *','lbl-cust-phone':'هاتف العميل *',
     'lbl-sell-date':'تاريخ البيع *','lbl-sell-price':'سعر البيع (ر.س) *',
-    'lbl-purch-cost':'تكلفة الشراء (ر.س) *','lbl-purch-hint':'💡 كم دفعت لشراء هذه السيارة؟',
+    'lbl-purch-cost':'تكلفة الشراء (ر.س) *','lbl-purch-hint':'💡 كم دفعت لشراء هذه المركبة؟',
+    'lbl-remaining-balance':'الرصيد المتبقي',
     'lbl-expenses':'مصاريف إضافية (اختياري)','lbl-exp-hint':'إصلاحات، صيانة، تعديلات...',
     'btn-add-expense':'➕ إضافة مصروف','lbl-pay-type':'نوع الدفع *',
     'lbl-cash':'نقداً (دفع كامل)','lbl-inst':'أقساط',
-    'lbl-down':'الدفعة الأولى (ر.س) *','lbl-inst-count':'عدد الأقساط *',
+    'lbl-down':'الدفعة المقدمة *','lbl-inst-count':'عدد الأقساط *',
     'lbl-sold-by':'بيع بواسطة (الموظف) *','lbl-receipt-photo':'صورة الإيصال *',
     'btn-save-receipt':'💾 حفظ الإيصال','lbl-pay-track':'تتبع المدفوعات',
     'lbl-overdue-title':'⚠️ مدفوعات متأخرة!','lbl-upcoming-title':'📅 مدفوعات قادمة',
@@ -1695,14 +1745,16 @@ const LANG = {
     'header-title':'🚗 ڪار شوروم مئنيجر','lbl-overdue':'دير ٿيل',
     'lbl-employees':'ملازم','lbl-logout':'لاگ آئوٽ','lang-text':'EN',
     'lbl-install':'📱 آسان رسائي لاءِ انسٽال ڪريو!','btn-install':'انسٽال',
+    'lbl-vehicle-type':'گاڏيءَ جو قسم *','lbl-veh-car':'ڪار','lbl-veh-bike':'بائيڪ','lbl-filter-vehicle':'گاڏيءَ جي قسم سان فلٽر',
     'lbl-car-name':'گاڏيءَ جو نالو / ماڊل *','lbl-reg-number':'رجسٽريشن نمبر *',
     'lbl-cust-name':'گراهڪ جو نالو *','lbl-cust-phone':'گراهڪ جو فون *',
     'lbl-sell-date':'وڪري جي تاريخ *','lbl-sell-price':'وڪري جي قيمت (PKR) *',
     'lbl-purch-cost':'خريداري جي قيمت (PKR) *','lbl-purch-hint':'💡 هيءَ گاڏي خريد ڪرڻ تي ڪيترو ڏنو؟',
+    'lbl-remaining-balance':'باقي بچيل رقم',
     'lbl-expenses':'اضافي خرچا (اختياري)','lbl-exp-hint':'مرمت، سار سنڀال، تبديليون...',
     'btn-add-expense':'➕ خرچو شامل ڪريو','lbl-pay-type':'ادائيگي جو قسم *',
     'lbl-cash':'نقد (مڪمل ادائيگي)','lbl-inst':'قسطون',
-    'lbl-down':'پهرين ادائيگي (PKR) *','lbl-inst-count':'قسطن جو تعداد *',
+    'lbl-down':'ايڊوانس / پهرين ادائيگي *','lbl-inst-count':'قسطن جو تعداد *',
     'lbl-sold-by':'فروخت ڪندڙ (ملازم) *','lbl-receipt-photo':'رسيد جي تصوير *',
     'btn-save-receipt':'💾 رسيد محفوظ ڪريو','lbl-pay-track':'ادائيگي ٽريڪنگ',
     'lbl-overdue-title':'⚠️ دير ٿيل ادائيگيون!','lbl-upcoming-title':'📅 ايندڙ ادائيگيون',
@@ -1734,14 +1786,16 @@ const LANG = {
     'header-title':'🚗 مدیر نمایشگاه خودرو','lbl-overdue':'معوقه',
     'lbl-employees':'کارمندان','lbl-logout':'خروج','lang-text':'EN',
     'lbl-install':'📱 برای دسترسی آسان نصب کنید!','btn-install':'نصب',
-    'lbl-car-name':'نام/مدل خودرو *','lbl-reg-number':'شماره پلاک *',
+    'lbl-vehicle-type':'نوع وسیله *','lbl-veh-car':'خودرو','lbl-veh-bike':'موتورسیکلت','lbl-filter-vehicle':'فیلتر بر اساس نوع وسیله',
+    'lbl-car-name':'نام/مدل وسیله *','lbl-reg-number':'شماره پلاک *',
     'lbl-cust-name':'نام مشتری *','lbl-cust-phone':'تلفن مشتری *',
     'lbl-sell-date':'تاریخ فروش *','lbl-sell-price':'قیمت فروش (تومان) *',
-    'lbl-purch-cost':'هزینه خرید (تومان) *','lbl-purch-hint':'💡 این خودرو را به چه قیمتی خریدید؟',
+    'lbl-purch-cost':'هزینه خرید (تومان) *','lbl-purch-hint':'💡 این وسیله را به چه قیمتی خریدید؟',
+    'lbl-remaining-balance':'مانده حساب',
     'lbl-expenses':'هزینه‌های اضافی (اختیاری)','lbl-exp-hint':'تعمیرات، نگهداری، تغییرات...',
     'btn-add-expense':'➕ افزودن هزینه','lbl-pay-type':'نوع پرداخت *',
     'lbl-cash':'نقدی (پرداخت کامل)','lbl-inst':'اقساط',
-    'lbl-down':'پیش پرداخت (تومان) *','lbl-inst-count':'تعداد اقساط *',
+    'lbl-down':'بیعانه / پیش پرداخت *','lbl-inst-count':'تعداد اقساط *',
     'lbl-sold-by':'فروشنده (کارمند) *','lbl-receipt-photo':'عکس رسید *',
     'btn-save-receipt':'💾 ذخیره رسید','lbl-pay-track':'پیگیری پرداخت‌ها',
     'lbl-overdue-title':'⚠️ پرداخت‌های معوقه!','lbl-upcoming-title':'📅 پرداخت‌های پیش رو',
@@ -2000,25 +2054,88 @@ function switchTabDirect(tab) {
   if (tab==='payments') loadPayments();
 }
 
+function onVehicleTypeChange() {
+  const vt = document.querySelector('input[name="vehicle-type"]:checked').value;
+  const nameInput = document.getElementById('car-name');
+  if (nameInput) nameInput.placeholder = vt === 'BIKE' ? 'e.g., Honda CD70 2023' : 'e.g., Toyota Corolla 2020';
+}
+
 function toggleInstallmentSection() {
   const pt = document.querySelector('input[name="payment-type"]:checked').value;
   document.getElementById('installment-section').style.display = pt==='INSTALLMENT' ? 'block' : 'none';
-  if (pt==='INSTALLMENT') generateInstallmentFields();
+  if (pt==='INSTALLMENT') { generateAdvanceFields(); generateInstallmentFields(); }
 }
+// Generate advance/down-payment fields — supports collecting the advance in multiple parts
+// (e.g. one part received today "on the spot", another due later)
+function generateAdvanceFields() {
+  let cnt = parseInt(document.getElementById('advance-count').value) || 1;
+  if (cnt < 1) cnt = 1;
+  if (cnt > 30) cnt = 30;
+  document.getElementById('advance-count').value = cnt;
+  const today = new Date().toISOString().split('T')[0];
+  let h = '';
+  for (let i=1; i<=cnt; i++) {
+    const label = i===1 ? 'Advance ' + i + ' (e.g. on the spot)' : 'Advance ' + i + ' (e.g. after some time)';
+    const existingDate = document.getElementById('adv-date-'+i);
+    const existingAmt = document.getElementById('adv-amount-'+i);
+    const keepDate = existingDate ? existingDate.value : (i===1 ? today : '');
+    const keepAmt = existingAmt ? existingAmt.value : '';
+    h += `<div class="installment-item"><strong>${label}</strong>
+      <div class="form-group"><label>Date${i===1?' (received)':' (expected)'}</label><input type="date" id="adv-date-${i}" value="${keepDate}"></div>
+      <div class="form-group"><label>Amount (PKR)</label><input type="number" id="adv-amount-${i}" placeholder="Amount" min="0" step="1000" value="${keepAmt}" oninput="updateInstallmentBalance()"></div></div>`;
+  }
+  document.getElementById('advance-fields').innerHTML = h;
+  updateInstallmentBalance();
+}
+
+function getTotalAdvance() {
+  const cnt = parseInt(document.getElementById('advance-count').value) || 0;
+  let total = 0;
+  for (let i=1; i<=cnt; i++) {
+    const el = document.getElementById('adv-amount-'+i);
+    if (el) total += parseFloat(el.value) || 0;
+  }
+  return total;
+}
+
 function generateInstallmentFields() {
-  const cnt = parseInt(document.getElementById('installment-count').value);
+  let cnt = parseInt(document.getElementById('installment-count').value) || 1;
+  if (cnt < 1) cnt = 1;
+  if (cnt > 30) cnt = 30;
+  document.getElementById('installment-count').value = cnt;
   let h = '<h4 style="color:#00D4FF;margin:15px 0 10px 0;font-weight:700;">Installment Details:</h4>';
   for (let i=1; i<=cnt; i++) {
     h += `<div class="installment-item"><strong>Installment ${i}</strong>
       <div class="form-group"><label>Due Date</label><input type="date" id="inst-date-${i}"></div>
-      <div class="form-group"><label>Amount (PKR)</label><input type="number" id="inst-amount-${i}" placeholder="Amount" min="0" step="1000"></div></div>`;
+      <div class="form-group"><label>Amount (PKR)</label><input type="number" id="inst-amount-${i}" placeholder="Amount" min="0" step="1000" oninput="updateInstallmentBalance()"></div></div>`;
   }
   document.getElementById('installment-fields').innerHTML = h;
+  updateInstallmentBalance();
+}
+
+// Live remaining-balance calculator for installment sales
+function updateInstallmentBalance() {
+  const box = document.getElementById('installment-remaining');
+  const advBox = document.getElementById('advance-total-amount');
+  const price = parseFloat(document.getElementById('selling-price').value) || 0;
+  const down = getTotalAdvance();
+  if (advBox) advBox.textContent = '₨' + Math.round(down).toLocaleString();
+  if (!box) return;
+  const cnt = parseInt(document.getElementById('installment-count').value) || 0;
+  let instTotal = 0;
+  for (let i=1; i<=cnt; i++) {
+    const el = document.getElementById('inst-amount-'+i);
+    if (el) instTotal += parseFloat(el.value) || 0;
+  }
+  const remaining = price - down - instTotal;
+  box.textContent = '₨' + Math.round(remaining).toLocaleString();
+  box.style.color = Math.abs(remaining) < 1 ? 'var(--success)' : (remaining < 0 ? 'var(--danger)' : 'var(--accent)');
 }
 
 // ===================== UPLOAD =====================
 async function uploadReceipt() {
   const v = {
+    vehicleType: (document.querySelector('input[name="vehicle-type"]:checked')||{}).value || 'CAR',
     carName: document.getElementById('car-name').value.trim(),
     regNumber: document.getElementById('reg-number').value.trim().toUpperCase(),
     customerName: document.getElementById('customer-name').value.trim(),
@@ -2040,10 +2157,17 @@ async function uploadReceipt() {
   if (!v.carName||!v.regNumber||!v.customerName||!v.customerPhone||!v.sellingDate||!v.sellingPrice||parseFloat(v.sellingPrice)<=0||!v.purchaseCost||parseFloat(v.purchaseCost)<=0||!v.soldBy||!photoFile) {
     eMsg.textContent='Please fill all required fields'; eMsg.style.display='block'; return;
   }
-  let downPayment=0, installments=[];
+  let downPayment=0, installments=[], advances=[];
   if (paymentType==='INSTALLMENT') {
-    downPayment = parseFloat(document.getElementById('down-payment').value)||0;
-    if (downPayment<=0) { eMsg.textContent='Please enter down payment'; eMsg.style.display='block'; return; }
+    const advCnt = parseInt(document.getElementById('advance-count').value) || 0;
+    for (let i=1; i<=advCnt; i++) {
+      const adEl=document.getElementById(`adv-date-${i}`), amEl=document.getElementById(`adv-amount-${i}`);
+      const ad=adEl?adEl.value:'', am=amEl?parseFloat(amEl.value)||0:0;
+      if (!ad||am<=0) { eMsg.textContent=`Fill advance ${i} details (date & amount)`; eMsg.style.display='block'; return; }
+      advances.push({part:i, date:ad, amount:am});
+    }
+    downPayment = advances.reduce((s,a)=>s+a.amount,0);
+    if (downPayment<=0) { eMsg.textContent='Please enter at least one advance payment'; eMsg.style.display='block'; return; }
     const cnt = parseInt(document.getElementById('installment-count').value);
     for (let i=1; i<=cnt; i++) {
       const dt=document.getElementById(`inst-date-${i}`).value, am=parseFloat(document.getElementById(`inst-amount-${i}`).value)||0;
@@ -2058,13 +2182,16 @@ async function uploadReceipt() {
   try {
     const imageData = await new Promise((res,rej)=>{const r=new FileReader();r.onload=e=>res(e.target.result);r.onerror=()=>rej(new Error('Failed to read image'));r.readAsDataURL(photoFile);});
     const receiptId = v.regNumber+'_'+v.sellingDate+'_'+Date.now();
-    const result = await post({action:'upload', receiptId, ...v, sellingPrice:parseFloat(v.sellingPrice), purchaseCost:parseFloat(v.purchaseCost), expenses, paymentType, downPayment, installments, imageData, fileName:receiptId+'.'+photoFile.name.split('.').pop(), mimeType:photoFile.type, timestamp:new Date().toISOString()});
+    const result = await post({action:'upload', receiptId, ...v, sellingPrice:parseFloat(v.sellingPrice), purchaseCost:parseFloat(v.purchaseCost), expenses, paymentType, downPayment, advances, installments, imageData, fileName:receiptId+'.'+photoFile.name.split('.').pop(), mimeType:photoFile.type, timestamp:new Date().toISOString()});
     if (result.success) {
       sMsg.textContent=`✅ Receipt saved for ${v.carName} (${v.regNumber})`; sMsg.style.display='block';
       ['car-name','reg-number','customer-name','customer-phone','selling-price','purchase-cost','sold-by'].forEach(id=>document.getElementById(id).value='');
+      document.querySelector('input[name="vehicle-type"][value="CAR"]').checked = true; onVehicleTypeChange();
       document.getElementById('expenses-container').innerHTML=''; expenseFieldCount=0;
       document.getElementById('receipt-photo').value=''; document.getElementById('preview').style.display='none';
-      document.querySelector('input[name="payment-type"][value="CASH"]').checked=true; toggleInstallmentSection();
+      document.querySelector('input[name="payment-type"][value="CASH"]').checked=true;
+      document.getElementById('advance-count').value=1; document.getElementById('installment-count').value=6;
+      toggleInstallmentSection();
       window.scrollTo(0,0);
     } else throw new Error(result.error||'Upload failed');
   } catch(err) { eMsg.textContent='❌ '+err.message; eMsg.style.display='block'; }
@@ -2102,16 +2229,34 @@ async function loadAllData() {
   return result;
 }
 
+let currentAllFilter = 'ALL';
+function setAllFilter(type, btn) {
+  currentAllFilter = type;
+  document.querySelectorAll('#all-tab .ps-btn').forEach(b=>b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  renderAllReceipts();
+}
+function renderAllReceipts() {
+  const div = document.getElementById('all-receipts');
+  let list = allReceiptsCache;
+  if (currentAllFilter !== 'ALL') list = list.filter(r => (r.vehicleType||'CAR') === currentAllFilter);
+  document.getElementById('total-receipts').textContent = list.length;
+  const carCount = allReceiptsCache.filter(r=>(r.vehicleType||'CAR')==='CAR').length;
+  const bikeCount = allReceiptsCache.filter(r=>(r.vehicleType||'CAR')==='BIKE').length;
+  const splitEl = document.getElementById('total-receipts-split');
+  if (splitEl) splitEl.textContent = `🚗${carCount} · 🏍️${bikeCount}`;
+  div.innerHTML = list.length ? list.map(r => receiptCardHTML(r)).join('') : '<div class="no-results">No receipts found</div>';
+}
 async function loadAllReceipts() {
   const div = document.getElementById('all-receipts');
   div.innerHTML='<div class="loading">Loading...</div>';
   try {
     await loadAllData();
-    document.getElementById('total-receipts').textContent = allReceiptsCache.length;
     if (allReceiptsCache.length > 0) {
       allReceiptsCache.sort((a,b)=>new Date(b.sellingDate)-new Date(a.sellingDate));
-      div.innerHTML = allReceiptsCache.map(r => receiptCardHTML(r)).join('');
+      renderAllReceipts();
     } else {
+      document.getElementById('total-receipts').textContent = 0;
       div.innerHTML='<div class="no-results">No receipts yet</div>';
     }
   } catch(err) { div.innerHTML='<div class="no-results">Error loading receipts</div>'; console.error(err); }
@@ -2136,8 +2281,10 @@ function receiptCardHTML(r) {
     else if(pend.length>0){sc='pending-payment';sb=`<span class="payment-badge installment">📅 ${pend.length} Pending</span>`;}
     else sb='<span class="payment-badge cash">✅ Completed</span>';
   }
+  const vt = r.vehicleType || 'CAR';
+  const vtBadge = vt==='BIKE' ? '🏍️ Bike' : '🚗 Car';
   return `<div class="receipt-item ${sc}" onclick='viewReceiptByData(${JSON.stringify(r).replace(/'/g,"&#39;")})'>
-    <div class="receipt-reg">${r.carName||'N/A'}</div>
+    <div class="receipt-reg">${vtBadge} · ${r.carName||'N/A'}</div>
     <div class="receipt-date">Reg: ${r.regNumber}</div>
     <div class="receipt-date">Customer: ${r.customerName||'N/A'}</div>
     <div class="receipt-date">Date: ${dt} · Price: ${pr}</div>
@@ -2175,12 +2322,14 @@ function checkOverduePayments() {
 async function performSearch() {
   const si=document.getElementById('search-input').value.trim().toUpperCase();
   const se=document.getElementById('search-employee').value;
+  const svt=document.getElementById('search-vehicle-type').value;
   const rd=document.getElementById('search-results');
   rd.innerHTML='<div class="loading">Searching...</div>';
   if(allReceiptsCache.length===0) await loadAllData();
   let f=allReceiptsCache;
   if(si) f=f.filter(r=>r.regNumber.includes(si)||(r.carName||'').toUpperCase().includes(si)||(r.customerName||'').toUpperCase().includes(si));
   if(se) f=f.filter(r=>r.soldBy===se);
+  if(svt) f=f.filter(r=>(r.vehicleType||'CAR')===svt);
   rd.innerHTML = f.length ? f.map(r=>receiptCardHTML(r)).join('') : '<div class="no-results">❌ Not found</div>';
 }
 
@@ -2188,14 +2337,17 @@ async function viewReceiptByData(receipt) {
   const mi=document.getElementById('modal-image');
   mi.src=`https://drive.google.com/thumbnail?id=${receipt.driveFileId}&sz=w1000`;
   mi.onerror=function(){this.src=`https://drive.google.com/uc?export=view&id=${receipt.driveFileId}`;};
-  document.getElementById('modal-reg').textContent=`${receipt.carName} (${receipt.regNumber})`;
+  const vtIcon = (receipt.vehicleType||'CAR')==='BIKE' ? '🏍️' : '🚗';
+  document.getElementById('modal-reg').textContent=`${vtIcon} ${receipt.carName} (${receipt.regNumber})`;
   const dt=new Date(receipt.sellingDate).toLocaleDateString();
   document.getElementById('modal-details').innerHTML=`Customer: ${receipt.customerName}<br>Phone: ${receipt.customerPhone}<br>Date: ${dt}<br>Price: ₨${parseFloat(receipt.sellingPrice).toLocaleString()}<br>Sold by: ${receipt.soldBy}<br>Payment: ${receipt.paymentType}`;
   const mi2=document.getElementById('modal-installments');
   if(receipt.paymentType==='INSTALLMENT'){
     const ri=allInstallmentsCache.filter(i=>i.receiptId===receipt.receiptId);
+    const balPending = ri.filter(i=>i.status!=='PAID').reduce((s,i)=>s+(parseFloat(i.amount)||0),0);
     let h='<div style="background:rgba(255,255,255,.1);padding:15px;border-radius:10px;margin-top:15px;">';
     h+=`<div style="color:white;font-weight:700;margin-bottom:10px;">Down Payment: ₨${parseFloat(receipt.downPayment).toLocaleString()}</div>`;
+    h+=`<div style="color:${balPending>0?'#F59E0B':'#28a745'};font-weight:800;margin-bottom:12px;font-size:15px;">${balPending>0?'⏳ Remaining Balance: ₨'+balPending.toLocaleString():'✅ Fully Paid'}</div>`;
     ri.forEach(i=>{
       const ip=i.status==='PAID',io=!ip&&new Date(i.dueDate)<new Date();
       const sc=ip?'#28a745':io?'#dc3545':'#D4AF37', st=ip?'✅ Paid':io?'⚠️ Overdue':'📅 Pending';
@@ -2247,6 +2399,9 @@ function editReceipt() {
   if(!currentViewingReceipt) return;
   const r=currentViewingReceipt; // save BEFORE closeModal nulls it
   closeModal();
+  const vt = r.vehicleType || 'CAR';
+  const vtRadio = document.querySelector(`input[name="edit-vehicle-type"][value="${vt}"]`);
+  if (vtRadio) vtRadio.checked = true;
   document.getElementById('edit-car-name').value=r.carName||'';
   document.getElementById('edit-reg-number').value=r.regNumber||'';
   document.getElementById('edit-customer-name').value=r.customerName||'';
@@ -2264,6 +2419,7 @@ function closeEditModal(){document.getElementById('edit-modal').classList.remove
 
 async function saveEditedReceipt() {
   const vals={
+    vehicleType:(document.querySelector('input[name="edit-vehicle-type"]:checked')||{}).value || 'CAR',
     carName:document.getElementById('edit-car-name').value.trim(),
     regNumber:document.getElementById('edit-reg-number').value.trim().toUpperCase(),
     customerName:document.getElementById('edit-customer-name').value.trim(),
@@ -2285,6 +2441,7 @@ async function saveEditedReceipt() {
     const r=await post({
       action:'updateReceipt',
       receiptId:currentViewingReceipt.receiptId,
+      vehicleType:vals.vehicleType,
       carName:vals.carName,
       regNumber:vals.regNumber,
       customerName:vals.customerName,
@@ -2382,6 +2539,8 @@ async function calculateAnalytics() {
   const mr=allReceiptsCache.filter(r=>new Date(r.sellingDate)>=new Date(now.getFullYear(),now.getMonth(),1));
   document.getElementById('total-cars').textContent=total;
   document.getElementById('total-revenue').textContent='₨'+rev.toLocaleString();
+  document.getElementById('total-cars-only').textContent=allReceiptsCache.filter(r=>(r.vehicleType||'CAR')==='CAR').length;
+  document.getElementById('total-bikes-only').textContent=allReceiptsCache.filter(r=>(r.vehicleType||'CAR')==='BIKE').length;
   document.getElementById('week-cars').textContent=wr.length;
   document.getElementById('week-revenue').textContent='₨'+wr.reduce((s,r)=>s+(parseFloat(r.sellingPrice)||0),0).toLocaleString();
   document.getElementById('month-cars').textContent=mr.length;
